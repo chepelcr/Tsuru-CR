@@ -16,8 +16,8 @@ from openpyxl.utils import get_column_letter
 OUT = Path(__file__).parent / "POS_FE_QA_ANALYSIS.xlsx"
 
 META = {
-    "fecha": "2026-08-06 (actualización de confiabilidad POS)",
-    "commit": "working tree (drawer/offline/idempotency audit)",
+    "fecha": "2026-09-07 (verticales por tipo de negocio)",
+    "commit": "working tree (TSR-150…164 verticales)",
     "repo": "chepelcr/tsuru-pos-system",
     "url": "https://app.tsuru.jcampos.dev",
 }
@@ -148,7 +148,7 @@ MODULES = [
         ["Offline / sincronización", "Dexie v2 + PendingSalesSyncBridge autenticado; SyncPill online/offline/syncing/pending/error", "✅ Completo", "TSR-130", "SW ya no reenvía ventas; validar reconexión, reinicio y aislamiento por usuario", "Alta"],
         ["Exportar CSV", "Botón CSV en ReportePage (generación en navegador)", "✅ Completo", "—", "Verificar escape de comillas/comas y acentos", "Media"],
         ["Exportar PDF", "'Descargar PDF' en ReportePage (html2canvas + jsPDF, A4)", "✅ Completo", "—", "Render de canvas en reportes largos", "Media"],
-        ["Impresión de recibo", "PRINT_RECEIPT.md documenta botón en src/pages/pos/POSPage.tsx — archivo que ya no existe", "❌ Faltante", "TSR-127", "Único window.print está en ReportePage; Receipt.tsx del checkout no imprime — no se puede imprimir recibo de venta", "Alta"],
+        ["Impresión de ticket 80 mm", "Ticket generado en el backend (ticket.html → wkhtmltopdf 72 mm → S3), expuesto en attachments.ticket_url", "✅ Completo", "TSR-127", "Regenera a propósito para tomar el consecutivo/QR tras facturar. Faltan comandas por estación", "Media"],
         ["Paginación", "Componente Pagination compartido en todas las listas", "✅ Completo", "—", "—", "Baja"],
         ["Estados de carga/error", "Skeletons por página, ErrorBox, EmptyState, PageTransition", "✅ Completo", "—", "—", "Baja"],
         ["Responsive / móvil", "Drawers móviles, panel de notificaciones centrado, toolbar container-queries", "✅ Completo", "TSR-111, TSR-132", "Drawers/modales usan portal + overlay stack; probar página scrolleada y overlays anidados", "Media"],
@@ -186,6 +186,32 @@ MODULES = [
         ["Flujo de dispositivo src/pages/pos/*", "SessionSetup/InventoryOpening/Payment/Success — documentado pero no cableado en Routes.tsx", "❌ Faltante", "TSR-120", "—", "Baja"],
         ["ClosingFlow.tsx", "450 líneas de cierre de caja con BE listo, nunca montado", "❌ Faltante", "TSR-005", "Funcionalidad faltante, no solo código muerto", "Alta"],
     ]),
+    ("Verticales-TipoNegocio", [
+        ["Tipo de negocio", "9 tipos + 2 toggles independientes (is_retail_supplier, is_pyme); el BE escribe organization_modules", "✅ Completo", "TSR-150", "Los toggles NO son tipos: un minisúper puede ser PYME *y* proveedor de cadena", "Alta"],
+        ["Gating de verticales", "useBusinessType lee la lista de módulos y falla cerrado", "✅ Completo", "TSR-150", "No usa hasModule(): ese falla abierto y auto-concede al owner — correcto para un permiso, incorrecto para un vertical", "Alta"],
+        ["Onboarding progresivo", "Paso 1 se revela en beats (nombre → tipo → toggles → resumen)", "✅ Completo", "TSR-150", "El resumen se deriva de BUSINESS_TYPE_MODULES, no de copy fijo", "Media"],
+        ["Pedido manual — 2 tarjetas", "Documento ausente (no colapsado); Pago eliminado; toggle proforma; número editable", "✅ Completo", "TSR-151", "Punto de entrega sin texto libre: registrado / receptor / cascada CR", "Alta"],
+        ["Endpoint pedidos manuales", "POST /orders discriminado por source; totales recalculados; Idempotency-Key", "✅ Completo", "TSR-152", "El cuerpo del storefront (sin source) sigue validando igual — verificado", "Alta"],
+        ["SelectField", "Listbox propio, teclado + ARIA; 32 archivos convertidos sin tocar handlers", "✅ Completo", "TSR-153", "Un <option> nativo no se puede estilizar; el popup lo dibuja el SO", "Media"],
+        ["Menú 'Más' de pagos", "Bug de capas CSS: .dropdown-menu fuera de @layer ganaba a las utilities", "✅ Completo", "TSR-153", "Verificado en el CSS compilado", "Alta"],
+        ["Mesas / cuentas abiertas", "Full-stack; una cuenta de bar es una mesa dinámica", "✅ Completo", "TSR-154", "Direccionadas por branch_code entero (TSR-149)", "Media"],
+        ["Combos", "Explotan en componentes al agregar al carrito", "✅ Completo", "TSR-154", "Un combo con 13% y exento no puede ser una línea plana en un comprobante fiscal", "Alta"],
+        ["Servicio 10%", "Línea propia, nunca recargo sobre el total", "✅ Completo", "TSR-154", "Se excluye de su propia base o se compone en cada recálculo", "Alta"],
+        ["Cuenta dividida", "Por línea o en partes iguales; N documentos", "✅ Completo", "TSR-154", "sharesReconcile verifica que las partes sumen la cuenta original", "Alta"],
+        ["Búsqueda por código", "Sin gate — cualquier organización", "✅ Completo", "TSR-155", "Verificado contra datos reales de dev; funciona sin conexión", "Alta"],
+        ["Código de balanza", "Peso/precio embebido en EAN-13, parametrizable", "✅ Completo", "TSR-155", "El layout no está estandarizado: cada tienda configura su balanza", "Media"],
+        ["Proformas", "Estado quote, no un tipo de documento", "✅ Completo", "TSR-156", "Guarda bloquea quote → delivered: una cotización sin aprobar no debe facturarse", "Alta"],
+        ["Puntos de venta manuales", "CRUD junto al importador de Excel", "✅ Completo", "TSR-157", "Totales derivados; sobre-asignar devuelve 422 nombrando la línea", "Media"],
+        ["Happy hour", "Ventanas que cruzan medianoche; nunca sube el precio", "✅ Completo", "TSR-158", "El servidor re-resuelve al enviar: el reloj del cliente no fija precios fiscales", "Alta"],
+        ["Lotes / FEFO", "Primero el que vence, no el que llegó", "✅ Completo", "TSR-159", "Stock sin fecha va al final; 0 días = vence hoy", "Media"],
+        ["Facturación recurrente", "Cadencia con recorte de mes", "✅ Completo", "TSR-160", "Genera borrador, nunca transmite; falta EventBridge", "Media"],
+        ["Unidades con conversión", "Stock en rollos, venta por metro", "✅ Completo", "TSR-161", "Factor 0 rechazado; price_override gana", "Baja"],
+        ["Agenda", "Un módulo, dos verticales (salón y taller)", "✅ Completo", "TSR-162", "asset_id nullable: el salón agenda una persona, el taller persona + vehículo", "Media"],
+        ["Órdenes de trabajo", "PM con order_type='work_order'", "✅ Completo", "TSR-163", "No es una entidad nueva; client_assets sí, para historial por activo", "Media"],
+        ["Importación Excel estructurada", "Descuento 07 Comercial + impuestos del producto", "✅ Completo", "TSR-152", "Sólo 01/03 desvían IVA a fábrica; 07 debe seguir siendo rebaja de precio", "Alta"],
+        ["Ticket 80 mm", "Generado en el backend (ticket.html → wkhtmltopdf → S3)", "✅ Completo", "TSR-127", "Se descartó imprimir en el navegador: dos maquetadores harían que una reimpresión no coincida con el original", "Media"],
+        ["Ferias", "Fuera del selector a propósito", "❌ Faltante", "TSR-164", "Es agrupación multi-organización, no un tipo de negocio", "Baja"],
+    ]),
 ]
 
 HALLAZGOS = [
@@ -204,7 +230,7 @@ HALLAZGOS = [
      "Bloque OtherCharges v4.4 (códigos 01–10/99, hasta 15/doc) ausente en FE y en el BE de ventas; useAllOtherCharges sin usar; además Σ MedioPago == TotalComprobante no se valida en BE", "Alta"],
     ["TSR-126", "Referencias NC/ND parciales",
      "ReferencesSection sin auditoría contra Nota 10/10.1 (cobertura completa de ReferenceCode + Razon obligatoria) — riesgo de notas de crédito/débito rechazadas", "Alta"],
-    ["TSR-127", "Impresión de recibo de venta inalcanzable",
+    ["TSR-127", "Impresión de ticket — RESUELTO (backend)",
      "PRINT_RECEIPT.md referencia src/pages/pos/POSPage.tsx (ya no existe); único window.print en ReportePage; Receipt.tsx del checkout no imprime — un POS que no imprime recibos", "Alta"],
     ["TSR-128", "Notificaciones sin backend ni persistencia",
      "NotificationsContext 100% client-side (useState) — se pierde al refrescar; source:'be' existe pero nada lo publica; bloquea el feed de invalidación de catálogos", "Media"],

@@ -39,7 +39,7 @@ Tailwind. Gestor de paquetes: **pnpm**.
 | ✅ Completo | Autenticación, Dashboard, POS/editor, Productos, Categorías, Clientes B2B, Sesiones/Puestos, Roles RBAC, Config. de organización, Perfil, **Motor fiscal (los 10 tipos de impuesto + cascada de descuentos)**, **Catálogos data-api (~45 hooks)** |
 | 🟡 Parcial | Facturación electrónica (FE listo; Lambdas XML/notificación como stubs), Pedidos (mutaciones sin verificar), Programas (filtro BE pendiente), Reportes (analytics sin verificar), Referencias NC/ND (TSR-126) |
 | ⚠️ Sin verificar | Confirmaciones (cross-docking), **CMS/Galería/Plantillas/Despliegues (riesgo más alto: endpoints "nunca ejercitados por el POS")** |
-| ❌ Faltante / muerto | Cierre de caja (`ClosingFlow` sin montar), **Exoneraciones v4.4 (TSR-124)**, **Otros cargos v4.4 (TSR-125)**, **Impresión de recibo (TSR-127)**, páginas huérfanas (`AnalyticsPage`, `AssignmentsPage`, flujo `src/pages/pos/*`) |
+| ❌ Faltante / muerto | Cierre de caja (`ClosingFlow` sin montar), **Exoneraciones v4.4 (TSR-124)**, **Otros cargos v4.4 (TSR-125)**, páginas huérfanas (`AnalyticsPage`, `AssignmentsPage`, flujo `src/pages/pos/*`) |
 
 **Señales duras del código:** 30 marcadores `TODO(verify-endpoint)`, 5 pruebas POS en 2 archivos
 (TSR-097 en progreso), permisos RBAC en modo *fail-open* hasta el flip de enforcement (TSR-027).
@@ -199,7 +199,7 @@ Rutas: `/dashboard/sessions`, `/dashboard/stations`.
 | Funcionalidad | Descripción | Estado | Incidencia (TSR) | Bugs / Riesgos | Prioridad QA |
 |---|---|---|---|---|---|
 | Sesiones | `SessionsPage` + `SessionConfig` (creación multi-paso) | ✅ | — | Tormenta de refetch ya corregida (cache 5 min) — verificar que no regresó | Media |
-| Puestos (sucursales/terminales) | `PuestosPage`, catálogo de tipos de sucursal | 🟡 | — | `useBranchTypes` con TODO — catálogo "en proceso de agregarse en cross-app-be" | Media |
+| Puestos (sucursales/terminales) | `PuestosPage`, catálogo de tipos de sucursal | ✅ | TSR-139 | Catálogo `branch_types` implementado en store-be (4 rutas); el TODO de `useBranchTypes` quedó obsoleto. Las sucursales se direccionan por `code` entero, no UUID (TSR-149) | Baja |
 | Aprobación de cierres | Autorización de cierre de caja | 🔒 | TSR-010 | `is_manager` default `True` en BE ("backward compatibility") — cualquier usuario aprueba cierres | Alta |
 
 ### 3.12 Miembros y roles (RBAC)
@@ -271,7 +271,7 @@ Funciones que cruzan todos los módulos: layout, notificaciones, offline, tema, 
 | Offline / sincronización | Dexie v2 + `PendingSalesSyncBridge` autenticado; `SyncPill` muestra online/offline/syncing/pending/error | ✅ | **TSR-130** | El SW ya no reenvía ventas; validar reconexión, reinicio de app y aislamiento por usuario | **Alta** |
 | Exportar CSV | Botón "CSV" en `ReportePage` (generación en navegador, sin deps) | ✅ | — | Verificar escape de comillas/comas y acentos (BOM) | Media |
 | Exportar PDF | "Descargar PDF" en `ReportePage` (html2canvas + jsPDF, A4) | ✅ | — | Render de canvas en reportes largos (multi-página) | Media |
-| **Impresión de recibo** | `PRINT_RECEIPT.md` documenta el botón "Imprimir" en `src/pages/pos/POSPage.tsx` — **archivo que ya no existe** | ❌ | **TSR-127** | El único `window.print` del app está en ReportePage; `Receipt.tsx` del checkout no imprime — **no se puede imprimir un recibo de venta** | **Alta** |
+| **Impresión de ticket 80 mm** | Ticket generado en el **backend** (`ticket.html` → wkhtmltopdf 72 mm → S3), expuesto en `attachments.ticket_url` vía `POST /orders/{doc}/ticket`; botón en `OrderDetailPage` | ✅ | **TSR-127** | Se descartó imprimir desde el navegador: dos maquetadores para el mismo comprobante harían que una reimpresión dejara de coincidir con el original. Regenera a propósito para tomar el consecutivo/QR tras facturar. Faltan comandas por estación | Media |
 | Paginación | Componente `Pagination` compartido (page size, totales) en todas las listas | ✅ | — | — | Baja |
 | Estados de carga/error | Skeletons por página (sweep 2026-06-13), `ErrorBox`, `EmptyState`, `PageTransition` | ✅ | — | — | Baja |
 | Responsive / móvil | Drawers móviles (nav, documentos), panel de notificaciones centrado (fix TSR-111), toolbar con container queries | ✅ | TSR-111, TSR-132 | Drawers/modales compartidos usan portal + stack de overlays; probar página scrolleada y overlays anidados | Media |
@@ -322,6 +322,35 @@ de data-api no resolvía — tipo de cambio, versiones de documento y todos los 
 | Catálogos sin consumidor | `useAllExemptions`+`useExemptionValidation` (TSR-124), `useAllOtherCharges` (TSR-125), `useAllDocumentTypes`, `useAllPharmaceuticalForms`, `useAllRegimes`, `useAllNationalTaxpayerCompanies`, `useAllNotificationCodes`, `useAllTransactions`, `useAllTaxConditions`, `useAllTaxRateCodes`, `useDollarRate/useEuroRate` | ❌ | TSR-124, TSR-125 | Actividades económicas ya se obtienen de la organización registrada; los demás hooks siguen sin UI | Media |
 
 ---
+
+### 3.21 Tipos de negocio y verticales (TSR-150…164)
+
+| Funcionalidad | Descripción | Estado | Incidencia (TSR) | Bugs / Riesgos | Prioridad QA |
+|---|---|---|---|---|---|
+| Tipo de negocio | 9 tipos + 2 toggles independientes (`is_retail_supplier`, `is_pyme`); el BE escribe `organization_modules` | ✅ | TSR-150 | Los toggles NO son tipos: un minisúper puede ser PYME *y* proveedor de cadena | Alta |
+| Gating de verticales | `useBusinessType` lee la lista de módulos y **falla cerrado** | ✅ | TSR-150 | No usa `hasModule()`: ese falla *abierto* y auto-concede al owner — correcto para un permiso, incorrecto para un vertical | Alta |
+| Onboarding progresivo | Paso 1 del asistente se revela en beats (nombre → tipo → toggles → resumen) | ✅ | TSR-150 | El resumen se deriva de `BUSINESS_TYPE_MODULES`, no de copy fijo, para que no mienta | Media |
+| Pedido manual — 2 tarjetas | Documento **ausente** (no colapsado); Pago eliminado; toggle de proforma; número editable | ✅ | TSR-151 | Punto de entrega sin texto libre: punto registrado / dirección del receptor / cascada CR | Alta |
+| Endpoint de pedidos manuales | `POST /orders` discriminado por `source`; totales recalculados; `Idempotency-Key` | ✅ | TSR-152 | El cuerpo del storefront (sin `source`) sigue validando igual — verificado | Alta |
+| `SelectField` | Listbox propio, teclado + ARIA; 32 archivos convertidos sin tocar handlers | ✅ | TSR-153 | Un `<option>` nativo no se puede estilizar; el popup lo dibuja el SO | Media |
+| Menú "Más" de pagos | Bug de capas CSS: `.dropdown-menu` fuera de `@layer` ganaba a las utilities | ✅ | TSR-153 | Verificado en el CSS compilado | Alta |
+| Mesas / cuentas abiertas | Full-stack; una cuenta de bar **es** una mesa dinámica | ✅ | TSR-154/158 | Direccionadas por `branch_code` entero (TSR-149) | Media |
+| Combos | Explotan en componentes al agregar al carrito | ✅ | TSR-154 | Un combo con 13% y exento **no puede ser una línea plana** en un comprobante fiscal | **Alta** |
+| Servicio 10% | Línea propia, nunca recargo sobre el total | ✅ | TSR-154 | Se excluye de su propia base o se compone en cada recálculo | Alta |
+| Cuenta dividida | Por línea o en partes iguales; N documentos | ✅ | TSR-154 | `sharesReconcile` verifica que las partes sumen la cuenta original | Alta |
+| Búsqueda por código | **Sin gate** — cualquier organización | ✅ | TSR-155 | Verificado contra datos reales de dev; funciona sin conexión | Alta |
+| Código de balanza | Peso/precio embebido en EAN-13, parametrizable | ✅ | TSR-155 | El layout no está estandarizado: cada tienda configura su balanza | Media |
+| Proformas | Estado `quote`, no un tipo de documento | ✅ | TSR-156 | Guarda bloquea `quote → delivered`: una cotización sin aprobar no debe facturarse | **Alta** |
+| Puntos de venta manuales | CRUD junto al importador de Excel | ✅ | TSR-157 | Totales derivados; sobre-asignar devuelve 422 nombrando la línea | Media |
+| Happy hour | Ventanas que cruzan medianoche; nunca sube el precio | ✅ | TSR-158 | El servidor re-resuelve al enviar: el reloj del cliente no fija precios fiscales | **Alta** |
+| Lotes / FEFO | Primero el que vence, no el que llegó | ✅ | TSR-159 | Stock sin fecha va al final; `0` días = vence hoy | Media |
+| Facturación recurrente | Cadencia con recorte de mes | ✅ | TSR-160 | Genera **borrador**, nunca transmite; falta EventBridge | Media |
+| Unidades con conversión | Stock en rollos, venta por metro | ✅ | TSR-161 | Factor 0 rechazado; `price_override` gana | Baja |
+| Agenda | Un módulo, dos verticales (salón y taller) | ✅ | TSR-162 | `asset_id` nullable: el salón agenda una persona, el taller persona + vehículo | Media |
+| Órdenes de trabajo | `PM` con `order_type='work_order'` | ✅ | TSR-163 | No es una entidad nueva; `client_assets` sí, para historial por activo | Media |
+| Importación Excel estructurada | Descuento `07 Comercial` + impuestos del producto | ✅ | TSR-152 | Sólo 01/03 desvían IVA a fábrica; 07 debe seguir siendo rebaja de precio | **Alta** |
+| Ferias | **Fuera del selector** a propósito | ❌ | TSR-164 | Es agrupación multi-organización, no un tipo de negocio | Baja |
+
 
 ## 4. Hallazgos nuevos de este análisis (TSR nuevos)
 
