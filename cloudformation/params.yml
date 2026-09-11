@@ -45,6 +45,16 @@ Parameters:
     Type: String
     Description: Orders service API URL (e.g. https://orders-api.tsuru.jcampos.dev)
 
+  SalesApiUrl:
+    Type: String
+    Default: https://sales-api.tsuru.jcampos.dev
+    Description: Sales / e-invoicing API URL (sales-be's gateway)
+
+  DataApiUrl:
+    Type: String
+    Default: https://data-api.tsuru.jcampos.dev
+    Description: Hacienda catalog (data) API URL
+
   EventsApiUrl:
     Type: String
     Default: https://events.tsuru.jcampos.dev/event
@@ -181,6 +191,24 @@ Resources:
       Type: String
       Value: !Ref OrdersApiUrl
       Description: Orders service API URL
+
+  # /tsuru/{env}/platform/api/sales-url
+  SalesApiUrlParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub "/tsuru/${Environment}/platform/api/sales-url"
+      Type: String
+      Value: !Ref SalesApiUrl
+      Description: Sales / e-invoicing API URL
+
+  # /tsuru/{env}/platform/api/data-url
+  DataApiUrlParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub "/tsuru/${Environment}/platform/api/data-url"
+      Type: String
+      Value: !Ref DataApiUrl
+      Description: Hacienda catalog (data) API URL
 
   # /tsuru/{env}/platform/appsync/events-url
   # Read by the POS build (VITE_APPSYNC_EVENTS_URL). It lives in the `platform`

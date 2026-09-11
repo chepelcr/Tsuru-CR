@@ -15,9 +15,14 @@ set -e
 #   --cloudfront-domain  CloudFront distribution domain
 #   --api-url          Backend API URL
 #   --orders-api-url   Orders service API URL
+#   --sales-api-url    Sales / e-invoicing API URL
+#   --data-api-url     Hacienda catalog (data) API URL
 #   --events-api-url   AppSync Events endpoint for real-time notifications
 #                      (browser clients). Defaults to the custom domain the
 #                      sales-be appsync-events stack publishes.
+#
+# These are not merely recorded here: the POS build READS them from SSM at
+# build time, so a missing or wrong value ships a broken frontend.
 #   --region           AWS region (default: us-east-1)
 #   --no-profile       Skip AWS named profile (use IAM role — for CodeBuild)
 #
@@ -61,6 +66,8 @@ ORDERS_API_URL_VAL=""
 # constant precisely so it does not have to be plumbed through from a stack
 # output. Pass --events-api-url "" to build the POS without live notifications.
 EVENTS_API_URL_VAL="${EVENTS_API_URL:-https://events.tsuru.jcampos.dev/event}"
+SALES_API_URL_VAL="${SALES_API_URL:-https://sales-api.tsuru.jcampos.dev}"
+DATA_API_URL_VAL="${DATA_API_URL:-https://data-api.tsuru.jcampos.dev}"
 if [ -f "$DASHBOARD_ENV" ]; then
   API_URL_VAL=$(grep -E '^VITE_API_URL=' "$DASHBOARD_ENV" 2>/dev/null | cut -d'=' -f2-)
   ORDERS_API_URL_VAL=$(grep -E '^VITE_ORDERS_API_URL=' "$DASHBOARD_ENV" 2>/dev/null | cut -d'=' -f2-)
@@ -77,6 +84,8 @@ while [[ $# -gt 0 ]]; do
     --api-url)           API_URL_VAL="$2";           shift 2 ;;
     --orders-api-url)    ORDERS_API_URL_VAL="$2";    shift 2 ;;
     --events-api-url)    EVENTS_API_URL_VAL="$2";    shift 2 ;;
+    --sales-api-url)     SALES_API_URL_VAL="$2";     shift 2 ;;
+    --data-api-url)      DATA_API_URL_VAL="$2";      shift 2 ;;
     --region)            REGION="$2";               shift 2 ;;
     --no-profile)        USE_PROFILE=false;         shift ;;
     *) echo "Unknown argument: $1"; exit 1 ;;
@@ -139,6 +148,8 @@ echo " Dashboard URL:    $DASHBOARD_URL_VAL"
 echo " CloudFront Domain: $CLOUDFRONT_DOMAIN_VAL"
 echo " API URL:          $API_URL_VAL"
 echo " Orders API URL:   $ORDERS_API_URL_VAL"
+echo " Sales API URL:    $SALES_API_URL_VAL"
+echo " Data API URL:     $DATA_API_URL_VAL"
 echo " Events API URL:   ${EVENTS_API_URL_VAL:-<none — POS builds without live notifications>}"
 echo " SSM Base Path:    /tsuru/${ENVIRONMENT}/jmarkets"
 echo "======================================================"
@@ -159,6 +170,8 @@ aws cloudformation deploy \
     "ApiUrl=${API_URL_VAL}" \
     "OrdersApiUrl=${ORDERS_API_URL_VAL}" \
     "EventsApiUrl=${EVENTS_API_URL_VAL}" \
+    "SalesApiUrl=${SALES_API_URL_VAL}" \
+    "DataApiUrl=${DATA_API_URL_VAL}" \
   $PROFILE_ARG
 
 echo ""
