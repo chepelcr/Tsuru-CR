@@ -15,6 +15,9 @@ set -e
 #   --cloudfront-domain  CloudFront distribution domain
 #   --api-url          Backend API URL
 #   --orders-api-url   Orders service API URL
+#   --events-api-url   AppSync Events endpoint for real-time notifications
+#                      (browser clients). Defaults to the custom domain the
+#                      sales-be appsync-events stack publishes.
 #   --region           AWS region (default: us-east-1)
 #   --no-profile       Skip AWS named profile (use IAM role — for CodeBuild)
 #
@@ -54,6 +57,10 @@ CLOUDFRONT_DOMAIN_VAL="${CLOUDFRONT_DOMAIN:-}"
 DASHBOARD_ENV="$REPO_ROOT/fe/dashboard/.env"
 API_URL_VAL=""
 ORDERS_API_URL_VAL=""
+# Default is the custom domain the sales-be appsync-events stack owns; it is a
+# constant precisely so it does not have to be plumbed through from a stack
+# output. Pass --events-api-url "" to build the POS without live notifications.
+EVENTS_API_URL_VAL="${EVENTS_API_URL:-https://events.tsuru.jcampos.dev/event}"
 if [ -f "$DASHBOARD_ENV" ]; then
   API_URL_VAL=$(grep -E '^VITE_API_URL=' "$DASHBOARD_ENV" 2>/dev/null | cut -d'=' -f2-)
   ORDERS_API_URL_VAL=$(grep -E '^VITE_ORDERS_API_URL=' "$DASHBOARD_ENV" 2>/dev/null | cut -d'=' -f2-)
@@ -69,6 +76,7 @@ while [[ $# -gt 0 ]]; do
     --cloudfront-domain) CLOUDFRONT_DOMAIN_VAL="$2"; shift 2 ;;
     --api-url)           API_URL_VAL="$2";           shift 2 ;;
     --orders-api-url)    ORDERS_API_URL_VAL="$2";    shift 2 ;;
+    --events-api-url)    EVENTS_API_URL_VAL="$2";    shift 2 ;;
     --region)            REGION="$2";               shift 2 ;;
     --no-profile)        USE_PROFILE=false;         shift ;;
     *) echo "Unknown argument: $1"; exit 1 ;;
@@ -111,7 +119,11 @@ if [ "$USE_PROFILE" = true ]; then
   PROFILE_ARG="--profile $PROFILE"
 fi
 
-PARAMS_STACK="tsuru-${ENVIRONMENT}-jmarkets-ssm-params"
+# Must match the DEPLOYED stack. This said "jmarkets-ssm-params" long after the
+# live stack was named for the `platform` namespace it writes, so running the
+# script would try to CREATE a second stack over parameter names the first one
+# already owns — which fails, rolls back, and tells you nothing useful.
+PARAMS_STACK="tsuru-${ENVIRONMENT}-platform-ssm-params"
 TEMPLATE_FILE="$REPO_ROOT/cloudformation/params.yml"
 
 echo "======================================================"
@@ -127,6 +139,7 @@ echo " Dashboard URL:    $DASHBOARD_URL_VAL"
 echo " CloudFront Domain: $CLOUDFRONT_DOMAIN_VAL"
 echo " API URL:          $API_URL_VAL"
 echo " Orders API URL:   $ORDERS_API_URL_VAL"
+echo " Events API URL:   ${EVENTS_API_URL_VAL:-<none — POS builds without live notifications>}"
 echo " SSM Base Path:    /tsuru/${ENVIRONMENT}/jmarkets"
 echo "======================================================"
 
@@ -145,6 +158,7 @@ aws cloudformation deploy \
     "CloudfrontDomain=${CLOUDFRONT_DOMAIN_VAL}" \
     "ApiUrl=${API_URL_VAL}" \
     "OrdersApiUrl=${ORDERS_API_URL_VAL}" \
+    "EventsApiUrl=${EVENTS_API_URL_VAL}" \
   $PROFILE_ARG
 
 echo ""

@@ -45,6 +45,17 @@ Parameters:
     Type: String
     Description: Orders service API URL (e.g. https://orders-api.tsuru.jcampos.dev)
 
+  EventsApiUrl:
+    Type: String
+    Default: https://events.tsuru.jcampos.dev/event
+    Description: >-
+      AppSync Events API endpoint for real-time notifications, as browser
+      clients use it. A plain parameter rather than a cross-stack import
+      because the whole point of the custom domain (owned by sales-be's
+      appsync-events stack) is that this value is a constant. Leave it empty to
+      build the frontend without live notifications — the bell then shows what
+      its one hydrate fetch loaded and stops updating until a reload.
+
 # ---------------------------------------------------------------------------
 # Resources  — one SSM parameter per entry
 # ---------------------------------------------------------------------------
@@ -170,6 +181,19 @@ Resources:
       Type: String
       Value: !Ref OrdersApiUrl
       Description: Orders service API URL
+
+  # /tsuru/{env}/platform/appsync/events-url
+  # Read by the POS build (VITE_APPSYNC_EVENTS_URL). It lives in the `platform`
+  # namespace with the rest of the frontend's config — the API URLs and the
+  # Cognito ids — rather than next to the backend's publish endpoint under
+  # /notifications, because this is build input for a browser bundle.
+  EventsApiUrlParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub "/tsuru/${Environment}/platform/appsync/events-url"
+      Type: String
+      Value: !Ref EventsApiUrl
+      Description: AppSync Events API endpoint for real-time notifications (browser clients)
 
 # ---------------------------------------------------------------------------
 # Outputs
