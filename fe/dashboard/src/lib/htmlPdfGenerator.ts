@@ -102,7 +102,7 @@ export class HTMLPDFGenerator {
           onPreview(htmlContent);
         }
       } else {
-        // Generate PDF from HTML like IVOIS
+        // Generate the PDF from its HTML template
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
         
