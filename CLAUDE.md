@@ -16,6 +16,13 @@ Evidence cells in §2, refresh §7 manual steps, and append a dated line to the 
 changelog (rules in §1). New work gets a new TSR ID; never renumber or delete rows.
 The audit corpus in `docs/audit/tsuru/` is a historical record — do not edit it.
 
+**Live status doc for the wire/DTO convergence.**
+`docs/roadmap/wire_convergence_status.md` tracks the multi-repo snake_case +
+typed-DTO effort (roadmap TSR-265..269): what is done, what is left, and the
+decisions not to re-litigate. It is a **live** document — flip its status cells
+and add the commit in the same session you change anything it describes. Start
+there when resuming that work.
+
 **QA analysis doc has an Excel twin — keep them in sync.** `docs/qa/POS_FE_QA_ANALYSIS.md`
 is the source of truth for the POS FE QA/product analysis and has a generated workbook
 `docs/qa/POS_FE_QA_ANALYSIS.xlsx` (one sheet per module, used by the QA team). Whenever the
