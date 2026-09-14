@@ -25,23 +25,24 @@ no payload crossing a boundary is parsed as an untyped dict.
 | §5 | sales-be raw-dict DTOs (F1–F6) | ✅ done | `sales-be` `454da7c`, `dc6a0fb`, `6d6ff83`, `87831c3` |
 | §6 | Pacific fiscal test matrix | ✅ done | 3 documents ACCEPTED (…0002/0003/0004) |
 | — | Product save-time validation | ✅ done | `store-be` `3ebd6a4` |
-| **§4** | **management-be → snake_case** | 🔶 **in progress** | `management-be` `3d5c78a` |
+| **§4** | **management-be → snake_case** | ✅ **done** | `management-be` `4e83294`, `pos-system` `e7722ef`, `landing` `06a07ee` |
 | §4a | └ response seam | ✅ done | `management-be` `3d5c78a` — 343 call sites, one edit |
-| §4b | └ request seam + jsonb opt-out | ✅ done | `management-be` `3d5c78a`, corrected in `327a7cb` — `OPAQUE_KEYS` derived from the 9 real jsonb columns |
-| §4c | └ zod request DTOs | ⬜ | — |
-| §4d | └ OpenAPI regeneration | ⬜ | — |
+| §4b | └ request seam + jsonb opt-out | ✅ done | `management-be` `3d5c78a`, `327a7cb`, `4e83294` — strict snake-only input; both root-JSONB route aliases bypass deep conversion |
+| §4c | └ zod request DTOs | ✅ done | `management-be` `4e83294` — all mutation bodies + 7 query surfaces; HTTP validation fixtures |
+| §4d | └ OpenAPI regeneration | ✅ done | `management-be` `4e83294` — 90 paths / 116 operations / 0 camelCase data or query names |
 | §4e | └ SNS `eventType` attribute + FilterPolicy | ✅ done | `management-be` `327a7cb` + `sales-be` `5987bbf` — fixture pinned both sides |
-| §4f | └ `fe/pos-system` mirror types | ⬜ | — |
-| §4g | └ `fe/landing` (separate repo) | ⬜ | — |
+| §4f | └ `fe/pos-system` mirror types | ✅ done | `pos-system` `e7722ef` — type/style check + 386 tests |
+| §4g | └ `fe/landing` (separate repo) | ✅ done | `landing` `06a07ee` — typecheck + production build |
 
-Deploys are green for everything marked done. `fe/dashboard` is **out of scope**
-— see §4 decisions.
+Previously committed rows are deployed green. The 2026-09-14 §4 completion is
+verified and committed; deployment remains pending. `fe/dashboard` is **out of
+scope** — see §4 decisions.
 
 ---
 
-## 2 · What remains: §4, management-be
+## 2 · Completed implementation: §4, management-be
 
-The only camelCase backend left. `api.tsuru.jcampos.dev`, its own repo
+This was the only camelCase backend left. `api.tsuru.jcampos.dev`, its own repo
 (`chepelcr/tsuru-management-be`), TypeScript + Express 4 + Drizzle on Lambda.
 
 ### Why it is the large one
@@ -54,8 +55,8 @@ The only camelCase backend left. `api.tsuru.jcampos.dev`, its own repo
 | `req.query` camelCase params | 7 |
 | Drizzle camelCase properties → snake_case columns | **237** across 37 entity files |
 | `@swagger` JSDoc blocks | 104, ~114 camelCase property lines |
-| Runtime validation today | **none** — zod is a dependency, `0` `.parse(`/`.safeParse(` in controllers or services |
-| Tests | 6 files / 1741 lines, all mock-based, **no HTTP-level or contract test** |
+| Runtime validation now | strict zod DTOs on every mutation body and all 7 query surfaces |
+| Tests now | 10 files / 136 tests, including HTTP wire-format and request-validation fixtures |
 
 ### §4a — Response seam
 
@@ -97,13 +98,16 @@ destructurings and the 7 `req.query` params (`activeOnly`, `includeContent`,
 
 ### §4c — zod request DTOs
 
+**Implemented 2026-09-14.** `RequestSchemas.ts` contains strict endpoint DTOs;
+`validateBody` / `validateQuery` return field-level 400s using public snake_case
+paths. Unknown properties and the legacy bare RBAC permission array are
+rejected. Empty-body mutations explicitly accept only omitted/`{}` bodies.
+
 The casing seam makes the wire consistent; it does **not** make the input safe.
 This is where "proper DTO definitions instead of `.get` from the JSONs" and the
 casing work are the same work.
 
-Add zod schemas per endpoint, `safeParse` → 400. Highest risk first — these are
-the sites already carrying hand-rolled hygiene because their authors knew they
-were dangerous:
+Coverage includes the formerly highest-risk sites:
 
 1. `OrganizationController.ts:303,400-405,483,533,633` — whole body into jsonb
 2. `RBACController.ts:435-437` — untyped array-or-object union cast to `PermissionGrantDto[]`
@@ -111,16 +115,23 @@ were dangerous:
 4. CMS: `PageController`, `SectionController`, `SectionContentController`
 5. The four `*SettingsController`s, `S3UploadController.ts:44`
 
-Note `src/models/*Schema.ts` already exports drizzle-zod `insertXSchema` objects
-that are **defined and never invoked** — start from those where they fit.
+The endpoint DTOs are intentionally narrower than the existing generated
+drizzle-zod insert schemas: path-derived ownership/organization fields and
+server-managed columns cannot be mass-assigned.
 
 ### §4d — OpenAPI
 
-104 `@swagger` JSDoc blocks carry ~114 camelCase property lines and regenerate
-`api-gateway/template.yml` (6700 lines) on deploy via
-`scripts/generate-swagger-spec.cjs` → `scripts/gen_api_template.py`. Either
-hand-edit the blocks or transform during generation. **The regenerated spec diff
-is the review artifact** — same technique that verified data-be.
+**Implemented 2026-09-14.** Generation rewrites JSON schema properties,
+`required` entries, discriminators and query parameter names to snake_case,
+then fails if any camelCase data/query name remains. Path-variable and header
+names remain unchanged by design. Regeneration produced 90 paths / 116
+operations with zero audit failures.
+
+104 `@swagger` JSDoc blocks carry ~114 internal camelCase property lines and
+regenerate `api-gateway/template.yml` (6700 lines) on deploy via
+`scripts/generate-swagger-spec.cjs` → `scripts/gen_api_template.py`. The chosen
+implementation transforms them during generation. **The regenerated spec diff
+is the review artifact** — the same technique that verified data-be.
 
 ### §4e — The SNS attribute (cross-repo, must move together)
 
@@ -148,7 +159,13 @@ Also convert management-be's own SNS body (`src/events/EventBase.ts:26`
 
 ### §4f/§4g — The frontends
 
-Both get **real snake_case types**, not a converting client: the POS's sales-be
+**Implemented 2026-09-14.** Both consumers now use snake_case API mirror types,
+reads, request bodies and query names. The POS migration also corrected the
+invitation route family, member-removal body, and management-backed analytics /
+inventory payloads; landing corrected the verification route and platform-RBAC
+request mappings.
+
+Both use **real snake_case types**, not a converting client: the POS's sales-be
 and store-be types are already snake_case, so camelCase platform types are the
 odd ones out, and a converter would leave it speaking two casings internally.
 
@@ -165,21 +182,13 @@ whose own comments say so (`types/organization.ts:4`, `types/rbac.ts:2`). A
 rename therefore surfaces as `undefined`, silently. They must ship in lockstep
 with the backend.
 
-### Risk, stated plainly
+### Risk and mitigation
 
-management-be has **no automated net**: 6 mock-based test files, no HTTP-level
-tests, no fixtures, no contract test, no CI test step. Worse, the existing
-assertions are `expect(mockRes.json).toHaveBeenCalledWith(mockOrg)` — identity
-against the mocked service return — so they would **not catch a middleware-level
-transform at all**.
-
-Mitigations, to be part of the work rather than afterthoughts:
-1. the two seams, so the diff is concentrated and reviewable;
-2. the compiler on both frontends;
-3. the regenerated swagger diff;
-4. **one HTTP-level wire-format fixture test** — the equivalent of store-be's
-   `tests/local/tests.json`, which is exactly what made the store-be/sales-be
-   contract break loudly instead of silently.
+The original management-be suite was mock-only and could not observe a
+middleware-level transform. The completed work adds real HTTP fixtures for
+snake responses, snake requests, strict rejection of legacy camelCase,
+query-key replacement, opaque JSON documents, timestamps, pagination and the
+controller whitelist ordering, plus HTTP request-DTO failure cases.
 
 ---
 
@@ -197,7 +206,11 @@ Mitigations, to be part of the work rather than afterthoughts:
 | **Every product fiscal guard is conditional** | An org that is not registered with Hacienda still needs a catalogue. Pinned by `TestNonFiscalProducts`. |
 | **Drizzle property names stay camelCase** | The ORM is already mapping them to snake_case columns; renaming 237 of them is churn that fights the library. |
 | **`OPAQUE_KEYS` is derived from the schema, never guessed** | The first version included `data` — the payload key of every paginated response and event envelope — which would have left every row in every list camelCase. The list now mirrors the nine real `jsonb` columns, in both spellings. |
+| **A root JSON document needs a route-level bypass** | `OPAQUE_KEYS` protects values beneath a named key; it cannot protect the body root. Both mounted aliases of `PUT .../organizations/:orgId/settings` bypass request-key inspection/conversion and are pinned by HTTP fixtures. |
 | **`codes`/`discounts`/`taxes` are opaque because they are ALREADY snake_case** | Our own fiscal structures, canonicalized by store-be's `20260521_canonicalize_product_jsonb_keys`. Running `keysToCamel` over them turns `tax_type_id` into `taxTypeId` and corrupts the row. |
+| **Legacy camelCase requests fail at the seam** | A conversion function naturally leaves an already-camel key unchanged. The seam therefore audits first and returns 400, except inside explicitly opaque caller-owned documents. |
+| **OpenAPI transforms data fields, not protocol metadata** | JSON property maps, `required` fields, discriminators and query names are snake_case; OpenAPI keywords, path variables and HTTP header names retain their required spellings. |
+| **Theme icon columns use the existing migration** | `loading_icon` and `product_fallback_icon` already exist from migration `0011`; the missing Drizzle mappings and organization response fields were restored, with no new migration. |
 | **SNS MessageAttribute names are subscription contract** | `FilterPolicy` keys on them. Rename one side alone and the topic still accepts the message while the consumer's queue silently never matches. |
 
 ---
@@ -220,7 +233,14 @@ cd be/store-be && ./.venv-migrate/bin/python -m pytest tests -q -m "not integrat
 cd be/data-be && python3 scripts/gen_api_template.py && git diff --stat swagger/
 
 # management-be (§4)
-cd be/management-be && pnpm test && pnpm generate:swagger && git diff --stat swagger/ api-gateway/
+cd be/management-be
+./node_modules/.bin/tsc --noEmit
+./node_modules/.bin/vitest run                              # 136
+node scripts/generate-swagger-spec.cjs                      # 90 paths, zero camel data/query names
+python3 scripts/gen_api_template.py                         # 116 operations
+
+# landing (§4g)
+cd fe/landing && ./node_modules/.bin/tsc --noEmit && ./node_modules/.bin/vite build
 ```
 
 Live checks that have proven meaningful:
