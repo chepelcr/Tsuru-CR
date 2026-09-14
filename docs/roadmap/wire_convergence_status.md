@@ -25,12 +25,12 @@ no payload crossing a boundary is parsed as an untyped dict.
 | §5 | sales-be raw-dict DTOs (F1–F6) | ✅ done | `sales-be` `454da7c`, `dc6a0fb`, `6d6ff83`, `87831c3` |
 | §6 | Pacific fiscal test matrix | ✅ done | 3 documents ACCEPTED (…0002/0003/0004) |
 | — | Product save-time validation | ✅ done | `store-be` `3ebd6a4` |
-| **§4** | **management-be → snake_case** | ⬜ **not started** | — |
-| §4a | └ response seam | ⬜ | — |
-| §4b | └ request seam + jsonb opt-out | ⬜ | — |
+| **§4** | **management-be → snake_case** | 🔶 **in progress** | `management-be` `3d5c78a` |
+| §4a | └ response seam | ✅ done | `management-be` `3d5c78a` — 343 call sites, one edit |
+| §4b | └ request seam + jsonb opt-out | ✅ done | `management-be` `3d5c78a`, corrected in `327a7cb` — `OPAQUE_KEYS` derived from the 9 real jsonb columns |
 | §4c | └ zod request DTOs | ⬜ | — |
 | §4d | └ OpenAPI regeneration | ⬜ | — |
-| §4e | └ SNS `eventType` attribute + FilterPolicy | ⬜ | — |
+| §4e | └ SNS `eventType` attribute + FilterPolicy | ✅ done | `management-be` `327a7cb` + `sales-be` `5987bbf` — fixture pinned both sides |
 | §4f | └ `fe/pos-system` mirror types | ⬜ | — |
 | §4g | └ `fe/landing` (separate repo) | ⬜ | — |
 
@@ -196,6 +196,9 @@ Mitigations, to be part of the work rather than afterthoughts:
 | **A bare `date` search bound means the whole day** | `HistoricalDocumentRepository.search` reads `date` as `< next midnight` and `datetime` as `<= instant`. Collapsing them silently drops a day of results. |
 | **Every product fiscal guard is conditional** | An org that is not registered with Hacienda still needs a catalogue. Pinned by `TestNonFiscalProducts`. |
 | **Drizzle property names stay camelCase** | The ORM is already mapping them to snake_case columns; renaming 237 of them is churn that fights the library. |
+| **`OPAQUE_KEYS` is derived from the schema, never guessed** | The first version included `data` — the payload key of every paginated response and event envelope — which would have left every row in every list camelCase. The list now mirrors the nine real `jsonb` columns, in both spellings. |
+| **`codes`/`discounts`/`taxes` are opaque because they are ALREADY snake_case** | Our own fiscal structures, canonicalized by store-be's `20260521_canonicalize_product_jsonb_keys`. Running `keysToCamel` over them turns `tax_type_id` into `taxTypeId` and corrupts the row. |
+| **SNS MessageAttribute names are subscription contract** | `FilterPolicy` keys on them. Rename one side alone and the topic still accepts the message while the consumer's queue silently never matches. |
 
 ---
 
