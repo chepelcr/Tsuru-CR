@@ -7,11 +7,12 @@
 > here.
 >
 > It complements `tsuru_roadmap.md` rather than duplicating it: the roadmap
-> records *what was decided and why* (TSR-265..269); this records *where the
+> records *what was decided and why* (TSR-265..272); this records *where the
 > work is* and *what is left*.
 
-**Goal.** Every service speaks snake_case on the wire, in both directions, and
-no payload crossing a boundary is parsed as an untyped dict.
+**Goal.** Every service speaks snake_case on the wire, in both directions; no
+payload crossing a boundary is parsed as an untyped dict; and every HTTP error
+uses the same safe, catalog-backed DTO.
 
 ---
 
@@ -33,10 +34,13 @@ no payload crossing a boundary is parsed as an untyped dict.
 | §4e | └ SNS `eventType` attribute + FilterPolicy | ✅ done | `management-be` `327a7cb` + `sales-be` `5987bbf` — fixture pinned both sides |
 | §4f | └ `fe/pos-system` mirror types | ✅ done | `pos-system` `e7722ef` — type/style check + 386 tests |
 | §4g | └ `fe/landing` (separate repo) | ✅ done | `landing` `06a07ee` — typecheck + production build |
+| §7 | Common backend error response DTO | ✅ done (code) | management `d95c031`, data `23e48a4`, sales `674ae1f`, store `c369185` — enum-backed exceptions + framework/unhandled normalization |
+| §7a | Backend service + error catalogs | ✅ done (code) | management `d95c031` — migration `0022`, generated 47-service / 237-error seed and resolver APIs |
+| §7b | Support/incident observability | ✅ done (code) | management `d95c031`, data `23e48a4`, sales `674ae1f`, store `c369185`, POS `ca2d8b8` — migration `0021`, POS/landing reporters, real BE 5xx forwarding, AppSync support namespace, local admin dashboard |
 
 Previously committed rows are deployed green. The 2026-09-14 §4 completion is
-verified and committed; deployment remains pending. `fe/dashboard` is **out of
-scope** — see §4 decisions.
+verified and committed; deployment remains pending. `fe/dashboard` remains
+**local-only**, but is now intentionally used as the platform support console.
 
 ---
 
@@ -196,7 +200,9 @@ controller whitelist ordering, plus HTTP request-DTO failure cases.
 
 | Decision | Why |
 |---|---|
-| **`fe/dashboard` stays on the old contract** | Retired into the POS (roadmap TSR-091); verified nothing deploys it — no buildspec at the monorepo root, no workflow of its own. ~349 reads saved. |
+| **`fe/dashboard` stays local-only** | It is now the platform support/admin console, but the owner explicitly keeps deployment out of this implementation. It has no auto-deploy workflow. |
+| **Error `message` is the catalog code** | Human copy drifts and may leak internals. Resolve by `(service, message)`; numeric legacy codes are service-scoped, while `COMMON_*` falls back to the `common` catalog service. |
+| **Unhandled details never go on the wire** | Stack traces and exception text are logged and sent through the private support ingest path. The public DTO contains only the stable code and safe validation coordinates. |
 | **Hacienda's own field names keep their aliases** | `ind-estado`, `respuesta-xml`, `nombreEmisor`, and the Spanish public-API fields (`fecha`, `venta`, `descripcion`). That is their wire, not ours. |
 | **HTTP header names keep their aliases** | `x-user-id`, `Idempotency-Key`, `x-organization-id` — they cannot be Python identifiers. |
 | **`_type` keeps its alias** | A JSON discriminator, not a data field; a leading underscore cannot be a pydantic attribute name. |
@@ -219,7 +225,7 @@ controller whitelist ordering, plus HTTP request-DTO failure cases.
 
 ```bash
 # POS
-cd fe/pos-system && pnpm run check && npx vitest run          # 386 + locales guard
+cd fe/pos-system && pnpm run check && pnpm exec vitest run   # 386 + locales guard
 
 # sales-be
 cd be/sales-be && ./.venv/bin/python tests/local/probe_matrix.py            # 80 probes
@@ -241,6 +247,14 @@ python3 scripts/gen_api_template.py                         # 116 operations
 
 # landing (§4g)
 cd fe/landing && ./node_modules/.bin/tsc --noEmit && ./node_modules/.bin/vite build
+
+# common error catalog/contract (TSR-272)
+cd ../..
+python3 scripts/generate_backend_error_catalog.py
+cd be/management-be && pnpm run check && pnpm test
+cd ../data-be && PYTHONPATH=shared python3 -m pytest tests/test_error_contract.py -q
+cd ../sales-be && PYTHONPATH=shared python3 -m pytest shared/tests/test_error_contract.py -q
+cd ../store-be && python3 -m pytest tests/test_error_contract.py tests/test_support_incidents.py -q
 ```
 
 Live checks that have proven meaningful:

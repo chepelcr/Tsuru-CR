@@ -4,12 +4,12 @@ import {
   SidebarProvider,
   SidebarInset,
 } from "@/components/ui/sidebar";
-import { AppSidebar } from "./app-sidebar";
+import { PlatformSidebar } from './platform-sidebar';
 import { DashboardNavbar } from "./dashboard-navbar";
-import { PreDeploymentBanner } from "@/components/pre-deployment-banner";
 import { useSidebarStore } from "@/store/sidebar-store";
 import { useAuth } from "@/hooks/useAuth";
 import { PageLoader } from "@/components/ui/page-loader";
+import { usePlatformSupportEvents } from '@/hooks/usePlatformSupportEvents';
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -17,8 +17,9 @@ interface AdminLayoutProps {
 
 export function AdminLayout({ children }: AdminLayoutProps) {
   const { isCollapsed } = useSidebarStore();
-  const { isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
   const [, setLocation] = useLocation();
+  usePlatformSupportEvents(user?.role === 'platform_admin' ? user.id : undefined);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -37,12 +38,18 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     return null;
   }
 
+  if (user?.role !== 'platform_admin') {
+    return <div className="min-h-screen flex items-center justify-center p-6 text-center">
+      <div><h1 className="text-2xl font-semibold">Acceso de plataforma requerido</h1>
+        <p className="text-muted-foreground mt-2">Este panel es solo para administradores de Tsuru. Usa la aplicación POS para administrar tu organización.</p></div>
+    </div>;
+  }
+
   return (
     <SidebarProvider defaultOpen={!isCollapsed}>
-      <AppSidebar />
+      <PlatformSidebar />
       <SidebarInset>
         <DashboardNavbar />
-        <PreDeploymentBanner />
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           {children}
         </div>

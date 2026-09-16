@@ -17,7 +17,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useQueryClient } from "@tanstack/react-query";
 
 export function DashboardNavbar() {
-  const [location, setLocation, navigate] = useLocation();
+  const [location, setLocation] = useLocation();
   const { t } = useLanguage();
   const queryClient = useQueryClient();
 
@@ -56,6 +56,10 @@ export function DashboardNavbar() {
     // Map path segments to translation keys
     const labelMap: Record<string, string> = {
       admin: "nav.dashboard",
+      organizations: 'Organizaciones',
+      users: 'Usuarios',
+      tickets: 'Tickets de soporte',
+      incidents: 'Incidentes',
       products: "nav.products",
       categories: "nav.categories",
       content: "nav.content",

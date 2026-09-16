@@ -1,6 +1,9 @@
 import { Amplify } from 'aws-amplify';
 import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 
+const rawEventsEndpoint = (import.meta.env.VITE_APPSYNC_EVENTS_URL || '').trim().replace(/\/+$/, '');
+export const EVENTS_ENDPOINT = rawEventsEndpoint
+  ? (rawEventsEndpoint.endsWith('/event') ? rawEventsEndpoint : `${rawEventsEndpoint}/event`) : '';
 
 const amplifyConfig = {
   Auth: {
@@ -15,6 +18,15 @@ const amplifyConfig = {
       },
     },
   },
+  ...(import.meta.env.VITE_APPSYNC_EVENTS_URL ? {
+    API: {
+      Events: {
+        endpoint: EVENTS_ENDPOINT,
+        region: import.meta.env.VITE_AWS_REGION || 'us-east-1',
+        defaultAuthMode: 'userPool' as const,
+      },
+    },
+  } : {}),
 };
 
 Amplify.configure(amplifyConfig);

@@ -57,7 +57,7 @@ export default function Login() {
         title: t('auth.login.success'),
         description: t('auth.login.successDescription'),
       });
-      navigate("/organizations/select");
+      navigate(result.user?.role === 'platform_admin' ? '/admin' : '/organizations/select');
     } catch (error: any) {
       const errorMessage = error.message || "Invalid credentials";
 
@@ -171,18 +171,6 @@ export default function Login() {
                 onClick={() => navigate("/forgot-password")}
               >
                 {t('auth.login.forgotPassword')}
-              </Button>
-            </div>
-            <div>
-              <span className="text-muted-foreground">
-                {t('auth.login.noAccount')}{" "}
-              </span>
-              <Button
-                variant="link"
-                className="p-0 h-auto font-medium text-primary"
-                onClick={() => navigate("/register")}
-              >
-                {t('auth.login.register')}
               </Button>
             </div>
           </div>
