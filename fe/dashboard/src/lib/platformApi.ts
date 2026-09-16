@@ -1,5 +1,6 @@
 import { fetchAuthSession } from 'aws-amplify/auth';
-import { buildPublicApiUrl } from './apiUtils';
+
+const ADMIN_API_URL = (import.meta.env.VITE_ADMIN_API_URL || 'https://admin-api.tsuru.jcampos.dev').replace(/\/+$/, '');
 
 export interface PlatformOverview {
   organizations: number; users: number; open_tickets: number; incidents24h: number;
@@ -40,28 +41,30 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
   const session = await fetchAuthSession();
   const token = session.tokens?.idToken?.toString();
   if (!token) throw new Error('Authentication required');
-  const response = await fetch(buildPublicApiUrl(path), {
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  const response = await fetch(`${ADMIN_API_URL}${cleanPath}`, {
     method,
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   if (!response.ok) {
     const result = await response.json().catch(() => ({}));
-    throw new Error(result.error || `Request failed (${response.status})`);
+    throw new Error(result.message || result.error || `Request failed (${response.status})`);
   }
   return response.json() as Promise<T>;
 }
 
 export const platformApi = {
-  overview: () => request<PlatformOverview>('GET', '/admin/overview'),
+  overview: () => request<PlatformOverview>('GET', '/api/admin/overview'),
   organizations: (search = '', page = 1) => request<PlatformOrganizationsResult>('GET',
-    `/admin/organizations?search=${encodeURIComponent(search)}&page=${page}&page_size=20`),
-  users: (search = '') => request<PlatformUser[]>('GET', `/admin/users?search=${encodeURIComponent(search)}`),
-  tickets: (status = '') => request<PlatformTicket[]>('GET', `/admin/support/tickets${status ? `?status=${encodeURIComponent(status)}` : ''}`),
-  ticket: (id: string) => request<PlatformTicket>('GET', `/admin/support/tickets/${encodeURIComponent(id)}`),
+    `/api/admin/organizations?search=${encodeURIComponent(search)}&page=${page}&page_size=20`),
+  users: (search = '') => request<PlatformUser[]>('GET', `/api/admin/users?search=${encodeURIComponent(search)}`),
+  tickets: (status = '') => request<PlatformTicket[]>('GET', `/api/admin/support/tickets${status ? `?status=${encodeURIComponent(status)}` : ''}`),
+  ticket: (id: string) => request<PlatformTicket>('GET', `/api/admin/support/tickets/${encodeURIComponent(id)}`),
   updateTicket: (id: string, update: { status?: string; priority?: string }) =>
-    request<PlatformTicket>('PATCH', `/admin/support/tickets/${encodeURIComponent(id)}`, update),
-  reply: (id: string, body: string) => request('POST', `/admin/support/tickets/${encodeURIComponent(id)}/messages`, { body }),
-  incidents: () => request<PlatformIncident[]>('GET', '/admin/support/incidents'),
-  errorCatalog: () => request<BackendErrorCatalogEntry[]>('GET', '/admin/error-catalog'),
+    request<PlatformTicket>('PATCH', `/api/admin/support/tickets/${encodeURIComponent(id)}`, update),
+  reply: (id: string, body: string) => request('POST', `/api/admin/support/tickets/${encodeURIComponent(id)}/messages`, { body }),
+  incidents: () => request<PlatformIncident[]>('GET', '/api/admin/support/incidents'),
+  errorCatalog: () => request<BackendErrorCatalogEntry[]>('GET', '/api/admin/error-catalog'),
+  data: <T = unknown>(method: string, path: string, body?: unknown) => request<T>(method, path, body),
 };

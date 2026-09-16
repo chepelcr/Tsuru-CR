@@ -30,7 +30,7 @@ export default function ResetPassword() {
 
   // Password strength indicators
   const passwordChecks = {
-    minLength: newPassword.length >= 8,
+    minLength: newPassword.length >= 14,
     hasLower: /[a-z]/.test(newPassword),
     hasUpper: /[A-Z]/.test(newPassword),
     hasNumber: /[0-9]/.test(newPassword),

@@ -5,12 +5,12 @@ import { AdminLayout } from '@/components/layout/admin-layout';
 import { Router } from '@/components/Router';
 import { useAuth } from '@/hooks/useAuth';
 
-/** The dashboard is the Tsuru platform console. Organization-side workflows
- * remain in the POS app; unused legacy pages stay in source until retired. */
+/** The dashboard is the local Tsuru platform-administration console.
+ * Organization-side workflows live exclusively in the POS app. */
 export default function App() {
   const [location] = useLocation();
   const { isAuthenticated, isLoading } = useAuth();
-  const authScreen = location === '/' || ['/login', '/verify-email', '/forgot-password', '/reset-password']
+  const authScreen = location === '/' || ['/login', '/forgot-password', '/reset-password']
     .some((path) => location.startsWith(path));
 
   return <ThemeProvider>

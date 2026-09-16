@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth, type AdminChallenge } from "@/hooks/useAuth";
 import { PageLoader } from "@/components/ui/page-loader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,11 +22,14 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 export default function Login() {
   const { t } = useLanguage();
-  const { isLoading, login, forceLogout } = useAuth();
+  const { isLoading, login, answerChallenge, forceLogout } = useAuth();
   const [, navigate] = useLocation();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [sessionCleared, setSessionCleared] = useState(false);
+  const [challenge, setChallenge] = useState<AdminChallenge | null>(null);
+  const [challengeResponse, setChallengeResponse] = useState('');
+  const [loginEmail, setLoginEmail] = useState('');
 
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -44,12 +47,10 @@ export default function Login() {
   const onSubmit = async (data: LoginForm) => {
     try {
       const result = await login.mutateAsync(data);
-
-      if (result.needsVerification) {
-        // Store email for verification page
-        sessionStorage.setItem('verificationEmail', data.email);
-        sessionStorage.setItem('verificationPassword', data.password);
-        navigate("/verify-email");
+      if (result.challenge) {
+        setLoginEmail(data.email);
+        setChallenge(result.challenge);
+        setChallengeResponse('');
         return;
       }
 
@@ -57,23 +58,31 @@ export default function Login() {
         title: t('auth.login.success'),
         description: t('auth.login.successDescription'),
       });
-      navigate(result.user?.role === 'platform_admin' ? '/admin' : '/organizations/select');
+      navigate('/admin');
     } catch (error: any) {
       const errorMessage = error.message || "Invalid credentials";
-
-      // Handle specific Cognito errors
-      if (errorMessage.includes('UserNotConfirmedException')) {
-        sessionStorage.setItem('verificationEmail', data.email);
-        sessionStorage.setItem('verificationPassword', data.password);
-        navigate("/verify-email");
-        return;
-      }
 
       toast({
         title: t('auth.login.error'),
         description: errorMessage,
         variant: "destructive",
       });
+    }
+  };
+
+  const onChallenge = async (event: React.FormEvent) => {
+    event.preventDefault();
+    try {
+      const result = await answerChallenge.mutateAsync({ response: challengeResponse, email: loginEmail });
+      if (result.challenge) {
+        setChallenge(result.challenge);
+        setChallengeResponse('');
+        return;
+      }
+      toast({ title: 'Acceso confirmado', description: 'La sesión administrativa está lista.' });
+      navigate('/admin');
+    } catch (error: any) {
+      toast({ title: 'No se pudo completar el acceso', description: error.message || 'Respuesta inválida', variant: 'destructive' });
     }
   };
 
@@ -93,6 +102,33 @@ export default function Login() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {challenge ? <form onSubmit={onChallenge} className="space-y-4">
+            <div className="rounded-md border bg-muted p-3 text-sm">
+              {challenge.step === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED'
+                ? 'Crea una contraseña administrativa permanente de al menos 14 caracteres.'
+                : challenge.step === 'CONTINUE_SIGN_IN_WITH_TOTP_SETUP'
+                  ? 'Configura MFA en tu aplicación autenticadora y escribe el código de seis dígitos.'
+                  : 'Escribe el código de seis dígitos de tu aplicación autenticadora.'}
+            </div>
+            {challenge.sharedSecret && <div className="space-y-1 text-sm">
+              <div className="font-medium">Clave de configuración MFA</div>
+              <code className="block break-all rounded bg-muted p-3">{challenge.sharedSecret}</code>
+              {challenge.setupUri && <a className="text-primary underline" href={challenge.setupUri}>Abrir en el autenticador</a>}
+            </div>}
+            <Input
+              type={challenge.step === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED' ? 'password' : 'text'}
+              autoComplete={challenge.step === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED' ? 'new-password' : 'one-time-code'}
+              minLength={challenge.step === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED' ? 14 : undefined}
+              inputMode={challenge.step === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED' ? undefined : 'numeric'}
+              value={challengeResponse}
+              onChange={(event) => setChallengeResponse(challenge.step === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED'
+                ? event.target.value : event.target.value.replace(/\D/g, '').slice(0, 6))}
+              placeholder={challenge.step === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED' ? 'Nueva contraseña' : '000000'}
+              required
+            />
+            <Button className="w-full" type="submit" disabled={answerChallenge.isPending || !challengeResponse}>Continuar</Button>
+            <Button className="w-full" type="button" variant="outline" onClick={() => { setChallenge(null); setChallengeResponse(''); }}>Cancelar</Button>
+          </form> : <>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
@@ -174,6 +210,7 @@ export default function Login() {
               </Button>
             </div>
           </div>
+          </>}
         </CardContent>
       </Card>
     </div>

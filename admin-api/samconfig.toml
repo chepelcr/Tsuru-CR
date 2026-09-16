@@ -1,0 +1,28 @@
+version = 0.1
+
+[dev.deploy.parameters]
+stack_name = "tsuru-dev-admin-api"
+s3_bucket = "tsuru-dev-sam-deployments"
+s3_prefix = "admin-api"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = false
+fail_on_empty_changeset = false
+
+[stag.deploy.parameters]
+stack_name = "tsuru-stag-admin-api"
+s3_bucket = "tsuru-stag-sam-deployments"
+s3_prefix = "admin-api"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = false
+fail_on_empty_changeset = false
+
+[prod.deploy.parameters]
+stack_name = "tsuru-prod-admin-api"
+s3_bucket = "tsuru-prod-sam-deployments"
+s3_prefix = "admin-api"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = false
+fail_on_empty_changeset = false

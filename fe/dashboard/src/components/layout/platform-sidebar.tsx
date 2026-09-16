@@ -1,5 +1,5 @@
 import { useLocation } from 'wouter';
-import { Activity, Building2, LayoutDashboard, LifeBuoy, LogOut, Users } from 'lucide-react';
+import { Activity, Building2, Database, LayoutDashboard, LifeBuoy, LogOut, Users } from 'lucide-react';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
   SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { useAuth } from '@/hooks/useAuth';
@@ -10,6 +10,7 @@ const navigation = [
   { path: '/admin/users', label: 'Usuarios', icon: Users },
   { path: '/admin/tickets', label: 'Tickets de soporte', icon: LifeBuoy },
   { path: '/admin/incidents', label: 'Incidentes', icon: Activity },
+  { path: '/admin/data', label: 'Catálogos de datos', icon: Database },
 ];
 
 export function PlatformSidebar() {

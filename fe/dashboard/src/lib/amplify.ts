@@ -9,9 +9,10 @@ const amplifyConfig = {
   Auth: {
     Cognito: {
       region: import.meta.env.VITE_AWS_REGION || 'us-east-1',
-      userPoolId: import.meta.env.VITE_AWS_COGNITO_USER_POOL_ID || '',
-      userPoolClientId: import.meta.env.VITE_AWS_COGNITO_CLIENT_ID || '',
-      signUpVerificationMethod: 'code' as const,
+      // Deliberately no fallback to the normal/POS pool. This console accepts
+      // identities only from the dedicated admin Cognito stack.
+      userPoolId: import.meta.env.VITE_ADMIN_COGNITO_USER_POOL_ID || '',
+      userPoolClientId: import.meta.env.VITE_ADMIN_COGNITO_CLIENT_ID || '',
       loginWith: {
         email: true,
         username: false,

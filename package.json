@@ -4,9 +4,11 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
+    "generate:admin-api": "python3 admin-api/generate_admin_api.py",
+    "deploy:admin-api": "bash admin-api/deploy.sh",
     "dev": "cross-env NODE_ENV=development tsx server/src/index.ts",
     "dev:landing": "cd fe/landing && npm run dev",
-    "dev:dashboard": "cd fe/dashboard && npm run dev",
+    "dev:dashboard": "pnpm --dir fe/dashboard dev",
     "dev:pos": "cd fe/pos-system && npm run dev",
     "dev:all": "concurrently -n \"server,landing,dashboard\" -c \"blue,green,yellow\" \"npm run dev\" \"npm run dev:landing\" \"npm run dev:dashboard\"",
     "dev:all:pos": "concurrently -n \"server,landing,dashboard,pos\" -c \"blue,green,yellow,magenta\" \"npm run dev\" \"npm run dev:landing\" \"npm run dev:dashboard\" \"npm run dev:pos\"",
@@ -50,7 +52,7 @@
     "dev:template:pollo-porteno": "cd templates/pollo-porteno && npm run dev",
     "build:template:pollo-porteno": "cd templates/pollo-porteno && npm install && npm run build",
     "build:templates": "npm run build:template:tsuru-demo && npm run build:template:tech-gadgets && npm run build:template:vintage-fashion && npm run build:template:artisan-crafts && npm run build:template:gourmet-foods && npm run build:template:fitness-hub && npm run build:template:pet-care && npm run build:template:beauty-essentials && npm run build:template:pollo-porteno",
-    "build:dashboard": "cd fe/dashboard && npm run build",
+    "build:dashboard": "pnpm --dir fe/dashboard build",
     "deploy:all-frontend": "npm run build:templates && npm run build:dashboard && node setup-template-bucket.js"
   },
   "dependencies": {

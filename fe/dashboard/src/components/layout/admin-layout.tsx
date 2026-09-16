@@ -38,13 +38,6 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     return null;
   }
 
-  if (user?.role !== 'platform_admin') {
-    return <div className="min-h-screen flex items-center justify-center p-6 text-center">
-      <div><h1 className="text-2xl font-semibold">Acceso de plataforma requerido</h1>
-        <p className="text-muted-foreground mt-2">Este panel es solo para administradores de Tsuru. Usa la aplicación POS para administrar tu organización.</p></div>
-    </div>;
-  }
-
   return (
     <SidebarProvider defaultOpen={!isCollapsed}>
       <PlatformSidebar />
