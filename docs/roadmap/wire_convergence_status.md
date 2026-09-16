@@ -36,7 +36,7 @@ uses the same safe, catalog-backed DTO.
 | §4g | └ `fe/landing` (separate repo) | ✅ done | `landing` `06a07ee` — typecheck + production build |
 | §7 | Common backend error response DTO | ✅ done (code) | management `d95c031`, data `23e48a4`, sales `674ae1f`, store `c369185` — enum-backed exceptions + framework/unhandled normalization |
 | §7a | Backend service + error catalogs | ✅ done (code) | management `d95c031` — migration `0022`, generated 47-service / 237-error seed and resolver APIs |
-| §7b | Support/incident observability | ✅ done (code) | management `d95c031`, data `23e48a4`, sales `674ae1f`, store `c369185`, POS `ca2d8b8` — migration `0021`, POS/landing reporters, real BE 5xx forwarding, AppSync support namespace, local admin dashboard |
+| §7b | Support/incident observability | ✅ done (code) | root `4656168`, management `d95c031`, data `23e48a4`, sales `674ae1f`, store `c369185`, POS `ca2d8b8` — migration `0021`, POS/landing reporters, real BE 5xx forwarding, AppSync support namespace, local admin dashboard |
 
 Previously committed rows are deployed green. The 2026-09-14 §4 completion is
 verified and committed; deployment remains pending. `fe/dashboard` remains
