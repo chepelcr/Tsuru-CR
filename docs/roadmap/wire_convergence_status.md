@@ -7,7 +7,7 @@
 > here.
 >
 > It complements `tsuru_roadmap.md` rather than duplicating it: the roadmap
-> records *what was decided and why* (TSR-265..272); this records *where the
+> records *what was decided and why* (TSR-265..274); this records *where the
 > work is* and *what is left*.
 
 **Goal.** Every service speaks snake_case on the wire, in both directions; no
@@ -37,10 +37,13 @@ uses the same safe, catalog-backed DTO.
 | §7 | Common backend error response DTO | ✅ done (code) | management `d95c031`, data `23e48a4`, sales `674ae1f`, store `c369185` — enum-backed exceptions + framework/unhandled normalization |
 | §7a | Backend service + error catalogs | ✅ done (code) | management `d95c031` — migration `0022`, generated 47-service / 237-error seed and resolver APIs |
 | §7b | Support/incident observability | ✅ done (code) | root `4656168`, management `d95c031`, data `23e48a4`, sales `674ae1f`, store `c369185`, POS `ca2d8b8` — migration `0021`, POS/landing reporters, real BE 5xx forwarding, AppSync support namespace, local admin dashboard |
+| §7c | Dedicated admin identity/API + data editor | ✅ done (code; manual deploy pending) | root `e9e3567`, management `0d3a930`, data `4238cf6`, sales `05690f0` — normal APIs exclude admin writes; root manual gateway + isolated admin Cognito own the control plane |
 
 Previously committed rows are deployed green. The 2026-09-14 §4 completion is
 verified and committed; deployment remains pending. `fe/dashboard` remains
 **local-only**, but is now intentionally used as the platform support console.
+Its authentication and API traffic use only the dedicated admin plane; the
+normal customer/POS Cognito pool is not a fallback.
 
 ---
 
@@ -201,6 +204,9 @@ controller whitelist ordering, plus HTTP request-DTO failure cases.
 | Decision | Why |
 |---|---|
 | **`fe/dashboard` stays local-only** | It is now the platform support/admin console, but the owner explicitly keeps deployment out of this implementation. It has no auto-deploy workflow. |
+| **The admin API deploys manually from the root repository** | It is a control-plane composition over existing management/data Lambdas, not another backend service. `admin-api/generate_admin_api.py` owns the explicit route allowlist and `pnpm run deploy:admin-api -- <env> <profile>` is the only deployment entry point. |
+| **Normal APIs never publish platform-admin writes** | The management generator excludes `/api/admin/**`; the data generator remains GET-only. The dedicated gateway publishes both sets behind the isolated admin pool, and management additionally verifies the pool issuer/client from stage variables. |
+| **Data-editor forms are generated from OpenAPI** | Thirty mutable catalog services expose their actual path parameters and request fields; import-only CABYS is not mislabeled as a JSON create form. The manifest regenerates with the gateway so the dashboard does not maintain another hand-written catalog contract. |
 | **Error `message` is the catalog code** | Human copy drifts and may leak internals. Resolve by `(service, message)`; numeric legacy codes are service-scoped, while `COMMON_*` falls back to the `common` catalog service. |
 | **Unhandled details never go on the wire** | Stack traces and exception text are logged and sent through the private support ingest path. The public DTO contains only the stable code and safe validation coordinates. |
 | **Hacienda's own field names keep their aliases** | `ind-estado`, `respuesta-xml`, `nombreEmisor`, and the Spanish public-API fields (`fecha`, `venta`, `descripcion`). That is their wire, not ours. |
@@ -255,6 +261,14 @@ cd be/management-be && pnpm run check && pnpm test
 cd ../data-be && PYTHONPATH=shared python3 -m pytest tests/test_error_contract.py -q
 cd ../sales-be && PYTHONPATH=shared python3 -m pytest shared/tests/test_error_contract.py -q
 cd ../store-be && python3 -m pytest tests/test_error_contract.py tests/test_support_incidents.py -q
+
+# dedicated admin control plane (TSR-274; validates only, does not deploy)
+cd ../..
+pnpm run generate:admin-api
+sam validate --lint --template-file admin-api/admin-cognito.yml
+sam validate --lint --template-file admin-api/template.yml
+cd fe/dashboard && pnpm run check && pnpm run build
+cd ../../be/management-be && pnpm run check && pnpm test
 ```
 
 Live checks that have proven meaningful:
