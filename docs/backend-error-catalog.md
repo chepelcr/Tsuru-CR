@@ -35,6 +35,7 @@ Every backend error response uses `message` as a stable code. The admin control 
 | `hacienda-history` | `sales-be` |
 | `identifications` | `data-be` |
 | `infrastructure-service-provider` | `sales-be` |
+| `lambda-authorizer` | `sales-be` |
 | `locations` | `data-be` |
 | `measurement-units` | `data-be` |
 | `national-taxpayer-companies` | `data-be` |

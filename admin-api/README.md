@@ -23,10 +23,9 @@ Manual deployment:
 pnpm run deploy:admin-api -- dev PACIFIC-PROD
 ```
 
-After deployment, create administrators with Cognito `admin-create-user` and
-copy the stack's `UserPoolId` and `UserPoolClientId` outputs into the local
-dashboard environment. Self-registration is disabled and software-token MFA
-is mandatory.
+After deployment, create administrators with Cognito `admin-create-user`.
+Self-registration is disabled and software-token MFA is mandatory. Dashboard
+configuration is materialized from SSM rather than copied by hand.
 
 The command deploys, in order:
 
@@ -37,8 +36,10 @@ The command deploys, in order:
    Cognito authorizer, route allowlist, and scoped invoke permissions for the
    existing management/data Lambdas.
 
-It does not deploy a backend Lambda, the AppSync Events stack, or the local
-dashboard. To enable live support hints after the pool exists, update
+It does not deploy a backend Lambda, the AppSync Events stack, or the dashboard
+site. The root `deploys/deploy-support-control-plane.sh` command composes those
+pieces and invokes the private dashboard's manual S3/CloudFront deployment.
+To enable live support hints after the pool exists, update
 `be/sales-be/cloudformation/appsync-events.yml` with the admin stack's
 `UserPoolId` as `AdminUserPoolId`. Configure `fe/dashboard/.env` from the two
 Cognito outputs and the `ApiEndpoint` output, then run:

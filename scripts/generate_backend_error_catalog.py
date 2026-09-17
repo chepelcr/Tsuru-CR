@@ -110,7 +110,7 @@ for path in sorted((ROOT / "be/data-be").glob("**/enums/exception_codes.py")):
 
 sales_services = [
     "api-key-management", "document-notification", "document-pdf-generator",
-    "document-validator", "hacienda-history", "infrastructure-service-provider",
+    "document-validator", "hacienda-history", "infrastructure-service-provider", "lambda-authorizer",
     "organization-configurations", "registered-organizations", "sales-api", "user-notifications",
 ]
 for code in sales_services:

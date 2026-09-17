@@ -70,3 +70,9 @@ HOSTED_ZONE_ID="${SUPPORT_HOSTED_ZONE_ID}" \
 # This repeats the Cognito deployment as a no-op, then composes support/admin
 # routes and writes the local dashboard's SSM build configuration.
 bash admin-api/deploy.sh "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"
+
+if [[ ! -x fe/dashboard/deploys/deploy.sh ]]; then
+  echo "Missing the private dashboard checkout at fe/dashboard." >&2
+  exit 1
+fi
+bash fe/dashboard/deploys/deploy.sh "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"

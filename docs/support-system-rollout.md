@@ -17,7 +17,7 @@ POS only calls support-be for deliberate user ticket actions.
 3. SNS message-attribute filters deliver audit and error events to independent
    SQS queues and DLQs. The support Lambda consumes both with partial-batch
    failure reporting and idempotent event IDs.
-4. The local admin dashboard reads tickets, backend errors, the catalog, and
+4. The administrator dashboard reads tickets, backend errors, the catalog, and
    audit history through the dedicated admin API/Cognito plane. The customer
    support gateway at `https://support.tsuru.jcampos.dev` exposes only
    `/api/support/**`; `/api/admin/**` is omitted.
@@ -41,11 +41,12 @@ run from the root repository:
 bash deploys/deploy-support-control-plane.sh dev PACIFIC-PROD
 ```
 
-That command deploys the support Lambda, the two SNS/SQS event stacks, the
-customer support gateway, then regenerates/deploys the admin Cognito/API and
-its `/tsuru/dev/admin-dashboard/**` SSM template. It finally updates the
-existing AppSync Events stack with the isolated admin pool and the authorized
-`/support/platform` channel. The support gateway owns
+That command deploys admin Cognito, authorizes its `/support/platform` channel
+on the existing AppSync Events stack, deploys the support Lambda and two
+SNS/SQS event stacks, and wires the customer support and private administrator
+API gateways. It then writes `/tsuru/dev/admin-dashboard/**`, builds the
+private dashboard with pnpm, and publishes the manual S3/CloudFront site at
+`https://admin.tsuru.jcampos.dev`. The support gateway owns
 `/tsuru/dev/platform/api/support-url`, which POS resolves during its pnpm build.
 
 The command deliberately does not mutate the database. Apply the migration and
@@ -71,8 +72,8 @@ not depend on a support-stack export. The current image/code pipelines do not
 apply Lambda-role template changes: explicitly run data-be and sales-be
 `deploys/deploy-sam-stacks.sh`, store-be `deploys/deploy-lambda.sh`, and the
 management role/IAM rollout after reviewing that repo's placeholder-code
-warning. Then deploy POS so
-`VITE_SUPPORT_API_URL` is loaded from SSM. Keep `fe/dashboard` local:
+warning. Then deploy POS so `VITE_SUPPORT_API_URL` is loaded from SSM. The
+dashboard can also still run locally against the same deployed control plane:
 
 ```bash
 pnpm --dir fe/dashboard env:ssm -- dev PACIFIC-PROD
