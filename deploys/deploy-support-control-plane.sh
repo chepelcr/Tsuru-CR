@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Manually deploy support-be first, then refresh the dedicated admin API edge.
+# Manually deploy the identity/events prerequisites, support-be, then admin edge.
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -26,16 +26,18 @@ if [[ -z "${SUPPORT_HOSTED_ZONE_ID}" || "${SUPPORT_HOSTED_ZONE_ID}" == "None" ]]
   exit 1
 fi
 
-COGNITO_POOL_ID="${COGNITO_POOL_ID}" \
-API_DOMAIN="${SUPPORT_API_DOMAIN:-support.tsuru.jcampos.dev}" \
-HOSTED_ZONE_ID="${SUPPORT_HOSTED_ZONE_ID}" \
-  bash be/support-be/deploys/deploy-all.sh "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"
+# Create the admin identity first. AppSync must trust this pool before the
+# support Lambda can import the Events API ARN, while the composed admin API
+# itself must wait until the support Lambda exists.
+echo "Deploying the dedicated admin Cognito prerequisite..."
+aws cloudformation deploy \
+  --stack-name "tsuru-${ENVIRONMENT}-admin-cognito" \
+  --template-file admin-api/admin-cognito.yml \
+  --parameter-overrides "Environment=${ENVIRONMENT}" \
+  --no-fail-on-empty-changeset \
+  --profile "${AWS_PROFILE_NAME}" \
+  --region "${AWS_REGION:-us-east-1}"
 
-bash admin-api/deploy.sh "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"
-
-# Add the isolated administrator pool to AppSync Events and enable the shared
-# /support/platform subscription. This remains part of the same explicit,
-# root-owned rollout; neither private repo auto-deploys it.
 ADMIN_POOL_ID="$(aws cloudformation describe-stacks \
   --stack-name "tsuru-${ENVIRONMENT}-admin-cognito" \
   --profile "${AWS_PROFILE_NAME}" --region "${AWS_REGION:-us-east-1}" \
@@ -59,3 +61,12 @@ aws cloudformation deploy \
   --no-fail-on-empty-changeset \
   --profile "${AWS_PROFILE_NAME}" \
   --region "${AWS_REGION:-us-east-1}"
+
+COGNITO_POOL_ID="${COGNITO_POOL_ID}" \
+API_DOMAIN="${SUPPORT_API_DOMAIN:-support.tsuru.jcampos.dev}" \
+HOSTED_ZONE_ID="${SUPPORT_HOSTED_ZONE_ID}" \
+  bash be/support-be/deploys/deploy-all.sh "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"
+
+# This repeats the Cognito deployment as a no-op, then composes support/admin
+# routes and writes the local dashboard's SSM build configuration.
+bash admin-api/deploy.sh "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"
