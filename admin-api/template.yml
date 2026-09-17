@@ -91,8 +91,8 @@ Resources:
         paths:
           /api/admin/error-catalog:
             get:
-              operationId: admin_platform_api_get
-              summary: List the complete backend error catalog
+              operationId: admin_support_api_admin_error_catalog_api_admin_error_catalog_get
+              summary: Admin Error Catalog
               responses:
                 '200':
                   description: OK
@@ -110,7 +110,7 @@ Resources:
               - AdminCognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations'
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-support-api-lambda/invocations'
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -378,7 +378,7 @@ Resources:
           /api/admin/overview:
             get:
               operationId: admin_platform_api_get
-              summary: Platform organizations, users, tickets and incidents summary
+              summary: Count organizations and registered users
               responses:
                 '200':
                   description: OK
@@ -890,10 +890,10 @@ Resources:
                       method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Requested-With'''
                       method.response.header.Access-Control-Allow-Methods: '''GET,OPTIONS,PUT'''
                       method.response.header.Access-Control-Allow-Origin: '''*'''
-          /api/admin/support/incidents:
+          /api/admin/support/audit:
             get:
-              operationId: admin_platform_api_get
-              summary: List POS failures with module, error, user and organization
+              operationId: admin_support_api_admin_audit_api_admin_support_audit_get
+              summary: Admin Audit
               responses:
                 '200':
                   description: OK
@@ -911,7 +911,114 @@ Resources:
               - AdminCognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations'
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-support-api-lambda/invocations'
+                passthroughBehavior: when_no_match
+                contentHandling: CONVERT_TO_TEXT
+                type: aws_proxy
+              parameters:
+              - name: service
+                in: query
+                required: false
+                schema:
+                  type: string
+              - name: organization_id
+                in: query
+                required: false
+                schema:
+                  type: string
+              - name: status_code
+                in: query
+                required: false
+                schema:
+                  type: string
+              - name: limit
+                in: query
+                required: false
+                schema:
+                  type: integer
+            options:
+              responses:
+                '200':
+                  description: CORS OK
+              x-amazon-apigateway-integration:
+                type: mock
+                requestTemplates:
+                  application/json: '{"statusCode": 200}'
+                responses:
+                  default:
+                    statusCode: '200'
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Requested-With'''
+                      method.response.header.Access-Control-Allow-Methods: '''GET,OPTIONS'''
+                      method.response.header.Access-Control-Allow-Origin: '''*'''
+          /api/admin/support/incidents:
+            get:
+              operationId: admin_support_api_admin_errors_api_admin_support_incidents_get
+              summary: Admin Errors
+              responses:
+                '200':
+                  description: OK
+                '201':
+                  description: Created
+                '400':
+                  description: Bad Request
+                '401':
+                  description: Unauthorized
+                '403':
+                  description: Forbidden
+                '404':
+                  description: Not Found
+              security:
+              - AdminCognitoAuthorizer: []
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-support-api-lambda/invocations'
+                passthroughBehavior: when_no_match
+                contentHandling: CONVERT_TO_TEXT
+                type: aws_proxy
+              parameters:
+              - name: limit
+                in: query
+                required: false
+                schema:
+                  type: integer
+            options:
+              responses:
+                '200':
+                  description: CORS OK
+              x-amazon-apigateway-integration:
+                type: mock
+                requestTemplates:
+                  application/json: '{"statusCode": 200}'
+                responses:
+                  default:
+                    statusCode: '200'
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Requested-With'''
+                      method.response.header.Access-Control-Allow-Methods: '''GET,OPTIONS'''
+                      method.response.header.Access-Control-Allow-Origin: '''*'''
+          /api/admin/support/overview:
+            get:
+              operationId: admin_support_api_admin_overview_api_admin_support_overview_get
+              summary: Admin Overview
+              responses:
+                '200':
+                  description: OK
+                '201':
+                  description: Created
+                '400':
+                  description: Bad Request
+                '401':
+                  description: Unauthorized
+                '403':
+                  description: Forbidden
+                '404':
+                  description: Not Found
+              security:
+              - AdminCognitoAuthorizer: []
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-support-api-lambda/invocations'
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -932,8 +1039,8 @@ Resources:
                       method.response.header.Access-Control-Allow-Origin: '''*'''
           /api/admin/support/tickets:
             get:
-              operationId: admin_platform_api_get
-              summary: List support tickets across organizations
+              operationId: admin_support_api_admin_tickets_api_admin_support_tickets_get
+              summary: Admin Tickets
               responses:
                 '200':
                   description: OK
@@ -951,7 +1058,7 @@ Resources:
               - AdminCognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations'
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-support-api-lambda/invocations'
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -976,10 +1083,10 @@ Resources:
                       method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Requested-With'''
                       method.response.header.Access-Control-Allow-Methods: '''GET,OPTIONS'''
                       method.response.header.Access-Control-Allow-Origin: '''*'''
-          /api/admin/support/tickets/{ticketId}:
+          /api/admin/support/tickets/{ticket_id}:
             get:
-              operationId: admin_platform_api_get
-              summary: Get a ticket and all messages
+              operationId: admin_support_api_admin_ticket_api_admin_support_tickets__ticket_id__get
+              summary: Admin Ticket
               responses:
                 '200':
                   description: OK
@@ -997,19 +1104,19 @@ Resources:
               - AdminCognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations'
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-support-api-lambda/invocations'
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
               parameters:
-              - name: ticketId
+              - name: ticket_id
                 in: path
                 required: true
                 schema:
                   type: string
             patch:
-              operationId: admin_platform_api_patch
-              summary: Update ticket status or priority
+              operationId: admin_support_api_admin_update_ticket_api_admin_support_tickets__ticket_id__patch
+              summary: Admin Update Ticket
               responses:
                 '200':
                   description: OK
@@ -1027,10 +1134,16 @@ Resources:
               - AdminCognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations'
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-support-api-lambda/invocations'
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
+              parameters:
+              - name: ticket_id
+                in: path
+                required: true
+                schema:
+                  type: string
               requestBody:
                 required: true
                 content:
@@ -1052,10 +1165,10 @@ Resources:
                       method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Requested-With'''
                       method.response.header.Access-Control-Allow-Methods: '''GET,OPTIONS,PATCH'''
                       method.response.header.Access-Control-Allow-Origin: '''*'''
-          /api/admin/support/tickets/{ticketId}/messages:
-            post:
-              operationId: admin_platform_api_post
-              summary: Reply to a user's ticket as platform support
+          /api/admin/support/tickets/{ticket_id}/evidence/{evidence_id}/download:
+            get:
+              operationId: admin_support_api_admin_download_evidence_api_admin_support_tickets__ticket_id__evidence__evidence_id__download_get
+              summary: Admin Download Evidence
               responses:
                 '200':
                   description: OK
@@ -1073,12 +1186,63 @@ Resources:
               - AdminCognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations'
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-support-api-lambda/invocations'
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
               parameters:
-              - name: ticketId
+              - name: ticket_id
+                in: path
+                required: true
+                schema:
+                  type: string
+              - name: evidence_id
+                in: path
+                required: true
+                schema:
+                  type: string
+            options:
+              responses:
+                '200':
+                  description: CORS OK
+              x-amazon-apigateway-integration:
+                type: mock
+                requestTemplates:
+                  application/json: '{"statusCode": 200}'
+                responses:
+                  default:
+                    statusCode: '200'
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Requested-With'''
+                      method.response.header.Access-Control-Allow-Methods: '''GET,OPTIONS'''
+                      method.response.header.Access-Control-Allow-Origin: '''*'''
+          /api/admin/support/tickets/{ticket_id}/messages:
+            post:
+              operationId: admin_support_api_admin_add_message_api_admin_support_tickets__ticket_id__messages_post
+              summary: Admin Add Message
+              responses:
+                '200':
+                  description: OK
+                '201':
+                  description: Created
+                '400':
+                  description: Bad Request
+                '401':
+                  description: Unauthorized
+                '403':
+                  description: Forbidden
+                '404':
+                  description: Not Found
+              security:
+              - AdminCognitoAuthorizer: []
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-support-api-lambda/invocations'
+                passthroughBehavior: when_no_match
+                contentHandling: CONVERT_TO_TEXT
+                type: aws_proxy
+              parameters:
+              - name: ticket_id
                 in: path
                 required: true
                 schema:
@@ -10628,6 +10792,13 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AdminApi}/*'
+  LambdaPermissionSupportApi:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Sub 'tsuru-${Environment}-support-api-lambda'
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AdminApi}/*'
   LambdaPermissionTaxAmounts:
     Type: AWS::Lambda::Permission
     Properties:
@@ -10682,3 +10853,5 @@ Outputs:
     Value: !Ref 'AdminApi'
   ApiEndpoint:
     Value: !Sub 'https://${DomainName}'
+    Export:
+      Name: !Sub 'tsuru-${Environment}-admin-api-endpoint'

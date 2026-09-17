@@ -89,16 +89,17 @@ E:/dev/Tsuru/                         # monorepo (chepelcr/Tsuru-CR) — branch:
 │  ├─ landing/                        # chepelcr/tsuru-landing            (GH Pages)   [ignored]
 │  ├─ pos-system/                     # chepelcr/tsuru-pos-system         (GH Pages)   [ignored]
 │  ├─ storefront-sdk/                 # chepelcr/tsuru-storefront-sdk     (GH Packages)[ignored]
-│  └─ dashboard/                      # TRACKED in the monorepo (being retired, TSR-091)
+│  └─ dashboard/                      # chepelcr/tsuru-admin-dashboard (private/local-only) [ignored]
 ├─ be/
 │  ├─ management-be/                  # chepelcr/tsuru-management-be (private)          [ignored]
 │  ├─ store-be/                       # chepelcr/tsuru-store-be                          [ignored]
 │  ├─ sales-be/                       # chepelcr/tsuru-sales-be                          [ignored]
-│  └─ data-be/                        # chepelcr/tsuru-data-be                           [ignored]
+│  ├─ data-be/                        # chepelcr/tsuru-data-be                           [ignored]
+│  └─ support-be/                     # chepelcr/tsuru-support-be (private/manual deploy)[ignored]
 ├─ templates/
 │  ├─ gourmet-foods/  …               # chepelcr/template-<name> (×8)                   [ignored]
 ├─ Infrastructure/                    # chepelcr/tsuru-infrastructure (public-api gen, cognito, iam) [ignored]
-└─ (docs, cloudformation, deploys, fe/dashboard — tracked)
+└─ (docs, cloudformation, deploys, admin-api — tracked)
 ```
 
 Clone commands (run from `E:/dev/Tsuru`):
@@ -111,6 +112,8 @@ git clone https://github.com/chepelcr/tsuru-management-be.git    be/management-b
 git clone https://github.com/chepelcr/tsuru-store-be.git         be/store-be
 git clone https://github.com/chepelcr/tsuru-sales-be.git         be/sales-be
 git clone https://github.com/chepelcr/tsuru-data-be.git          be/data-be
+git clone https://github.com/chepelcr/tsuru-support-be.git       be/support-be
+git clone https://github.com/chepelcr/tsuru-admin-dashboard.git  fe/dashboard
 for n in gourmet-foods artisan-crafts beauty-essentials fitness-hub \
          tsuru-demo pet-care tech-gadgets vintage-fashion; do
   git clone "https://github.com/chepelcr/template-$n.git" "templates/$n"
@@ -151,7 +154,7 @@ export NODE_AUTH_TOKEN=$(gh auth token)   # gh account must have read:packages
 
 ## 6. Per-component config & how to run
 
-### Backends (management-be / store-be / sales-be / data-be)
+### Backends (management-be / store-be / sales-be / data-be / support-be)
 - Config resolves: env vars first → else AppConfig → SSM `/tsuru/{env}/{service}/…`
   → DB creds via Secrets Manager `tsuru/{env}/database`.
 - Local `.env` (gitignored) per repo — see each `.env.example`. Never commit real values.
@@ -160,14 +163,17 @@ export NODE_AUTH_TOKEN=$(gh auth token)   # gh account must have read:packages
   (schema is otherwise synced via `db:push`; there is no drizzle migration table).
 - **store/sales/data-be** (Python): `pip install -r requirements.txt`; alembic under
   `alembic/`. Deploy via each repo's GH Actions (OIDC → ECR/SAM) or `deploys/*.sh`.
+- **support-be** (Python): generated standalone FastAPI Lambda. CI validates only;
+  deploy manually from root with `bash deploys/deploy-support-control-plane.sh dev PACIFIC-PROD`.
 
 ### Frontends
 - **landing** (`fe/landing`): pnpm; GH Pages at `tsuru.jcampos.dev`. Build env in the
   workflow / repo secrets (`VITE_API_URL=https://api.tsuru.jcampos.dev`, Cognito ids).
 - **pos-system** (`fe/pos-system`): pnpm; GH Pages at `app.tsuru.jcampos.dev`. Reads
-  `VITE_API_URL`/`VITE_ORDERS_API_URL`/`VITE_SALES_API_URL`/`VITE_DATA_API_URL`
+  `VITE_API_URL`/`VITE_ORDERS_API_URL`/`VITE_SALES_API_URL`/`VITE_DATA_API_URL`/`VITE_SUPPORT_API_URL`
   (all `*.tsuru.jcampos.dev`) + Cognito ids.
-- **dashboard** (`fe/dashboard`, tracked): built by the monorepo pipeline.
+- **dashboard** (`fe/dashboard`, private standalone repo): local-only. Run
+  `pnpm run env:ssm -- dev PACIFIC-PROD && pnpm run dev`; its CI does not deploy.
 - **templates** (`templates/*`): pnpm; GH Pages at `{name}.examples.tsuru.jcampos.dev`.
   Each `main.tsx` calls `configureStorefrontAmplify({identityPoolId, region})`; the
   demo `public/config.json` carries the **template UUID**; workflow env supplies

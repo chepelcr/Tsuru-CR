@@ -26,6 +26,9 @@ fi
 aws cloudformation validate-template \
   --template-body file://admin-api/admin-cognito.yml \
   --profile "${AWS_PROFILE}" --region "${DEPLOY_REGION}" >/dev/null
+aws cloudformation validate-template \
+  --template-body file://admin-api/admin-dashboard-params.yml \
+  --profile "${AWS_PROFILE}" --region "${DEPLOY_REGION}" >/dev/null
 sam validate --lint --template-file admin-api/template.yml
 
 echo "Deploying dedicated admin Cognito stack..."
@@ -46,5 +49,14 @@ sam deploy \
   --profile "${AWS_PROFILE}" \
   --region "${DEPLOY_REGION}" \
   --no-fail-on-empty-changeset
+
+echo "Writing admin dashboard build configuration to SSM..."
+aws cloudformation deploy \
+  --stack-name "tsuru-${ENVIRONMENT}-admin-dashboard-params" \
+  --template-file admin-api/admin-dashboard-params.yml \
+  --parameter-overrides "Environment=${ENVIRONMENT}" \
+  --no-fail-on-empty-changeset \
+  --profile "${AWS_PROFILE}" \
+  --region "${DEPLOY_REGION}"
 
 echo "Admin API deployed at https://${ADMIN_DOMAIN}"

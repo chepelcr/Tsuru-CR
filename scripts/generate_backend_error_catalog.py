@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-JSON_OUT = ROOT / "be/management-be/src/seeds/backend-error-catalog.json"
+JSON_OUT = ROOT / "be/support-be/app/seeds/backend-error-catalog.json"
 DOC_OUT = ROOT / "docs/backend-error-catalog.md"
 
 COMMON = [
@@ -144,14 +144,25 @@ for enum_name, code, message in enum_rows(ROOT / "be/store-be/app/error_contract
 
 services["platform-api"] = service("platform-api", "management-be")
 platform_rows = [
-    ("SUPPORT_TICKET_NOT_FOUND", "No se encontró el ticket de soporte.", 404),
-    ("SUPPORT_TICKET_CLOSED", "El ticket de soporte está cerrado.", 409),
     ("ORGANIZATION_NOT_FOUND", "No se encontró la organización.", 404),
     ("PLATFORM_ADMIN_REQUIRED", "Se requieren permisos de administración de plataforma.", 403),
     ("ORGANIZATION_MEMBERSHIP_REQUIRED", "Se requiere pertenecer a la organización.", 403),
 ]
 for code, message, status in platform_rows:
     add_error("platform-api", code, code, message, status, "be/management-be/src/errors/ErrorContract.ts")
+
+services["support-api"] = service("support-api", "support-be")
+support_rows = [
+    ("SUPPORT_TICKET_NOT_FOUND", "No se encontró el ticket de soporte.", 404),
+    ("SUPPORT_TICKET_CLOSED", "El ticket de soporte está cerrado.", 409),
+    ("SUPPORT_EVIDENCE_TYPE_INVALID", "La evidencia debe ser una imagen JPG, PNG, WebP o GIF.", 422),
+    ("SUPPORT_EVIDENCE_SIZE_INVALID", "La imagen de evidencia debe pesar entre 1 byte y 5 MB.", 422),
+    ("SUPPORT_EVIDENCE_LIMIT_REACHED", "El ticket ya tiene el máximo de cinco imágenes.", 409),
+    ("SUPPORT_EVIDENCE_NOT_FOUND", "No se encontró la evidencia solicitada.", 404),
+    ("SUPPORT_EVIDENCE_UPLOAD_INVALID", "La evidencia cargada no coincide con la solicitud autorizada.", 422),
+]
+for code, message, status in support_rows:
+    add_error("support-api", code, code, message, status, "be/support-be/app/exceptions/platform_exception.py")
 
 payload = {
     "generatedFrom": "repository error enums; regenerate with python3 scripts/generate_backend_error_catalog.py",
@@ -166,7 +177,7 @@ lines = [
     "",
     "> Generated from the current service error enums. Do not hand-edit the tables below; run `python3 scripts/generate_backend_error_catalog.py`.",
     "",
-    "Every backend error response uses `message` as a stable code. Resolve human copy by `(service, message)` through `GET /api/public/error-catalog/{service}/{code}`. `COMMON_*` codes fall back to the `common` service. Legacy numeric codes are service-scoped and are not globally unique.",
+    "Every backend error response uses `message` as a stable code. The admin control plane resolves human copy by `(service, message)` through `GET /api/admin/error-catalog`. `COMMON_*` codes fall back to the `common` service. Legacy numeric codes are service-scoped and are not globally unique.",
     "",
     "## Common response DTO",
     "",
@@ -192,7 +203,7 @@ lines.extend([
     "- Domain exceptions receive an enum member containing both `code` and catalog copy; the wire sends only the code.",
     "- Framework validation, HTTP exceptions, and unhandled exceptions are converted to the same DTO.",
     "- Internal exception text and stack traces are logged and reported to support, but never returned in the HTTP body.",
-    "- The catalog seed is committed at `be/management-be/src/seeds/backend-error-catalog.json` and upserted with `pnpm db:seed:error-catalog` after migration `0022`.",
+    "- The catalog seed is committed at `be/support-be/app/seeds/backend-error-catalog.json` and upserted with `python -m app.scripts.seed_error_catalog` after the support-be migration.",
     "- HTTP statuses for legacy enums that do not declare a status are inferred from their enum name during generation; migrate those call sites to enum-backed common exceptions when touched.",
 ])
 DOC_OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")

@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Manually deploy support-be first, then refresh the dedicated admin API edge.
+set -euo pipefail
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ENVIRONMENT="${1:-dev}"
+AWS_PROFILE_NAME="${2:-PACIFIC-PROD}"
+
+cd "${REPO_ROOT}"
+
+# The normal customer gateway needs the existing platform Cognito pool.
+COGNITO_POOL_ID="${COGNITO_POOL_ID:-$(aws cloudformation list-exports \
+  --profile "${AWS_PROFILE_NAME}" --region "${AWS_REGION:-us-east-1}" \
+  --query "Exports[?Name=='tsuru-cognito-UserPoolId'].Value | [0]" --output text)}"
+if [[ -z "${COGNITO_POOL_ID}" || "${COGNITO_POOL_ID}" == "None" ]]; then
+  echo "Unable to resolve the customer Cognito pool; set COGNITO_POOL_ID." >&2
+  exit 1
+fi
+
+SUPPORT_HOSTED_ZONE_ID="${HOSTED_ZONE_ID:-$(aws route53 list-hosted-zones-by-name \
+  --dns-name "${ROOT_DOMAIN:-jcampos.dev}" --profile "${AWS_PROFILE_NAME}" \
+  --query "HostedZones[?Name=='${ROOT_DOMAIN:-jcampos.dev}.'].Id | [0]" \
+  --output text | sed 's|/hostedzone/||')}"
+if [[ -z "${SUPPORT_HOSTED_ZONE_ID}" || "${SUPPORT_HOSTED_ZONE_ID}" == "None" ]]; then
+  echo "Unable to resolve the Route53 hosted zone; set HOSTED_ZONE_ID." >&2
+  exit 1
+fi
+
+COGNITO_POOL_ID="${COGNITO_POOL_ID}" \
+API_DOMAIN="${SUPPORT_API_DOMAIN:-support.tsuru.jcampos.dev}" \
+HOSTED_ZONE_ID="${SUPPORT_HOSTED_ZONE_ID}" \
+  bash be/support-be/deploys/deploy-all.sh "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"
+
+bash admin-api/deploy.sh "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"

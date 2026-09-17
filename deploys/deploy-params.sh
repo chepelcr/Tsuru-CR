@@ -124,7 +124,7 @@ fi
 
 PROFILE_ARG=""
 if [ "$USE_PROFILE" = true ]; then
-  PROFILE="J-CAMPOS"
+  PROFILE="PACIFIC-PROD"
   PROFILE_ARG="--profile $PROFILE"
 fi
 

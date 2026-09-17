@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ADMIN_DIR = ROOT / "admin-api"
 MANAGEMENT_SPEC = ROOT / "be/management-be/swagger/jmarkets.json"
 DATA_SWAGGER_DIR = ROOT / "be/data-be/swagger"
+SUPPORT_SPEC = ROOT / "be/support-be/swagger/support-api.json"
 MANIFEST_PATH = ROOT / "fe/dashboard/src/generated/admin-data-catalogs.json"
 HTTP_METHODS = ("get", "post", "put", "patch", "delete")
 SKIP_DATA_PREFIXES = ("/health", "/cache", "/common-data-api")
@@ -59,6 +60,8 @@ def load_json(path: Path) -> dict:
 def lambda_name(service: str) -> str:
     if service == "platform-api":
         return "tsuru-${Environment}-api-handler"
+    if service == "support-api":
+        return "tsuru-${Environment}-support-api-lambda"
     return f"tsuru-${{Environment}}-hacienda-{service}-lambda"
 
 
@@ -151,6 +154,18 @@ def collect_routes() -> tuple[dict, dict[str, dict]]:
         for method in HTTP_METHODS:
             if method in item:
                 routes.setdefault(path, {})[method] = ("platform-api", item[method])
+
+    support = load_json(SUPPORT_SPEC)
+    specs["support-api"] = support
+    for path, item in support.get("paths", {}).items():
+        if not path.startswith("/api/admin"):
+            continue
+        for method in HTTP_METHODS:
+            if method in item:
+                if method in routes.setdefault(path, {}):
+                    owner = routes[path][method][0]
+                    raise SystemExit(f"Route collision: {method.upper()} {path}: {owner} and support-api")
+                routes[path][method] = ("support-api", item[method])
 
     for spec_path in sorted(DATA_SWAGGER_DIR.glob("*.json")):
         service = spec_path.stem
@@ -341,7 +356,10 @@ def build_template(routes: dict) -> dict:
         "Resources": resources,
         "Outputs": {
             "ApiId": {"Value": Ref("AdminApi")},
-            "ApiEndpoint": {"Value": Sub("https://${DomainName}")},
+            "ApiEndpoint": {
+                "Value": Sub("https://${DomainName}"),
+                "Export": {"Name": Sub("tsuru-${Environment}-admin-api-endpoint")},
+            },
         },
     }
 
@@ -428,7 +446,7 @@ def select_operation(spec: dict, method: str, predicate=None, list_mode=False):
 def build_manifest(specs: dict[str, dict]) -> dict:
     services = []
     for service, spec in sorted(specs.items()):
-        if service == "platform-api":
+        if service in {"platform-api", "support-api"}:
             continue
         # File-import operations are intentionally left on the protected admin
         # gateway but are not presented as a generic JSON "create" form.

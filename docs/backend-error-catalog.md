@@ -2,7 +2,7 @@
 
 > Generated from the current service error enums. Do not hand-edit the tables below; run `python3 scripts/generate_backend_error_catalog.py`.
 
-Every backend error response uses `message` as a stable code. Resolve human copy by `(service, message)` through `GET /api/public/error-catalog/{service}/{code}`. `COMMON_*` codes fall back to the `common` service. Legacy numeric codes are service-scoped and are not globally unique.
+Every backend error response uses `message` as a stable code. The admin control plane resolves human copy by `(service, message)` through `GET /api/admin/error-catalog`. `COMMON_*` codes fall back to the `common` service. Legacy numeric codes are service-scoped and are not globally unique.
 
 ## Common response DTO
 
@@ -53,6 +53,7 @@ Every backend error response uses `message` as a stable code. Resolve human copy
 | `sale-conditions` | `data-be` |
 | `sales-api` | `sales-be` |
 | `store-api` | `store-be` |
+| `support-api` | `support-be` |
 | `tax-amounts` | `data-be` |
 | `tax-conditions` | `data-be` |
 | `tax-factors` | `data-be` |
@@ -223,8 +224,6 @@ Every backend error response uses `message` as a stable code. Resolve human copy
 | `platform-api` | `ORGANIZATION_MEMBERSHIP_REQUIRED` | `ORGANIZATION_MEMBERSHIP_REQUIRED` | 403 | Se requiere pertenecer a la organización. | `be/management-be/src/errors/ErrorContract.ts` |
 | `platform-api` | `ORGANIZATION_NOT_FOUND` | `ORGANIZATION_NOT_FOUND` | 404 | No se encontró la organización. | `be/management-be/src/errors/ErrorContract.ts` |
 | `platform-api` | `PLATFORM_ADMIN_REQUIRED` | `PLATFORM_ADMIN_REQUIRED` | 403 | Se requieren permisos de administración de plataforma. | `be/management-be/src/errors/ErrorContract.ts` |
-| `platform-api` | `SUPPORT_TICKET_CLOSED` | `SUPPORT_TICKET_CLOSED` | 409 | El ticket de soporte está cerrado. | `be/management-be/src/errors/ErrorContract.ts` |
-| `platform-api` | `SUPPORT_TICKET_NOT_FOUND` | `SUPPORT_TICKET_NOT_FOUND` | 404 | No se encontró el ticket de soporte. | `be/management-be/src/errors/ErrorContract.ts` |
 | `product-types` | `001` | `PRODUCT_TYPE_FOUND` | 409 | El tipo de producto ya se encuentra previamente registrado | `be/data-be/app/product-types/src/enums/exception_codes.py` |
 | `product-types` | `002` | `PRODUCT_TYPE_NOT_FOUND` | 404 | El tipo de producto no se encuentra registrado | `be/data-be/app/product-types/src/enums/exception_codes.py` |
 | `product-types` | `003` | `PRODUCT_TYPE_REQUEST` | 422 | Se ha presentado un error en la solicitud del tipo de producto | `be/data-be/app/product-types/src/enums/exception_codes.py` |
@@ -268,6 +267,13 @@ Every backend error response uses `message` as a stable code. Resolve human copy
 | `store-api` | `API_NOT_AVAILABLE` | `API_NOT_AVAILABLE` | 503 | Un servicio dependiente no está disponible. | `be/store-be/app/error_contract.py` |
 | `store-api` | `EXCEL_PARSE_ERROR` | `EXCEL_PARSE_ERROR` | 500 | No se pudo procesar el archivo de Excel. | `be/store-be/app/error_contract.py` |
 | `store-api` | `ORGANIZATION_NOT_FOUND` | `ORGANIZATION_NOT_FOUND` | 404 | No se encontró la organización. | `be/store-be/app/error_contract.py` |
+| `support-api` | `SUPPORT_EVIDENCE_LIMIT_REACHED` | `SUPPORT_EVIDENCE_LIMIT_REACHED` | 409 | El ticket ya tiene el máximo de cinco imágenes. | `be/support-be/app/exceptions/platform_exception.py` |
+| `support-api` | `SUPPORT_EVIDENCE_NOT_FOUND` | `SUPPORT_EVIDENCE_NOT_FOUND` | 404 | No se encontró la evidencia solicitada. | `be/support-be/app/exceptions/platform_exception.py` |
+| `support-api` | `SUPPORT_EVIDENCE_SIZE_INVALID` | `SUPPORT_EVIDENCE_SIZE_INVALID` | 422 | La imagen de evidencia debe pesar entre 1 byte y 5 MB. | `be/support-be/app/exceptions/platform_exception.py` |
+| `support-api` | `SUPPORT_EVIDENCE_TYPE_INVALID` | `SUPPORT_EVIDENCE_TYPE_INVALID` | 422 | La evidencia debe ser una imagen JPG, PNG, WebP o GIF. | `be/support-be/app/exceptions/platform_exception.py` |
+| `support-api` | `SUPPORT_EVIDENCE_UPLOAD_INVALID` | `SUPPORT_EVIDENCE_UPLOAD_INVALID` | 422 | La evidencia cargada no coincide con la solicitud autorizada. | `be/support-be/app/exceptions/platform_exception.py` |
+| `support-api` | `SUPPORT_TICKET_CLOSED` | `SUPPORT_TICKET_CLOSED` | 409 | El ticket de soporte está cerrado. | `be/support-be/app/exceptions/platform_exception.py` |
+| `support-api` | `SUPPORT_TICKET_NOT_FOUND` | `SUPPORT_TICKET_NOT_FOUND` | 404 | No se encontró el ticket de soporte. | `be/support-be/app/exceptions/platform_exception.py` |
 | `tax-amounts` | `001` | `TAX_AMOUNT_FOUND` | 409 | El monto de impuesto ya se encuentra previamente registrado | `be/data-be/app/tax-amounts/src/enums/exception_codes.py` |
 | `tax-amounts` | `002` | `TAX_AMOUNT_NOT_FOUND` | 404 | El monto de impuesto no se encuentra registrado | `be/data-be/app/tax-amounts/src/enums/exception_codes.py` |
 | `tax-amounts` | `003` | `TAX_AMOUNT_REQUEST` | 422 | Se ha presentado un error en la solicitud del monto de impuesto | `be/data-be/app/tax-amounts/src/enums/exception_codes.py` |
@@ -309,5 +315,5 @@ Every backend error response uses `message` as a stable code. Resolve human copy
 - Domain exceptions receive an enum member containing both `code` and catalog copy; the wire sends only the code.
 - Framework validation, HTTP exceptions, and unhandled exceptions are converted to the same DTO.
 - Internal exception text and stack traces are logged and reported to support, but never returned in the HTTP body.
-- The catalog seed is committed at `be/management-be/src/seeds/backend-error-catalog.json` and upserted with `pnpm db:seed:error-catalog` after migration `0022`.
+- The catalog seed is committed at `be/support-be/app/seeds/backend-error-catalog.json` and upserted with `python -m app.scripts.seed_error_catalog` after the support-be migration.
 - HTTP statuses for legacy enums that do not declare a status are inferred from their enum name during generation; migrate those call sites to enum-backed common exceptions when touched.

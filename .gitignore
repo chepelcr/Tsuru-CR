@@ -25,13 +25,15 @@ fe/landing/
 # templates). Own repo; local folder is a standalone working copy.
 fe/storefront-sdk/
 
-# NOTE: fe/dashboard is NOT ignored — it stays tracked in the monorepo (being retired, TSR-091).
+# fe/dashboard → private chepelcr/tsuru-admin-dashboard (local-only; no deploy workflow)
+fe/dashboard/
 
 # be/ — each subfolder is its own standalone git repo
 be/management-be/
 be/store-be/
 be/sales-be/
 be/data-be/
+be/support-be/
 
 # Infrastructure — own git repo
 Infrastructure/

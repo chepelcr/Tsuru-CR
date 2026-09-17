@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Public build configuration for the local-only Tsuru admin dashboard.
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues: [dev, stag, prod]
+  EventsApiUrl:
+    Type: String
+    Default: https://events.tsuru.jcampos.dev/event
+
+Resources:
+  AwsRegion:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub "/tsuru/${Environment}/admin-dashboard/aws/region"
+      Type: String
+      Value: !Ref AWS::Region
+  AdminApiUrl:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub "/tsuru/${Environment}/admin-dashboard/api/url"
+      Type: String
+      Value:
+        Fn::ImportValue: !Sub "tsuru-${Environment}-admin-api-endpoint"
+  AdminUserPoolId:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub "/tsuru/${Environment}/admin-dashboard/cognito/user-pool-id"
+      Type: String
+      Value:
+        Fn::ImportValue: !Sub "tsuru-${Environment}-admin-cognito-user-pool-id"
+  AdminUserPoolClientId:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub "/tsuru/${Environment}/admin-dashboard/cognito/client-id"
+      Type: String
+      Value:
+        Fn::ImportValue: !Sub "tsuru-${Environment}-admin-cognito-client-id"
+  EventsEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub "/tsuru/${Environment}/admin-dashboard/appsync/events-url"
+      Type: String
+      Value: !Ref EventsApiUrl
+
+Outputs:
+  SsmBasePath:
+    Value: !Sub "/tsuru/${Environment}/admin-dashboard"
+    Export:
+      Name: !Sub "tsuru-${Environment}-admin-dashboard-ssm-base-path"

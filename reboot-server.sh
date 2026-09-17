@@ -1,71 +1,45 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Restart the local Tsuru workspace after refreshing admin dashboard config.
+# Usage: ./reboot-server.sh [dev|stag|prod] [aws-profile|-]
+set -euo pipefail
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-MAGENTA='\033[0;35m'
-NC='\033[0m' # No Color
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ENVIRONMENT="${1:-dev}"
+AWS_PROFILE_NAME="${2:-PACIFIC-PROD}"
+PORTS=(3001 3002 5000 5173 5180 9000)
 
-echo -e "${GREEN}🔄 Rebooting JMarkets server...${NC}"
+cd "${REPO_ROOT}"
+command -v pnpm >/dev/null 2>&1 || { echo "pnpm is required" >&2; exit 1; }
 
-# Kill existing server processes by name
-echo "Stopping existing processes..."
-taskkill //F //IM node.exe 2>/dev/null || true
-taskkill //F //IM tsx.exe 2>/dev/null || true
+echo "Refreshing admin dashboard configuration from SSM..."
+pnpm --dir fe/dashboard env:ssm -- "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"
 
-# Force kill processes on specific ports
-echo "Stopping processes on ports 3001, 3002, 5000, 9000, 5180..."
-for port in 3001 3002 5000 9000 5180; do
-  pid=$(netstat -ano | grep ":$port" | grep LISTENING | awk '{print $5}' | head -1)
-  if [ ! -z "$pid" ]; then
-    taskkill //F //PID $pid 2>/dev/null || true
-  fi
+echo "Stopping local processes on configured development ports..."
+for port in "${PORTS[@]}"; do
+  while IFS= read -r pid; do
+    [[ -n "${pid}" ]] && kill "${pid}" 2>/dev/null || true
+  done < <(lsof -tiTCP:"${port}" -sTCP:LISTEN 2>/dev/null || true)
 done
 
-# Wait a moment for processes to terminate
-sleep 2
+echo "Clearing local Vite caches..."
+for directory in \
+  fe/dashboard/node_modules/.vite fe/dashboard/.vite fe/dashboard/dist \
+  fe/landing/node_modules/.vite fe/landing/.vite fe/landing/dist \
+  fe/pos-system/node_modules/.vite fe/pos-system/.vite fe/pos-system/dist \
+  fe/pos-landing/node_modules/.vite fe/pos-landing/.vite fe/pos-landing/dist; do
+  [[ -e "${directory}" ]] && rm -rf -- "${directory}"
+done
 
-# Clean Vite caches
-echo "Cleaning Vite caches..."
-rm -rf dashboard/node_modules/.vite dashboard/.vite dashboard/dist
-rm -rf landing-client/node_modules/.vite landing-client/.vite landing-client/dist
-rm -rf client/node_modules/.vite client/.vite client/dist
-rm -rf templates/pos-system/node_modules/.vite templates/pos-system/.vite templates/pos-system/dist
-rm -rf templates/pos-landing/node_modules/.vite templates/pos-landing/.vite
-echo "Caches cleared"
-
-# Create logs directory if it doesn't exist
 mkdir -p logs
-
-# Start all services in background (including pos-system and pos-landing)
-echo -e "${GREEN}🚀 Starting all services (server, landing, dashboard, pos-system, pos-landing)...${NC}"
-nohup npm run dev:all:full > logs/server.log 2>&1 &
-DEV_ALL_PID=$!
-
-# Wait a moment to check if process started successfully
+echo "Starting server, landing, admin dashboard, POS, and POS landing..."
+nohup pnpm run dev:all:full > logs/server.log 2>&1 &
+process_id=$!
 sleep 3
 
-# Check if process is still running
-if ps -p $DEV_ALL_PID > /dev/null; then
-    echo -e "${GREEN}✅ All services started successfully!${NC}"
-    echo ""
-    echo -e "${YELLOW}Process PID:${NC} $DEV_ALL_PID"
-    echo ""
-    echo -e "${YELLOW}URLs:${NC}"
-    echo "  • API Server:  http://localhost:5000"
-    echo "  • Landing:     http://localhost:3001"
-    echo "  • Dashboard:   http://localhost:3002"
-    echo -e "  • ${MAGENTA}POS System:    http://localhost:9000${NC}"
-    echo -e "  • ${YELLOW}POS Landing:   http://localhost:5180${NC}"
-    echo -e "  • ${YELLOW}Local Dashboard: http://localhost:5180/dashboard${NC}"
-    echo ""
-    echo -e "${YELLOW}Logs:${NC}"
-    echo "  • All services: tail -f logs/server.log"
-    echo ""
-    echo -e "${YELLOW}Commands:${NC}"
-    echo "  • Stop all: ./stop-server.sh"
-    echo "  • Restart: ./reboot-server.sh"
-else
-    echo "❌ Services failed to start. Check logs/server.log for details."
-    exit 1
+if ! kill -0 "${process_id}" 2>/dev/null; then
+  echo "Services failed to start. See ${REPO_ROOT}/logs/server.log" >&2
+  exit 1
 fi
+
+echo "Tsuru local services started (PID ${process_id})."
+echo "Logs: tail -f ${REPO_ROOT}/logs/server.log"

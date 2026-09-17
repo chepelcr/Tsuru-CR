@@ -1,70 +1,91 @@
-# Platform support and incident rollout
+# Support, backend-error, and request-audit rollout
 
-This implementation is code-complete locally; no dashboard, admin edge, or
-backend stack was manually deployed in this change. The dashboard remains a
-local platform-admin console. Do not deploy
-`be/management-be/cloudformation/lambda.yml` as-is: its
-Lambda `Code.ZipFile` is a placeholder and would replace the live bundle.
+The support plane is backend-owned. Browser applications do not report their
+own crashes or replay failed HTTP responses into an internal ingest endpoint.
+POS only calls support-be for deliberate user ticket actions.
 
-## Deployment/configuration order
+## Runtime flow
 
-1. Apply `be/management-be/migrations/0021_create_support_system.sql` before
-   serving the new support routes. The platform API must still have a working
-   database to persist support and incident records.
-2. Deploy the isolated admin identity and API manually from the root repository:
+1. Every backend HTTP middleware emits `AUDIT_REQUEST_COMPLETED` to the audit
+   SNS topic with service, request type, route, status, duration, request ID,
+   and user/org identifiers when available. Login, registration and other
+   unauthenticated requests remain valid audit records with nullable identity.
+2. A 5xx response or uncaught exception also emits
+   `BACKEND_ERROR_OCCURRED`. Its public response still contains only the common
+   ErrorResponse DTO/catalog code; exception name/message/stack are confined to
+   the protected event.
+3. SNS message-attribute filters deliver audit and error events to independent
+   SQS queues and DLQs. The support Lambda consumes both with partial-batch
+   failure reporting and idempotent event IDs.
+4. The local admin dashboard reads tickets, backend errors, the catalog, and
+   audit history through the dedicated admin API/Cognito plane. The customer
+   support gateway at `https://support.tsuru.jcampos.dev` exposes only
+   `/api/support/**`; `/api/admin/**` is omitted.
+5. Ticket image evidence is uploaded directly to a private, encrypted S3
+   bucket with short-lived PUT URLs. The support Lambda validates type/size,
+   confirms the uploaded object, and issues five-minute read URLs only after
+   rechecking ticket access (or admin-edge access).
 
-   ```bash
-   pnpm run deploy:admin-api -- dev PACIFIC-PROD
-   ```
+## Manual deployment order
 
-   This deploys `admin-api/admin-cognito.yml` first and the generated
-   `admin-api/template.yml` second. It does not deploy any Lambda or frontend.
-   Create admin users through Cognito; self-registration is disabled and TOTP
-   MFA is required. The normal management gateway excludes `/api/admin/**`, and
-   the normal data gateway remains read-only; only the dedicated admin Cognito
-   authorizer can reach the admin routes and data mutations.
-3. Update the AppSync Events stack from
-   `be/sales-be/cloudformation/appsync-events.yml`, passing the admin stack's
-   `UserPoolId` as `AdminUserPoolId`. Its subscribe authorizer restricts
-   `/support/{sub}` to the caller's Cognito `sub`; publishers use IAM. Apply the
-   management Lambda role's `appsync:EventPublish` support policy without
-   replacing the live Lambda code with the CFN placeholder.
-4. Configure one high-entropy `SUPPORT_INGEST_TOKEN` secret for management-be
-   and the sales, store and data backend Lambdas. Set each producer's
-   `SUPPORT_INCIDENTS_URL` to
-   `https://api.tsuru.jcampos.dev/api/public/support/backend-incidents`.
-   The backend-ingest route refuses requests when the token is absent or wrong;
-   provision the secret through your deploy layer, never in Git or Vite env.
-5. Regenerate/deploy the normal management API Gateway spec, then ship the real Lambda
-   bundle. The two public incident endpoints are unauthenticated by the gateway
-   so login, registration and landing can report failures. The anonymous route
-   never accepts an org/user claim and limits distinct reports per reporter.
-6. Populate the local dashboard's `VITE_ADMIN_API_URL`,
-   `VITE_ADMIN_COGNITO_USER_POOL_ID`, and `VITE_ADMIN_COGNITO_CLIENT_ID` from
-   the admin stack outputs. Set the POS/dashboard `VITE_APPSYNC_EVENTS_URL` to
-   the Events HTTP endpoint when available. Missing push configuration only
-   delays refresh: tickets and incidents are persisted and re-read after a
-   reconnect. Start the dashboard with `pnpm --dir fe/dashboard dev`; do not
-   deploy it. The landing has an optional `VITE_PLATFORM_API_URL` override.
-7. Run the template seed to replace generic beauty demo rows for the seven
-   non-beauty templates. New organizations clone the revised rows after the
-   seed; existing organization CMS copies are not overwritten automatically.
+No dashboard or support API auto-deploy is configured. Use `PACIFIC-PROD` and
+run from the root repository:
 
-## What raises an admin incident
+```bash
+bash deploys/deploy-support-control-plane.sh dev PACIFIC-PROD
+```
 
-- POS React render failures, uncaught browser errors, rejected promises, and
-  actual 5xx responses from management, orders or sales API requests.
-- The public POS and landing surfaces use anonymous incidents until a signed-in
-  POS user and verified org membership are known.
-- Server-side HTTP 5xx responses and uncaught HTTP exceptions in sales/data
-  services using their shared FastAPI config, and the store FastAPI app. These
-  emit service, module, operation/path, status and error name/message when an
-  exception exists. The management API records its own 5xx best-effort.
-- Health endpoints and ordinary 4xx validation/auth failures are not monitored.
+That command deploys the support Lambda, the two SNS/SQS event stacks, the
+customer support gateway, then regenerates/deploys the admin Cognito/API and
+its `/tsuru/dev/admin-dashboard/**` SSM template. The support gateway owns
+`/tsuru/dev/platform/api/support-url`, which POS resolves during its pnpm build.
 
-The shared-secret forwarding is best-effort. If the platform API/database is
-unavailable at the same time, backend incidents may not persist; platform API
-errors from POS are queued locally and retried. Background-only SQS failures,
-API Gateway failures before Lambda, and full-service outages require separate
-CloudWatch/SNS incident ingestion in the deploy layer. The local dashboard
-shows an API loading error when its own management requests fail.
+The command deliberately does not mutate the database. Apply the migration and
+seed explicitly after reviewing the target secret:
+
+```bash
+cd be/support-be
+ENVIRONMENT=dev AWS_PROFILE=PACIFIC-PROD bash scripts/migrate-db.sh upgrade head
+ENVIRONMENT=dev AWS_PROFILE=PACIFIC-PROD python -m app.scripts.seed_error_catalog
+```
+
+The initial support Alembic revision adopts the live tables previously created
+by management migrations 0021/0022 with `IF NOT EXISTS`, preserves their rows,
+and adds `support_evidence`, `audit_records`, and `backend_errors`. It also
+removes the customer-users FK from message authors because admin replies use
+the isolated admin Cognito pool. Its downgrade intentionally
+does not drop adopted ticket/catalog data.
+
+Deploy management-be, data-be, sales-be, and store-be after the topics exist so
+their HTTP middleware starts publishing. Each producer has an inline policy
+for the deterministic audit/error topic ARNs, so its normal pipeline does not
+depend on a support-stack CloudFormation export. Then deploy POS so
+`VITE_SUPPORT_API_URL` is loaded from SSM. Keep `fe/dashboard` local:
+
+```bash
+pnpm --dir fe/dashboard env:ssm -- dev PACIFIC-PROD
+pnpm --dir fe/dashboard dev
+```
+
+## Acceptance checks
+
+- create a POS ticket, open it in the admin dashboard, reply, and observe the
+  POS polling refresh;
+- create a ticket with JPG/PNG/WebP/GIF evidence, open the private image from
+  both POS and the admin gateway, and reject a non-image or image over 5 MB;
+- confirm `support.tsuru.jcampos.dev` resolves to the customer support gateway
+  and that its SSM URL matches the custom domain;
+- call an authenticated backend route and confirm an audit row with user/org;
+- call a login/registration route before authentication and confirm a nullable
+  user/org audit row;
+- force a real backend 500 (not `/health`) and confirm one audit row plus one
+  backend-error row with the stable catalog code;
+- confirm normal 4xx responses create audit rows but not backend-error rows;
+- confirm each queue filter matches only its own `eventType`, and retry/DLQ
+  behavior does not duplicate stored event IDs;
+- confirm `/api/admin/**` is absent from the customer support gateway and is
+  protected by the dedicated admin Cognito authorizer on the admin domain.
+
+API Gateway failures before Lambda invocation and complete AWS regional
+outages cannot be emitted by application middleware; those remain CloudWatch
+and infrastructure-alarm concerns, not health-endpoint polling.
