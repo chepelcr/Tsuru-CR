@@ -32,3 +32,30 @@ HOSTED_ZONE_ID="${SUPPORT_HOSTED_ZONE_ID}" \
   bash be/support-be/deploys/deploy-all.sh "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"
 
 bash admin-api/deploy.sh "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"
+
+# Add the isolated administrator pool to AppSync Events and enable the shared
+# /support/platform subscription. This remains part of the same explicit,
+# root-owned rollout; neither private repo auto-deploys it.
+ADMIN_POOL_ID="$(aws cloudformation describe-stacks \
+  --stack-name "tsuru-${ENVIRONMENT}-admin-cognito" \
+  --profile "${AWS_PROFILE_NAME}" --region "${AWS_REGION:-us-east-1}" \
+  --query "Stacks[0].Outputs[?OutputKey=='UserPoolId'].OutputValue | [0]" --output text)"
+if [[ -z "${ADMIN_POOL_ID}" || "${ADMIN_POOL_ID}" == "None" ]]; then
+  echo "Unable to resolve the deployed admin Cognito pool." >&2
+  exit 1
+fi
+
+echo "Authorizing the admin support channel on AppSync Events..."
+aws cloudformation deploy \
+  --stack-name "tsuru-${ENVIRONMENT}-appsync-events" \
+  --template-file be/sales-be/cloudformation/appsync-events.yml \
+  --parameter-overrides \
+    "Environment=${ENVIRONMENT}" \
+    "UserPoolId=${COGNITO_POOL_ID}" \
+    "AdminUserPoolId=${ADMIN_POOL_ID}" \
+    "CustomDomainName=${APPSYNC_EVENTS_DOMAIN:-events.tsuru.jcampos.dev}" \
+    "HostedZoneId=${SUPPORT_HOSTED_ZONE_ID}" \
+  --capabilities CAPABILITY_NAMED_IAM \
+  --no-fail-on-empty-changeset \
+  --profile "${AWS_PROFILE_NAME}" \
+  --region "${AWS_REGION:-us-east-1}"

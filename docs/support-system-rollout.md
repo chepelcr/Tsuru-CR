@@ -25,6 +25,12 @@ POS only calls support-be for deliberate user ticket actions.
    bucket with short-lived PUT URLs. The support Lambda validates type/size,
    confirms the uploaded object, and issues five-minute read URLs only after
    rechecking ticket access (or admin-edge access).
+6. After a backend error is durably inserted, support-be publishes a
+   best-effort AppSync hint to `/support/platform`. Only identities issued by
+   the isolated admin pool can subscribe to that shared channel. Ticket
+   changes publish the same admin hint or a per-customer `/support/{sub}` hint;
+   the event contains no stack trace or ticket body and only invalidates the
+   corresponding persisted query.
 
 ## Manual deployment order
 
@@ -37,7 +43,9 @@ bash deploys/deploy-support-control-plane.sh dev PACIFIC-PROD
 
 That command deploys the support Lambda, the two SNS/SQS event stacks, the
 customer support gateway, then regenerates/deploys the admin Cognito/API and
-its `/tsuru/dev/admin-dashboard/**` SSM template. The support gateway owns
+its `/tsuru/dev/admin-dashboard/**` SSM template. It finally updates the
+existing AppSync Events stack with the isolated admin pool and the authorized
+`/support/platform` channel. The support gateway owns
 `/tsuru/dev/platform/api/support-url`, which POS resolves during its pnpm build.
 
 The command deliberately does not mutate the database. Apply the migration and
@@ -58,8 +66,12 @@ does not drop adopted ticket/catalog data.
 
 Deploy management-be, data-be, sales-be, and store-be after the topics exist so
 their HTTP middleware starts publishing. Each producer has an inline policy
-for the deterministic audit/error topic ARNs, so its normal pipeline does not
-depend on a support-stack CloudFormation export. Then deploy POS so
+for the deterministic audit/error topic ARNs, so its CloudFormation stack does
+not depend on a support-stack export. The current image/code pipelines do not
+apply Lambda-role template changes: explicitly run data-be and sales-be
+`deploys/deploy-sam-stacks.sh`, store-be `deploys/deploy-lambda.sh`, and the
+management role/IAM rollout after reviewing that repo's placeholder-code
+warning. Then deploy POS so
 `VITE_SUPPORT_API_URL` is loaded from SSM. Keep `fe/dashboard` local:
 
 ```bash
@@ -79,7 +91,8 @@ pnpm --dir fe/dashboard dev
 - call a login/registration route before authentication and confirm a nullable
   user/org audit row;
 - force a real backend 500 (not `/health`) and confirm one audit row plus one
-  backend-error row with the stable catalog code;
+  backend-error row with the stable catalog code and an AppSync invalidation in
+  the open admin dashboard;
 - confirm normal 4xx responses create audit rows but not backend-error rows;
 - confirm each queue filter matches only its own `eventType`, and retry/DLQ
   behavior does not duplicate stored event IDs;

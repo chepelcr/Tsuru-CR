@@ -36,7 +36,7 @@ uses the same safe, catalog-backed DTO.
 | §4g | └ `fe/landing` (separate repo) | ✅ done | `landing` `06a07ee` — typecheck + production build |
 | §7 | Common backend error response DTO | ✅ done (code) | management `d95c031`, data `23e48a4`, sales `674ae1f`, store `c369185` — enum-backed exceptions + framework/unhandled normalization |
 | §7a | Backend service + error catalogs | ✅ done (code; moved to support-be) | `be/support-be` owns the adopted schema, generated 48-service / 242-error seed and admin resolver; management persistence/routes removed |
-| §7b | Support/error/audit event plane | ✅ done (code; manual rollout pending) | new private `tsuru-support-be`; every BE emits SNS request audits and 5xx/errors to filtered SQS queues; POS browser error reporter deleted; admin audit UI added; customer tickets + private image evidence run at `support.tsuru.jcampos.dev` |
+| §7b | Support/error/audit event plane | ✅ done (code; manual rollout pending) | new private `tsuru-support-be`; every BE emits SNS request audits and 5xx/errors to filtered SQS queues; durable backend errors send a minimal AppSync hint to the admin-only `/support/platform` channel; POS browser error reporter deleted; admin audit UI added; customer tickets + private image evidence run at `support.tsuru.jcampos.dev` |
 | §7c | Dedicated admin identity/API + data editor | ✅ done (code; manual deploy pending) | root `e9e3567`, management `0d3a930`, data `4238cf6`, sales `05690f0` — normal APIs exclude admin writes; root manual gateway + isolated admin Cognito own the control plane |
 | §7d | Dashboard/support repo isolation + SSM | ✅ done (code) | private local-only dashboard repo with validation-only CI; root SSM template + reboot loader; support/control-plane deploy remains manual |
 
