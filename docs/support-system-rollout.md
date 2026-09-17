@@ -38,8 +38,15 @@ No dashboard or support API auto-deploy is configured. Use `PACIFIC-PROD` and
 run from the root repository:
 
 ```bash
+# A push to support-be/develop builds this commit as dev-<git-sha>.
+# For an explicit rebuild:
+gh workflow run build-image.yml -R chepelcr/tsuru-support-be -f environment=dev
 bash deploys/deploy-support-control-plane.sh dev PACIFIC-PROD
 ```
+
+The root command never builds the support image locally. It resolves the exact
+checked-out support-be commit tag from ECR and pins the Lambda stack to that
+immutable digest. The private workflow creates the ECR repository on first use.
 
 That command deploys admin Cognito, authorizes its `/support/platform` channel
 on the existing AppSync Events stack, deploys the support Lambda and two

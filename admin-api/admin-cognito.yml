@@ -25,7 +25,9 @@ Resources:
         RecoveryMechanisms:
           - Name: verified_email
             Priority: 1
-      MfaConfiguration: ON
+      # YAML 1.1 parses an unquoted ON as boolean true, but Cognito requires
+      # the literal enum string OFF, OPTIONAL, or ON.
+      MfaConfiguration: "ON"
       EnabledMfas: [SOFTWARE_TOKEN_MFA]
       Policies:
         PasswordPolicy:

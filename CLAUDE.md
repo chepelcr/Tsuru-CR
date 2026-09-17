@@ -55,7 +55,8 @@ on 2026-06-12 (roadmap TSR-112), parallel to the `be/` backend grouping — `fe/
   backend CI workflow or expose `/api/admin/**` through the normal management API.
 - The support/event control plane is also manual-only. Use
   `bash deploys/deploy-support-control-plane.sh <environment> <profile>` from root;
-  it deploys support-be before regenerating/deploying the admin composition.
+  it consumes the immutable support image built by the private repo's GitHub
+  Actions pipeline, then deploys Cognito/AppSync, support-be and the admin edge.
 - `fe/pos-landing` is **not** one of the 8 storefront templates — it is the POS *marketing* site and is deliberately excluded from `npm run build:templates`. Keep it out of the template matrix.
 - New work on the POS system belongs in `chepelcr/tsuru-pos-system`; new work on the landing site belongs in `chepelcr/tsuru-landing`; new work on the Express platform API belongs in `chepelcr/tsuru-platform-api` — not here. Mirror commits to the monorepo are no longer needed.
 
