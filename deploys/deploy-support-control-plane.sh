@@ -40,18 +40,34 @@ fi
 echo "Using GitHub-built support image: ${SUPPORT_ECR_IMAGE_URI}"
 
 # The normal customer gateway needs the existing platform Cognito pool.
+#
+# `list-exports` paginates, and `--output text` prints the query result for EVERY
+# page — so a filter that matches on page 1 of 3 yields "value\nNone\nNone".
+# Command substitution strips only the trailing newline, so the unfiltered form
+# produced a three-line pool id that CloudFormation accepted as a parameter and
+# API Gateway then rejected with "ProviderARNs need to be valid Cognito
+# Userpools". first_value keeps the first real line.
+first_value() {
+  awk 'NF && $0 != "None" { print; exit }'
+}
+
 COGNITO_POOL_ID="${COGNITO_POOL_ID:-$(aws cloudformation list-exports \
   --profile "${AWS_PROFILE_NAME}" --region "${AWS_REGION:-us-east-1}" \
-  --query "Exports[?Name=='tsuru-cognito-UserPoolId'].Value | [0]" --output text)}"
+  --query "Exports[?Name=='tsuru-cognito-UserPoolId'].Value | [0]" --output text \
+  | first_value)}"
 if [[ -z "${COGNITO_POOL_ID}" || "${COGNITO_POOL_ID}" == "None" ]]; then
   echo "Unable to resolve the customer Cognito pool; set COGNITO_POOL_ID." >&2
+  exit 1
+fi
+if [[ ! "${COGNITO_POOL_ID}" =~ ^[a-z0-9-]+_[A-Za-z0-9]+$ ]]; then
+  echo "Resolved an implausible Cognito pool id: ${COGNITO_POOL_ID}" >&2
   exit 1
 fi
 
 SUPPORT_HOSTED_ZONE_ID="${HOSTED_ZONE_ID:-$(aws route53 list-hosted-zones-by-name \
   --dns-name "${ROOT_DOMAIN:-jcampos.dev}" --profile "${AWS_PROFILE_NAME}" \
   --query "HostedZones[?Name=='${ROOT_DOMAIN:-jcampos.dev}.'].Id | [0]" \
-  --output text | sed 's|/hostedzone/||')}"
+  --output text | sed 's|/hostedzone/||' | first_value)}"
 if [[ -z "${SUPPORT_HOSTED_ZONE_ID}" || "${SUPPORT_HOSTED_ZONE_ID}" == "None" ]]; then
   echo "Unable to resolve the Route53 hosted zone; set HOSTED_ZONE_ID." >&2
   exit 1
@@ -60,33 +76,21 @@ fi
 # Create the admin identity first. AppSync must trust this pool before the
 # support Lambda can import the Events API ARN, while the composed admin API
 # itself must wait until the support Lambda exists.
-ADMIN_COGNITO_STACK="tsuru-${ENVIRONMENT}-admin-cognito"
-ADMIN_COGNITO_STATUS="$(aws cloudformation describe-stacks \
-  --stack-name "${ADMIN_COGNITO_STACK}" \
-  --profile "${AWS_PROFILE_NAME}" --region "${AWS_REGION:-us-east-1}" \
-  --query 'Stacks[0].StackStatus' --output text 2>/dev/null || true)"
-if [[ "${ADMIN_COGNITO_STATUS}" == "ROLLBACK_COMPLETE" ]]; then
-  echo "Removing failed prerequisite stack ${ADMIN_COGNITO_STACK}..."
-  aws cloudformation delete-stack \
-    --stack-name "${ADMIN_COGNITO_STACK}" \
-    --profile "${AWS_PROFILE_NAME}" --region "${AWS_REGION:-us-east-1}"
-  aws cloudformation wait stack-delete-complete \
-    --stack-name "${ADMIN_COGNITO_STACK}" \
-    --profile "${AWS_PROFILE_NAME}" --region "${AWS_REGION:-us-east-1}"
+#
+# The admin stacks (identity, generated gateway, dashboard SSM config, hosting)
+# are owned by the private dashboard repository at fe/dashboard — this script
+# only sequences them against the support Lambda they share.
+if [[ ! -x fe/dashboard/deploys/deploy-admin-cognito.sh ]]; then
+  echo "Missing the private dashboard checkout at fe/dashboard." >&2
+  exit 1
 fi
-echo "Deploying the dedicated admin Cognito prerequisite..."
-aws cloudformation deploy \
-  --stack-name "${ADMIN_COGNITO_STACK}" \
-  --template-file admin-api/admin-cognito.yml \
-  --parameter-overrides "Environment=${ENVIRONMENT}" \
-  --no-fail-on-empty-changeset \
-  --profile "${AWS_PROFILE_NAME}" \
-  --region "${AWS_REGION:-us-east-1}"
+bash fe/dashboard/deploys/deploy-admin-cognito.sh "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"
 
 ADMIN_POOL_ID="$(aws cloudformation describe-stacks \
   --stack-name "tsuru-${ENVIRONMENT}-admin-cognito" \
   --profile "${AWS_PROFILE_NAME}" --region "${AWS_REGION:-us-east-1}" \
-  --query "Stacks[0].Outputs[?OutputKey=='UserPoolId'].OutputValue | [0]" --output text)"
+  --query "Stacks[0].Outputs[?OutputKey=='UserPoolId'].OutputValue | [0]" \
+  --output text | first_value)"
 if [[ -z "${ADMIN_POOL_ID}" || "${ADMIN_POOL_ID}" == "None" ]]; then
   echo "Unable to resolve the deployed admin Cognito pool." >&2
   exit 1
@@ -113,12 +117,8 @@ HOSTED_ZONE_ID="${SUPPORT_HOSTED_ZONE_ID}" \
 ECR_IMAGE_URI="${SUPPORT_ECR_IMAGE_URI}" \
   bash be/support-be/deploys/deploy-all.sh "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"
 
-# This repeats the Cognito deployment as a no-op, then composes support/admin
-# routes and writes the local dashboard's SSM build configuration.
-bash admin-api/deploy.sh "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"
-
-if [[ ! -x fe/dashboard/deploys/deploy.sh ]]; then
-  echo "Missing the private dashboard checkout at fe/dashboard." >&2
-  exit 1
-fi
-bash fe/dashboard/deploys/deploy.sh "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"
+# The rest of the admin control plane, in the dashboard repository's own order:
+# admin Cognito (a no-op repeat), the gateway regenerated from the backend
+# OpenAPI sources, the dashboard's SSM build configuration, then hosting and the
+# built site.
+bash fe/dashboard/deploys/deploy-all.sh "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"

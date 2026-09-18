@@ -4,8 +4,9 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "generate:admin-api": "python3 admin-api/generate_admin_api.py",
-    "deploy:admin-api": "bash admin-api/deploy.sh",
+    "generate:admin-api": "python3 fe/dashboard/api/generate_admin_api.py",
+    "deploy:admin-api": "bash fe/dashboard/deploys/deploy-admin-api.sh",
+    "deploy:admin-control-plane": "bash fe/dashboard/deploys/deploy-all.sh",
     "dev": "cross-env NODE_ENV=development tsx server/src/index.ts",
     "dev:landing": "pnpm --dir fe/landing dev",
     "dev:dashboard": "pnpm --dir fe/dashboard dev",

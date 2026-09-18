@@ -206,7 +206,7 @@ controller whitelist ordering, plus HTTP request-DTO failure cases.
 | Decision | Why |
 |---|---|
 | **`fe/dashboard` stays local-only in a private repo** | It is the platform support/admin/audit console, but the owner explicitly keeps deployment out of this implementation. Its workflow validates only; root SSM supplies runtime config. |
-| **The admin API deploys manually from the root repository** | It is a control-plane composition over existing management/data Lambdas, not another backend service. `admin-api/generate_admin_api.py` owns the explicit route allowlist and `pnpm run deploy:admin-api -- <env> <profile>` is the only deployment entry point. |
+| **The admin API deploys from the dashboard repository, manually** | It is a control-plane composition over existing management/data/support Lambdas, not another backend service. The generator and the stacks moved into `fe/dashboard` on 2026-09-17 (TSR-280): `fe/dashboard/api/generate_admin_api.py` owns the explicit route allowlist, and `fe/dashboard/deploys/deploy-admin-api.sh` (or `deploy-all.sh` for the whole plane) is the deployment entry point. The retired root `admin-api/` directory must not be recreated. |
 | **Support/audit/error ingestion is backend-to-SNS, never browser-to-HTTP** | Every backend request emits `AUDIT_REQUEST_COMPLETED`; backend 5xx/unhandled failures additionally emit `BACKEND_ERROR_OCCURRED`. SNS attributes and queue filters are one contract. POS sends only deliberate support ticket actions. |
 | **support-be owns support persistence and catalogs** | The standalone Lambda consumes both SQS queues and serves tickets/catalog/admin reads. Its Alembic revision adopts the already-live management 0021/0022 tables without dropping data, then adds `audit_records` and `backend_errors`. |
 | **Normal APIs never publish platform-admin writes** | The management generator excludes `/api/admin/**`; the data generator remains GET-only. The dedicated gateway publishes both sets behind the isolated admin pool, and management additionally verifies the pool issuer/client from stage variables. |
@@ -277,8 +277,8 @@ bash deploys/deploy-all.sh dev PACIFIC-PROD --plan
 # dedicated admin control plane (TSR-274; validates only, does not deploy)
 cd ../..
 pnpm run generate:admin-api
-sam validate --lint --template-file admin-api/admin-cognito.yml
-sam validate --lint --template-file admin-api/template.yml
+sam validate --lint --template-file fe/dashboard/cloudformation/admin-cognito.yml
+sam validate --lint --template-file fe/dashboard/api/template.yml
 cd fe/dashboard && pnpm run check && pnpm run build
 cd ../../be/management-be && pnpm run check && pnpm test
 ```

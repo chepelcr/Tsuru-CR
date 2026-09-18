@@ -43,16 +43,25 @@ on 2026-06-12 (roadmap TSR-112), parallel to the `be/` backend grouping — `fe/
 | `fe/pos-system` (Tsuru POS — standalone POS & Costa Rica/Hacienda e-invoicing system; **not** a store-front template) | [`chepelcr/tsuru-pos-system`](https://github.com/chepelcr/tsuru-pos-system) | Extracted; **untracked here** (2026-06-12); relocated to `fe/pos-system` (2026-06-12). Deploys via its own GH Actions to **GitHub Pages** at `app.tsuru.jcampos.dev` (the old S3/CloudFront `pos.j-markets.jcampos.dev` deploy is retired). Develop it there. |
 | `fe/landing` (Tsuru landing — public marketing SPA + local JSON-driven content/admin DXP; deploys 100% static) | [`chepelcr/tsuru-landing`](https://github.com/chepelcr/tsuru-landing) | Extracted; **untracked here** (2026-06-12); relocated to `fe/landing` (2026-06-12). Deploys via its own GH Actions. Develop it there. |
 | `fe/pos-landing` (Tsuru POS **product marketing site** — pricing/plans, live POS demo, own config-driven dashboard; **not** a storefront template) | — (tracked in this monorepo) | **Tracked here**; relocated from `templates/pos-landing` to `fe/pos-landing` (2026-08-23, TSR-142). No standalone repo exists. Scripts: `npm run dev:pos-landing` / `build:pos-landing` → `dist/pos-landing`. |
-| `fe/dashboard` (platform-administration + support/audit console) | [`chepelcr/tsuru-admin-dashboard`](https://github.com/chepelcr/tsuru-admin-dashboard) | Extracted to a private repo and **untracked here** (2026-09-16). CI validates only; manual root rollout publishes its private S3/CloudFront site at `admin.tsuru.jcampos.dev`. Root `admin-api/` owns its Cognito/API/SSM control plane. |
+| `fe/dashboard` (platform-administration + support/audit console) | [`chepelcr/tsuru-admin-dashboard`](https://github.com/chepelcr/tsuru-admin-dashboard) | Extracted to a private repo and **untracked here** (2026-09-16). Deploys via its **own GH Actions** (OIDC → S3 + CloudFront) to `admin-app.tsuru.jcampos.dev` (2026-09-17). It also **owns its whole admin control plane** — admin Cognito, the generated admin API gateway, its SSM build config and its hosting — under `fe/dashboard/{cloudformation,api,deploys}` (moved out of the root `admin-api/` on 2026-09-17). |
 | `be/support-be` (support tickets, request audit, backend errors/catalog) | [`chepelcr/tsuru-support-be`](https://github.com/chepelcr/tsuru-support-be) | Private standalone FastAPI Lambda repo, **untracked here**. It has CI validation only; deployment is manual through root `deploys/deploy-support-control-plane.sh`. |
 | `server` (Tsuru platform API — users, orgs, RBAC, CMS, multi-tenant backend; Express on Lambda) | [`chepelcr/tsuru-platform-api`](https://github.com/chepelcr/tsuru-platform-api) | Extracted to its own **private** repo; **untracked here** (2026-06-12). Deploys via its own GH Actions. Develop it there. |
 
 **Rules after the split:**
 - `fe/pos-system/`, `fe/landing/`, `fe/dashboard/`, `be/support-be/`, and `server/` are gitignored and **no longer tracked** in this repo. The folders may still exist locally as standalone working copies — never `git add -f` them back.
 - The monorepo CodePipeline stages / buildspecs that referenced the split paths are obsolete — do not re-point them at the folders (roadmap TSR-090). Dashboard hosting is manual through the support-control-plane command, never an automatic root pipeline.
-- `admin-api/` is the manual-only platform-control edge. Deploy it from this root
-  with `pnpm run deploy:admin-api -- <environment> <profile>`; never add it to a
-  backend CI workflow or expose `/api/admin/**` through the normal management API.
+- **The admin control plane lives in the dashboard repo**, not here: `fe/dashboard/`
+  owns `cloudformation/admin-cognito.yml`, `cloudformation/admin-dashboard-params.yml`,
+  `cloudformation/hosting.yml`, `cloudformation/deploy-role.yml`, the generated
+  gateway in `api/` (`generate_admin_api.py` + committed `template.yml`), and one
+  deploy script per stack in `deploys/` (`deploy-all.sh` sequences them). The root
+  `admin-api/` directory is **retired** (2026-09-17) — do not recreate it.
+  Root convenience entry points: `pnpm run deploy:admin-api` and
+  `pnpm run deploy:admin-control-plane` (both `-- <environment> <profile>`).
+  `api/template.yml` is GENERATED from the backend OpenAPI sources in sibling
+  checkouts (`TSURU_WORKSPACE_ROOT`); it is committed because those specs are not
+  present in the dashboard repo's CI, so deploy there with `--skip-generate`.
+  Never expose `/api/admin/**` through the normal management API.
 - The support/event control plane is also manual-only. Use
   `bash deploys/deploy-support-control-plane.sh <environment> <profile>` from root;
   it consumes the immutable support image built by the private repo's GitHub
