@@ -45,8 +45,9 @@ MODULES = [
     ("Autenticación", [
         ["Login / Logout", "Cognito vía Amplify (AuthContext); guarda redirectAfterLogin", "✅ Completo", "TSR-008", "Credenciales ya no se guardan en sessionStorage; elimina cualquier valor legacy", "Alta"],
         ["Registro", "Multi-paso con ubicación estructurada (cascada CR) + panel Sibö/cacao (TSR-113)", "✅ Completo", "TSR-008", "Verificación usa autoSignIn de Amplify sin persistir password", "Alta"],
-        ["Verificación de email", "OTP Cognito; requerida antes de entrar", "✅ Completo", "—", "SES en sandbox: correos solo a direcciones verificadas (roadmap §7 paso 2)", "Alta"],
-        ["Recuperar/restablecer contraseña", "Flujo Cognito completo", "✅ Completo", "—", "—", "Media"],
+        ["Verificación de email", "OTP Cognito; requerida antes de entrar", "🟡 Parcial", "TSR-308", "Lambda CustomMessage no arrancó (imagen fría 29 días): registro murió dejando usuario UNCONFIRMED. arm64 + keep-warm corregido, falta desplegar (§7 paso 11). Sigue SES en sandbox (§7 paso 2)", "Alta"],
+        ["Errores de Cognito visibles en auth", "lib/authErrors.ts + AuthErrorAlert dentro del formulario, con botón de salida", "✅ Completo", "TSR-309", "Antes todo error iba a la campana, que AuthLayout no renderiza: las 5 páginas fallaban en silencio. Probar cuenta existente, código incorrecto/expirado, password inválido, reset sin verificar", "Alta"],
+        ["Recuperar/restablecer contraseña", "Flujo Cognito completo", "🟡 Parcial", "TSR-309", "Reset sobre correo nunca verificado responde InvalidParameterException y no envía nada; ahora la página lo dice y enlaza a verificación", "Media"],
         ["Invitaciones (/join/:token)", "Aceptar invitación a organización", "🟡 Parcial", "TSR-012", "Botón 'Rechazar' es no-op; redirects ?redirect= se pierden", "Media"],
         ["Selección/creación de org", "SelectOrganization, CreateOrganization (onboarding)", "✅ Completo", "TSR-117", "Re-link de org por email tras pool nuevo de Cognito (verificar)", "Media"],
     ]),

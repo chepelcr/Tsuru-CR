@@ -113,6 +113,7 @@ git clone https://github.com/chepelcr/tsuru-store-be.git         be/store-be
 git clone https://github.com/chepelcr/tsuru-sales-be.git         be/sales-be
 git clone https://github.com/chepelcr/tsuru-data-be.git          be/data-be
 git clone https://github.com/chepelcr/tsuru-support-be.git       be/support-be
+git clone https://github.com/chepelcr/tsuru-cognito-templates.git be/cognito-templates
 git clone https://github.com/chepelcr/tsuru-admin-dashboard.git  fe/dashboard
 for n in gourmet-foods artisan-crafts beauty-essentials fitness-hub \
          tsuru-demo pet-care tech-gadgets vintage-fashion; do

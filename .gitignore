@@ -34,6 +34,10 @@ be/store-be/
 be/sales-be/
 be/data-be/
 be/support-be/
+# be/cognito-templates → https://github.com/chepelcr/tsuru-cognito-templates
+# Cognito CustomMessage trigger Lambda + SES email templates. Its own repo; cloned
+# here (2026-09-19, TSR-308) so the trigger is editable from the workspace.
+be/cognito-templates/
 
 # Infrastructure — own git repo
 Infrastructure/
