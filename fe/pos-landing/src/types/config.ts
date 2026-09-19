@@ -176,6 +176,16 @@ export type TranslationMap = {
     moneyBackLabel:    string;
     amortizationLabel: string;
     addons: Array<{ icon: string; title: string; description: string }>;
+    /** The tiers themselves — translatable, so they live per language. */
+    plans?:               Plan[];
+    /** Comparison-table rows for the plan matrix. */
+    features?:            FeatureDef[];
+    /** Column headings for the plan matrix. */
+    planLabels?:          Record<string, string>;
+    /** Monthly/annual switch copy. */
+    billingToggle?:       { monthly: string; annual: string };
+    /** "2 months free" style copy beside the annual option. */
+    annualSavingsLabel?:  string;
   };
   testimonials: {
     eyebrow:  string;
@@ -287,8 +297,13 @@ export interface AppConfig {
     moneyBackDays:        number;
     annualDiscountMonths?: number;  // Number of free months for annual plan (e.g., 2 = pay 10, get 12)
     defaultBillingCycle?: 'monthly' | 'annual';  // Default billing cycle to display
-    features:             FeatureDef[];
-    plans:                Plan[];
+    // `plans` and `features` are NOT here. They are translatable copy — a plan's
+    // name, tagline and CTA label all change with the language — so they live in
+    // `translations[lang].pricing`, which is where `config.json` actually carries
+    // them and where `Pricing.tsx` / `PricingTab.tsx` read them. They were
+    // declared here as required while the data held zero of each, so the type
+    // described a shape that never existed and the correct reads were the ones
+    // that failed to compile.
   };
   demo: {
     products:   DemoProduct[];

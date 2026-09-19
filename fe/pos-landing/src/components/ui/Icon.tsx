@@ -6,7 +6,7 @@ import {
   Home, Trash, Trash2, Globe, Sparkles, Sun, Moon, Menu, Search, Star, Quote,
   Settings, Save, Eye, EyeOff, RefreshCw, Plus as PlusIcon, Pencil, Palette,
   Languages, DollarSign, LayoutDashboard, AlertCircle, Info, GitCompare, ListOrdered,
-  HelpCircle, Grid3x3, type LucideProps,
+  HelpCircle, Grid3x3, TrendingDown, GripVertical, type LucideProps,
 } from 'lucide-react';
 
 export type IconName =
@@ -19,7 +19,8 @@ export type IconName =
   | 'Home' | 'Trash' | 'Trash2' | 'Globe' | 'Sparkles' | 'Sun' | 'Moon' | 'Menu'
   | 'Search' | 'Star' | 'Quote' | 'Settings' | 'Save' | 'Eye' | 'EyeOff'
   | 'RefreshCw' | 'Pencil' | 'Palette' | 'Languages' | 'DollarSign' | 'LayoutDashboard'
-  | 'AlertCircle' | 'Info' | 'GitCompare' | 'ListOrdered' | 'HelpCircle' | 'Grid3x3';
+  | 'AlertCircle' | 'Info' | 'GitCompare' | 'ListOrdered' | 'HelpCircle' | 'Grid3x3'
+  | 'TrendingDown' | 'GripVertical';
 
 const ICONS: Record<IconName, React.FC<LucideProps>> = {
   ArrowRight, ArrowUpRight, ArrowUp, ArrowDown, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Check, X, Minus, Plus,
@@ -29,7 +30,7 @@ const ICONS: Record<IconName, React.FC<LucideProps>> = {
   Home, Trash, Trash2, Globe, Sparkles, Sun, Moon, Menu, Search, Star, Quote,
   Settings, Save, Eye, EyeOff, RefreshCw, Pencil, Palette, Languages,
   DollarSign, LayoutDashboard, AlertCircle, Info, GitCompare, ListOrdered,
-  HelpCircle, Grid3x3,
+  HelpCircle, Grid3x3, TrendingDown, GripVertical,
 };
 
 interface IconProps extends LucideProps {

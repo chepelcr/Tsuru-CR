@@ -50,9 +50,15 @@ export function useAutoTranslate({ sourceLanguage, targetLanguage, enabled = tru
       return;
     }
 
+    // Captured after the guard. The narrowing above does not reach inside the
+    // async closure — TypeScript cannot assume a mutable global still holds a
+    // value by the time the promise runs, and it is right not to: this is a
+    // browser API that may not exist.
+    const translatorApi = window.Translator;
+
     const checkAvailability = async () => {
       try {
-        const availability = await window.Translator.availability({
+        const availability = await translatorApi.availability({
           sourceLanguage,
           targetLanguage,
         });
@@ -72,13 +78,15 @@ export function useAutoTranslate({ sourceLanguage, targetLanguage, enabled = tru
       return;
     }
 
+    const translatorApi = window.Translator;
+
     let mounted = true;
     const controller = new AbortController();
 
     const createTranslator = async () => {
       try {
         setIsLoading(true);
-        const instance = await window.Translator.create({
+        const instance = await translatorApi.create({
           sourceLanguage,
           targetLanguage,
           signal: controller.signal,

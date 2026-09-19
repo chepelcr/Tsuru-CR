@@ -1,7 +1,13 @@
+import type React from 'react';
 import { cn } from '@/lib/cn';
 
 interface TextFieldProps {
-  label?: string;
+  /**
+   * ReactNode, not string: the comparison tab labels its columns with an icon
+   * beside the name (`<Icon/> JMarkets POS`), and the plain-string type made
+   * three correct call sites fail to compile.
+   */
+  label?: React.ReactNode;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;

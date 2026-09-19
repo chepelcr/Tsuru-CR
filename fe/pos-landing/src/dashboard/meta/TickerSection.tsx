@@ -75,7 +75,15 @@ export function TickerSection({ lang }: TickerSectionProps) {
               className="flex-1 h-9 rounded border border-border bg-background px-2 text-sm focus:outline-none focus:border-primary"
               placeholder="Factura electrónica 4.4"
             />
-            <ItemActions onRemove={() => removeTickerItem(i)} />
+            {/* `index`/`total` are required and the delete prop is `onDelete` —
+                this passed a lone `onRemove`, which the component has never had.
+                Every other call site (BenefitCard, TestimonialCard, FeatureGroup)
+                passes the full set. */}
+            <ItemActions
+              index={i}
+              total={ticker.length}
+              onDelete={() => removeTickerItem(i)}
+            />
           </div>
         ))}
       </div>
