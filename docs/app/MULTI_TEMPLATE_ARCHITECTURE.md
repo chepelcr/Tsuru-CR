@@ -78,23 +78,31 @@ BeautyMarket/
 
 ## Deployed Template URLs
 
-**Live Templates:**
-1. **jmarkets-demo-example** → https://jmarkets-demo-example.tsuru.jcampos.dev
-2. **tech-gadgets-example** → https://tech-gadgets-example.tsuru.jcampos.dev
-3. **vintage-fashion-example** → https://vintage-fashion-example.tsuru.jcampos.dev
-4. **artisan-crafts-example** → https://artisan-crafts-example.tsuru.jcampos.dev
-5. **gourmet-foods-example** → https://gourmet-foods-example.tsuru.jcampos.dev
-6. **fitness-hub-example** → https://fitness-hub-example.tsuru.jcampos.dev
-7. **pet-care-example** → https://pet-care-example.tsuru.jcampos.dev
+**Live Templates** — since the 2026-06-20 split each one is its own repo
+(`chepelcr/template-<name>`) deployed to **GitHub Pages**, and the host pattern
+is `{name}.examples.tsuru.jcampos.dev` (NOT the old `{name}-example.` one, and
+not the retired `*.j-markets.jcampos.dev` domain). These are also the
+`preview_url` values in the `templates` table:
 
-**SSL Certificate:** Wildcard cert `*.tsuru.jcampos.dev` (ARN: `arn:aws:acm:us-east-1:938590657428:certificate/a18f46b0-b2b1-46d0-80c1-233ad9addf91`)
+1. **tsuru-demo** (renamed from `jmarkets-demo` on 2026-07-03) → https://tsuru-demo.examples.tsuru.jcampos.dev
+2. **tech-gadgets** → https://tech-gadgets.examples.tsuru.jcampos.dev
+3. **vintage-fashion** → https://vintage-fashion.examples.tsuru.jcampos.dev
+4. **artisan-crafts** → https://artisan-crafts.examples.tsuru.jcampos.dev
+5. **gourmet-foods** → https://gourmet-foods.examples.tsuru.jcampos.dev
+6. **fitness-hub** → https://fitness-hub.examples.tsuru.jcampos.dev
+7. **pet-care** → https://pet-care.examples.tsuru.jcampos.dev
+8. **beauty-essentials** → https://beauty-essentials.examples.tsuru.jcampos.dev
+
+**SSL Certificate:** wildcard `*.tsuru.jcampos.dev` in ACM (us-east-1). The ARN
+previously written here belonged to the **retired `J-CAMPOS` account** and is
+dead; look it up in the live account instead of copying an account id into docs.
 
 ---
 
 ## Template Design Specifications
 
 ### 1. Tsuru (formerly JMarkets) Demo Example (General Marketplace)
-**Live URL:** https://jmarkets-demo-example.tsuru.jcampos.dev
+**Live URL:** https://tsuru-demo.examples.tsuru.jcampos.dev
 
 **Visual Identity:**
 - **Colors:** Pink `#ec4899` primary, Light Pink `#f472b6` secondary
