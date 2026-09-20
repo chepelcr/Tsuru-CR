@@ -43,7 +43,7 @@ Spans **five** repos, four of which are gitignored here and carry their own comm
 | Decision | Detail |
 |---|---|
 | Link key | The order's `document_id` holds sales-be's **`Sale.sale_id` UUID** — the id the POS already routes a document by (`/dashboard/documents/{saleId}`). `Sale.document_id` (bigint) rides inside `document_info` as `document_number`. |
-| Trigger | **ACCEPTED only** (AtvStatus 1). PARTIAL and REJECTED do not link, so the order stays billable. |
+| Trigger | **Two publishes.** sales-api claims the order at EMISSION with status 0 (PROCESSING) — that is what stops a second factura while the document is in flight. document-validator then publishes on **ACCEPTED only** (AtvStatus 1), moving the stored status to 1. PARTIAL and REJECTED publish nothing, so a rejected document leaves the claim standing and the order is released through the repair endpoint. |
 | DTO | **Clean break**: the order DTO drops `invoice` and emits `document_info`. The POS is the only consumer. |
 | Transport | SNS FIFO → SQS FIFO, modelled on the existing `OrganizationBranches` hop (sales-be → store-be). Not EventBridge, not a direct HTTP call. |
 | Order number on the document | Rides `other_fields` under **internal** codes, and therefore **reaches the signed XML** as `OtroTexto` — accepted deliberately: it needs no sales-be migration, and the order number is already on the document as the `notes` string "Pedido #…". |
@@ -201,8 +201,29 @@ Reverse for a rollback: pos-system first.
 
 ## 7. Known consequences accepted
 
-- **The "Facturado" badge is no longer instant.** It appears once Hacienda accepts and the
-  event lands — seconds to minutes. The checkout must say the document is being validated
-  rather than leaving the order looking unbilled and inviting a second factura.
-- **A document Hacienda never accepts never links.** That is the point, but it means an
-  order billed by a PROCESSING-forever document stays billable. The repair endpoint covers it.
+- **The "Facturado" badge is no longer instant.** The order is CLAIMED at emission, so it
+  cannot be billed twice, but it reads "Facturando — en validación" until Hacienda accepts.
+  Calling it billed before the verdict would be a claim nobody has checked.
+- **A REJECTED document leaves its order claimed.** The validator publishes only on
+  ACCEPTED, so nothing releases the claim on its own — deliberate, and the consequence is
+  that re-billing after a rejection needs the repair endpoint
+  (`POST /orders/{document_number}/invoice`). If that proves too manual, the fix is a
+  release publish on REJECTED, not a change to what "linked" means.
+
+---
+
+## 8. Follow-up: TSR-322 — the customers edit flow
+
+Reported 2026-09-20, in the same session. Unrelated to the order link except that both
+were "the API said no and the screen did not say why".
+
+| # | Unit | Repo | Status | Commit / evidence |
+|---|---|---|---|---|
+| 322.1 | The edit save PATCHed the status route; switch to PUT | pos-system | **Done** | `useClients.useUpdateClient` |
+| 322.2 | Move client status to `/{client_id}/status`, the convention every other controller follows | store-be | **Done** | `clients_controller`; `ClientStatusRequestDTO` (1-3, not the order DTO's 1-5) |
+| 322.3 | `validate_at_least_one_field` accepts `business_name` | store-be | **Done** | `client_request_dto`; the POS never fills `client_name` for an EMPRESA |
+| 322.4 | Identification length checked per type code, mirroring the POS | store-be | **Done** | `ID_NUMBER_LENGTHS`; masked and raw both pass; passports counted whole |
+| 322.5 | Surface FastAPI's `detail` in API errors | pos-system | **Done** | `lib/api.apiErrorMessage` + 6 tests |
+| 322.6 | Detail page reuses the one drawer; delete the drifted copy | pos-system | **Done** | `ClientFormBody.tsx` deleted; seeding pinned by `clientFormSeeding.test.ts` |
+| 322.7 | `notes` implemented end to end (it had no column, no DTO, no response field) | store-be + pos-system | **Done** | migration `f5a6b7c8d9e0`; `clientToDto` for the full-replace PUT |
+| 322.8 | Client DTO contract tests — there were none | store-be | **Done** | `tests/test_client_request_dto.py`, 27 tests |
