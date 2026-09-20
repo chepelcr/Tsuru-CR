@@ -83,6 +83,9 @@ Every backend error response uses `message` as a stable code. The admin control 
 | `common` | `COMMON_500` | `INTERNAL_ERROR` | 500 | Ocurrió un error interno. | `common contract` |
 | `common` | `COMMON_502` | `BAD_GATEWAY` | 502 | Un servicio dependiente devolvió un error. | `common contract` |
 | `common` | `COMMON_503` | `SERVICE_UNAVAILABLE` | 503 | El servicio no está disponible. | `common contract` |
+| `consumer-exchange-rate` | `001` | `COUNTRY_NOT_FOUND` | 404 | El país no se encuentra registrado | `be/data-be/app/consumer-exchange-rate/src/enums/exception_codes.py` |
+| `consumer-exchange-rate` | `002` | `RATE_UNAVAILABLE` | 404 | No hay un tipo de cambio disponible para este país | `be/data-be/app/consumer-exchange-rate/src/enums/exception_codes.py` |
+| `consumer-exchange-rate` | `003` | `PROVIDER_UNAVAILABLE` | 502 | El servicio de tipo de cambio de Hacienda no está disponible | `be/data-be/app/consumer-exchange-rate/src/enums/exception_codes.py` |
 | `customer-types` | `001` | `CUSTOMER_TYPE_FOUND` | 409 | El tipo de cliente ya se encuentra previamente registrado | `be/data-be/app/customer-types/src/enums/exception_codes.py` |
 | `customer-types` | `002` | `CUSTOMER_TYPE_NOT_FOUND` | 404 | El tipo de cliente no se encuentra registrado | `be/data-be/app/customer-types/src/enums/exception_codes.py` |
 | `customer-types` | `003` | `CUSTOMER_TYPE_REQUEST` | 422 | Se ha presentado un error en la solicitud del tipo de cliente | `be/data-be/app/customer-types/src/enums/exception_codes.py` |
