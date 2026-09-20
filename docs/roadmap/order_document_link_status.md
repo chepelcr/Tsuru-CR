@@ -227,3 +227,48 @@ were "the API said no and the screen did not say why".
 | 322.6 | Detail page reuses the one drawer; delete the drifted copy | pos-system | **Done** | `ClientFormBody.tsx` deleted; seeding pinned by `clientFormSeeding.test.ts` |
 | 322.7 | `notes` implemented end to end (it had no column, no DTO, no response field) | store-be + pos-system | **Done** | migration `f5a6b7c8d9e0`; `clientToDto` for the full-replace PUT |
 | 322.8 | Client DTO contract tests — there were none | store-be | **Done** | `tests/test_client_request_dto.py`, 27 tests |
+
+---
+
+## 9. Migrations applied, and the duplicate-form audit (2026-09-20)
+
+### Migrations — applied to dev and verified
+
+`STAGE=DEVELOPMENT AWS_PROFILE=PACIFIC-PROD python3 -m alembic upgrade head` in `be/store-be`,
+taking `d3e4f5a6b7c8` → `e4f5a6b7c8d9` → `f5a6b7c8d9e0`.
+
+| Check | Result |
+|---|---|
+| Linked orders before / after | 4 / 4, **every field identical** (snapshotted before the drop and diffed after) |
+| `invoice_*` columns | dropped |
+| `idx_order_document_id` | created |
+| `document_info.status` on backfilled rows | null — those links were made before a verdict existed to record, and inventing ACCEPTED would assert something never checked |
+| `clients.notes` | created |
+| Live read through the ORM + mapper | `PM-000001` returns `document_id` + `document_info` correctly |
+
+### Audit — is the clients bug a pattern?
+
+Three classes were checked across the POS.
+
+**1. A second, drifted copy of an edit form.** Clients was the only one.
+`ProductDetailPage` and `ProductsPage` both edit the same entity from two surfaces and do
+it correctly: one component (`ProductDrawerForm`) and one seeder + payload builder
+(`lib/productFormMapping`). No form component is orphaned — every one has at least one
+consumer, now that `ClientFormBody` is deleted.
+
+**2. A call whose verb/path matches no route** (the 422 and the 403 in TSR-322). Every POS
+call into store-be was cross-checked against its generated OpenAPI: **42 matched exactly,
+0 verb mismatches remain.** One genuine gap: `usePriceSchedules` →
+`GET /api/organizations/{org}/price-schedules`, which exists in no controller. store-be has
+the model, the migration and `price_schedule_service.py` — only the route was never
+registered. Nothing calls the hook, so it is a feature to finish rather than a live break;
+the hook now says so, instead of leaving the next caller to discover it as a 403. The other
+eight vertical hooks are unused but real.
+
+**3. An effect that blanks a field when a scope dependency changes** (what wiped the id).
+Six effects assign an empty value; five are seed-on-open (`[open, …]`), which is the
+correct pattern. The sixth is `IdentitySection`, which already carries the `previousScope`
+guard — and its unguarded twin is gone.
+
+Not re-checked: product save rules, which TSR-268 already aligned between the POS and
+store-be.
