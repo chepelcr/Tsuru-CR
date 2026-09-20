@@ -350,7 +350,31 @@ newest real order.
 | Email | **SENT** to `chepelcr@outlook.com`, SES id `010001a0bf6eaaf9-…` |
 | Audit rows | `RECEIVER: SENT` · `ISSUER: FAILED (Missing recipient email)` |
 
-**One open item, and it is data rather than code:** the organization has no issuer
-notification email on file, so the issuer's own copy fails. `NotificationPipeline` reads
-`registered.email or aggregate.primary_email`; setting either fixes it. It no longer takes
-the Lambda down.
+### The issuer copy, and the attachments (2026-09-20, follow-up)
+
+"Missing recipient email" was not missing data — `registered_organizations.email` has held
+`vilmacorella@yahoo.com` all along. `_resolve_issuer_email` read `email` / `billing_email`
+off the aggregate ROOT, and `OrganizationAggregate` has neither (it has `organization` and
+`registered_organization`), then fell back to `document["issuer"]["email"]`, which the
+pipeline hardcoded to `None` under a comment calling it a stub. **Both paths were dead**, so
+no organization could ever resolve an issuer address. Now: registered org → organization
+billing email → dict-shaped aggregate → document stub, and the stub is populated from the
+fiscal record so the fallback is real.
+
+**And every notification ever sent went out with no attachments.** `documents.bucket` and
+the three `documents.*_key_template` parameters are not provisioned in SSM for any stage, so
+`_download_optional` short-circuited on a `None` bucket — silently, because only the signed
+XML logs a warning and the other two return `None` quietly. The templates also described a
+layout (`documents/{clave}/signed.xml`) that nothing has ever written to: the producers use
+`hacienda/{stage}/{org}/{YYYY}/{MM}/{DD}/{clave}/` plus `artifact_naming`. The pipeline now
+resolves its bucket from the same keys `pdf_pipeline` does and addresses artifacts by the
+names that wrote them, with the configured templates kept as a fallback.
+
+Verified against document `…246`: XML 9,987 B, PDF 15,578 B, Hacienda response 5,907 B — all
+three found and attached, re-sent to the receiver (`010001a0bf7b6e2c-…`).
+
+**Open, and outside our control:** SES is in **sandbox** (`ProductionAccessEnabled: false`),
+so every recipient must be a verified identity. `vilmacorella@yahoo.com` was added and is
+**Pending** — AWS emailed it a confirmation link that has to be clicked. Until then the
+issuer copy records `SES delivery failed: Email address is not verified`, which is at least
+an honest, actionable error rather than the phantom "Missing recipient email".
