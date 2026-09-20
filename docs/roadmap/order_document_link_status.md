@@ -373,6 +373,17 @@ names that wrote them, with the configured templates kept as a fallback.
 Verified against document `…246`: XML 9,987 B, PDF 15,578 B, Hacienda response 5,907 B — all
 three found and attached, re-sent to the receiver (`010001a0bf7b6e2c-…`).
 
+**And the attachments were named `documento.xml` / `documento.pdf` /
+`respuesta-hacienda.xml`** — three hardcoded constants, identical on every document this
+platform has ever sent, so saving two invoices to one folder overwrites the first and
+nothing in the name says which comprobante it is. They now come from `artifact_naming`, the
+same helper that names them in S3, so the attachment and the download are one name:
+`Factura Electronica 00100001010000000246.xml`. The fallback constants remain for a document
+with no consecutive to name itself by, and for a consecutive `artifact_naming` refuses — a
+bad name must cost the NAME, never the attachment, since it goes straight into a MIME
+header. Those names contain spaces, which truncate at the first one if the header parameter
+is unquoted; `add_header(..., filename=)` quotes it, and a test pins the round trip.
+
 **Open, and outside our control:** SES is in **sandbox** (`ProductionAccessEnabled: false`),
 so every recipient must be a verified identity. `vilmacorella@yahoo.com` was added and is
 **Pending** — AWS emailed it a confirmation link that has to be clicked. Until then the
