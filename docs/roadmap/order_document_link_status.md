@@ -43,7 +43,7 @@ Spans **five** repos, four of which are gitignored here and carry their own comm
 | Decision | Detail |
 |---|---|
 | Link key | The order's `document_id` holds sales-be's **`Sale.sale_id` UUID** — the id the POS already routes a document by (`/dashboard/documents/{saleId}`). `Sale.document_id` (bigint) rides inside `document_info` as `document_number`. |
-| Trigger | **Two publishes.** sales-api claims the order at EMISSION with status 0 (PROCESSING) — that is what stops a second factura while the document is in flight. document-validator then publishes on **ACCEPTED only** (AtvStatus 1), moving the stored status to 1. PARTIAL and REJECTED publish nothing, so a rejected document leaves the claim standing and the order is released through the repair endpoint. |
+| Trigger | **Claim, then settle.** sales-api claims the order at EMISSION with status 0 (PROCESSING) — that is what stops a second factura while the document is in flight. document-validator settles it: **ACCEPTED** confirms the claim, **REJECTED** releases the order so a corrected document can be issued. PARTIAL publishes nothing (Hacienda accepted it, so the order stays claimed at PROCESSING — blocked either way). A released link is KEPT, not cleared: the order records which document was refused, it just stops counting as billed. |
 | DTO | **Clean break**: the order DTO drops `invoice` and emits `document_info`. The POS is the only consumer. |
 | Transport | SNS FIFO → SQS FIFO, modelled on the existing `OrganizationBranches` hop (sales-be → store-be). Not EventBridge, not a direct HTTP call. |
 | Order number on the document | Rides `other_fields` under **internal** codes, and therefore **reaches the signed XML** as `OtroTexto` — accepted deliberately: it needs no sales-be migration, and the order number is already on the document as the `notes` string "Pedido #…". |
@@ -272,3 +272,85 @@ guard — and its unguarded twin is gone.
 
 Not re-checked: product save rules, which TSR-268 already aligned between the POS and
 store-be.
+
+---
+
+## 10. Release-on-reject, the emission notification, and a real Walmart document (2026-09-20)
+
+### Release-on-reject (TSR-324)
+
+`REJECTED` now publishes too, and store-be releases the order: `is_order_billed` is
+`document_id AND status != 3`, so a refused document stops counting as billed and the next
+document may claim it. An ACCEPTED or still-in-flight claim is untouched — pinned by four
+tests, including both "cannot be displaced" cases, so releasing never weakens the
+double-billing guard.
+
+### The notification the issuer never got
+
+`notify_document_status` already targeted `sale.created_by` (the Cognito sub) on every
+terminal verdict — but PROCESSING is deliberately never announced, and **this issuer answers
+-37 indefinitely**, so a document could produce no notification at all, ever. Added
+`notify_order_billed`: emission-time, and only when the document bills an ORDER, so the bell
+does not ring on every walk-in sale. Different `event_type` from the verdict events, so the
+two do not dedupe each other away.
+
+### Two bugs that had made document-notification impossible
+
+Found by actually running it. **No document notification email had ever been delivered.**
+
+1. `NotificationPipeline` constructs three repositories and a comment claiming they "share
+   `self.session` via DatabaseConnection injection" — nothing did the sharing. The first
+   call through one (`_aggregate_repo.find_full_profile`, the line after the sale resolves)
+   raised `AttributeError: 'NoneType' object has no attribute 'execute'` on **every**
+   invocation. Fixed with an `__enter__` that binds them, mirroring `pdf_pipeline`.
+2. `notifications.updated_on` is NOT NULL in the database; the model declared it nullable
+   with `onupdate` only, so every INSERT wrote NULL and failed its flush — which rolled the
+   transaction back and poisoned the session for every row after it. Fixed the insert-time
+   default, made the model's nullability honest, and made a failed audit row roll itself
+   back so one bad row cannot take down the rest.
+
+### The live suite could not emit anything
+
+The layer-4 acceptance runner — the tool CLAUDE.md calls "the acceptance tool" — was
+entirely stale since the DTO convergence (TSR-265..269) moved the wire to snake_case. The
+request DTOs carry no camelCase aliases and do not reject unknown keys, so a camelCase body
+was **silently dropped**: `document_type`, `branch_id`, `net_price`, `line_number` and
+`unit_measure` all arrived as `None`. Four separate places:
+
+| Where | Was | Now |
+|---|---|---|
+| 95 case fixtures + 21 suites | camelCase | snake_case (AWS's own `messageId`/`eventSource` left alone — that envelope is AWS's, not ours) |
+| `_make_sqs_case` envelope | `eventType` / `occurredAt` | `event_type` / `occurred_at` — these were MISSING required fields, so every synthesized event was rejected and DLQ'd |
+| `_upgrade_live_expectations` | rewrote snake assertions **to** camelCase | normalises to snake; it had been renaming correct paths into ones that match nothing, so every run reported four failed assertions on a document that had emitted perfectly |
+| `_apply_source_order` | built a camelCase body | builds snake_case, and now emits `TsuruNumeroPedido` / `TsuruOrigenPedido` / `WMNumeroOrden`, so a layer-4 run exercises the order claim the POS actually sends |
+
+A **strict check replaces the normalisation**: a camelCase key in a request body is now a
+hard error naming the key and its snake_case spelling. Tolerating both is how the next
+fixture gets written the wrong way.
+
+Also added: `sourceOrder.tax_override`, which the old guard asked for but nothing
+implemented — it declares the tax RULE (code/rate), never the amount, and
+`_assert_tax_matches_order` refuses to emit unless the declared rate reproduces the tax the
+order already recorded. And a **notification stage**, which the live runner never had: it
+produced a real XML, a real verdict and a real PDF and then never invoked the one stage that
+puts them in the customer's inbox.
+
+### The emission
+
+`tests/local/suites/walmart_emission.json` — one case, one consecutive, billing Walmart's
+newest real order.
+
+| | |
+|---|---|
+| Consecutive | `00100001010000000246` |
+| Clave | `50620092600010244007700100001010000000246117381379` |
+| Signed XML | verified in S3 |
+| Hacienda | PROCESSING (this issuer answers **-37**, a registration mismatch — TSR-216) |
+| PDF | verified in S3 |
+| Email | **SENT** to `chepelcr@outlook.com`, SES id `010001a0bf6eaaf9-…` |
+| Audit rows | `RECEIVER: SENT` · `ISSUER: FAILED (Missing recipient email)` |
+
+**One open item, and it is data rather than code:** the organization has no issuer
+notification email on file, so the issuer's own copy fails. `NotificationPipeline` reads
+`registered.email or aggregate.primary_email`; setting either fixes it. It no longer takes
+the Lambda down.
