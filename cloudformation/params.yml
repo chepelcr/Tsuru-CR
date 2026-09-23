@@ -129,6 +129,20 @@ Resources:
         Fn::ImportValue: !Sub "tsuru-${Environment}-organization-events-topic-arn"
       Description: SNS topic ARN for organization events (imported from organization-publish-topic stack)
 
+  # /tsuru/{env}/platform/sns/branches-topic-arn
+  # management-be publishes the default station (branch 1 + terminal 1) here
+  # when an organization is first created, so manual orders work before any
+  # fiscal information exists. Same SAVE_BRANCHES contract and FIFO topic the
+  # Hacienda history sweep uses; store-be consumes it.
+  SnsBranchesTopicArn:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub "/tsuru/${Environment}/platform/sns/branches-topic-arn"
+      Type: String
+      Value:
+        Fn::ImportValue: !Sub "tsuru-${Environment}-organization-branches-topic-arn"
+      Description: SNS FIFO topic ARN for branch discovery (imported from sales-be hacienda-messaging)
+
   # /tsuru/{env}/platform/s3/bucket
   S3BucketParam:
     Type: AWS::SSM::Parameter
