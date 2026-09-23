@@ -57,6 +57,7 @@ Tailwind. Gestor de paquetes: **pnpm**.
 | ⚠️ Sin verificar | FE implementado pero el contrato del endpoint **no está confirmado** (`TODO(verify-endpoint)`) — puede fallar en runtime |
 | 🔒 Bloqueado por backend | FE listo; el backend correspondiente es stub o no existe |
 | ❌ Faltante | No implementado, no accesible, o código muerto |
+| ⏸️ Deshabilitado | Implementado, pero apagado a propósito con un flag del producto hasta completarlo |
 
 **Prioridad QA:** `Alta` (flujo fiscal/legal o riesgo alto de fallo), `Media`, `Baja`.
 
@@ -195,12 +196,15 @@ Ruta: `/dashboard/reports` (`ReportePage.tsx`).
 
 ### 3.11 Sesiones y puestos
 
-Rutas: `/dashboard/sessions`, `/dashboard/stations`.
+Rutas: `/dashboard/sessions`, `/dashboard/stations`, `/dashboard/stations/:branchCode/terminals/:terminalCode`, `/dashboard/consecutives`.
 
 | Funcionalidad | Descripción | Estado | Incidencia (TSR) | Bugs / Riesgos | Prioridad QA |
 |---|---|---|---|---|---|
 | Sesiones | `SessionsPage` + `SessionConfig` (creación multi-paso) | ✅ | — | Tormenta de refetch ya corregida (cache 5 min) — verificar que no regresó | Media |
 | Puestos (sucursales/terminales) | `PuestosPage`, catálogo de tipos de sucursal | ✅ | TSR-139 | Catálogo `branch_types` implementado en store-be (4 rutas); el TODO de `useBranchTypes` quedó obsoleto. Las sucursales se direccionan por `code` entero, no UUID (TSR-149) | Baja |
+| Detalle de terminal | `TerminalDetailPage`: datos de la terminal, consecutivo por tipo de documento (último número + próximo consecutivo de 20 dígitos) y documentos emitidos desde esa terminal | ✅ | TSR-327, TSR-328 | Nuevo (2026-09-22). La tarjeta de consecutivos requiere `admin:consecutives:read`, la de documentos `documents:emitted:read` — verificar que un rol sin ellos no vea la tarjeta | Media |
+| Consecutivos (Administración interna) | `ConsecutivesPage`: filtros sucursal → terminal de la sucursal → tipo de documento con el DSL `search=` de la plataforma, persistidos en la URL | ✅ | TSR-327, TSR-329 | Verificar que el filtro sobrevive a recargar la página y que cambiar de sucursal limpia la terminal | Media |
+| Ajuste manual de consecutivo | `ConsecutiveEditDrawer` en dos pasos con pantalla de confirmación y acuse obligatorio; el BE solo permite **subir** el número, con bloqueo de fila y bitácora (`consecutive_adjustments`) | ✅ | TSR-327 | **Sensible fiscal.** Probar: número menor o igual → error; cambio concurrente con una venta → 409 con el valor real; rol sin `admin:consecutives:update` → 403 y botón oculto; la bitácora muestra motivo, usuario y fecha | **Alta** |
 | Aprobación de cierres | Autorización de cierre de caja | 🔒 | TSR-010 | `is_manager` default `True` en BE ("backward compatibility") — cualquier usuario aprueba cierres | Alta |
 
 ### 3.12 Miembros y roles (RBAC)
@@ -209,9 +213,11 @@ Rutas: `/dashboard/members`, `/dashboard/roles`.
 
 | Funcionalidad | Descripción | Estado | Incidencia (TSR) | Bugs / Riesgos | Prioridad QA |
 |---|---|---|---|---|---|
-| Gestión de miembros | Invitar, asignar rol, remover | ✅ | TSR-024 | — | Media |
+| Gestión de miembros | Invitar, asignar roles (varios por miembro, como chips), quitar roles, remover | ✅ | TSR-024, TSR-330 | Un miembro conserva al menos un rol; el último propietario conserva `owner`; nadie edita sus propios roles | Media |
+| Cambio de rol en sesión | Tarjeta "Rol en esta organización" en Perfil: el usuario con varios roles elige el activo sin cerrar sesión | ✅ | TSR-330 | Los permisos son los del rol **activo**, nunca la unión. Verificar que el menú cambia al instante | Media |
+| Cambios de permisos en vivo | Cambiar el rol de un miembro o los permisos de un rol llega por AppSync a su POS abierto, que recarga permisos sin refrescar | ✅ | TSR-331 | Requiere desplegar la política IAM de management-be; verificar con dos sesiones abiertas | Alta |
 | Roles y matriz de permisos | `RolesPage` + `RoleDrawerForm` + `PermissionMatrix` org-scoped; catálogo espejo 1:1 del sidebar | ✅ | TSR-037 | — | Media |
-| Gating de acciones en toda la app | 133 elementos accionables gateados (hide-not-disable) + nav + doc-types + org-settings por tarjeta | ✅ | TSR-110, TSR-038, TSR-109, TSR-107 | **`usePermissions()` es fail-open** mientras `RBAC_ENFORCEMENT=log` — el ocultamiento de permisos NO es confiable hasta el flip (TSR-027) | **Alta** |
+| Gating de acciones en toda la app | 133 elementos accionables gateados (hide-not-disable) + nav + doc-types + org-settings por tarjeta | ✅ | TSR-110, TSR-038, TSR-109, TSR-107, TSR-332 | `usePermissions()` es **fail-closed** desde 2026-09-22: nada se muestra hasta resolver permisos y el sidebar se arma solo con los módulos disponibles. Mapeo único: agregar → `create`, editar → `update`, activar/desactivar y eliminar → `delete`. El BE sigue en `RBAC_ENFORCEMENT=log` (TSR-027) | **Alta** |
 
 ### 3.13 Configuración de organización
 
@@ -337,7 +343,7 @@ de data-api no resolvía — tipo de cambio, versiones de documento y todos los 
 | Fechas de pedidos manuales | `YYYY-MM-DD` se leía como medianoche UTC → se mostraba **un día antes** en Costa Rica; el formateador estaba duplicado en dos páginas | ✅ | **TSR-264** | Los pedidos importados (`DD/MM/YYYY`) nunca tuvieron el fallo, así que solo se ve en pedidos capturados en el POS. Verificar creación y entrega en lista y detalle | Media |
 | `SelectField` | Listbox propio, teclado + ARIA; 32 archivos convertidos sin tocar handlers | ✅ | TSR-153 | Un `<option>` nativo no se puede estilizar; el popup lo dibuja el SO | Media |
 | Menú "Más" de pagos | Bug de capas CSS: `.dropdown-menu` fuera de `@layer` ganaba a las utilities | ✅ | TSR-153 | Verificado en el CSS compilado | Alta |
-| Mesas / cuentas abiertas | Full-stack; una cuenta de bar **es** una mesa dinámica | ✅ | TSR-154/158 | Direccionadas por `branch_code` entero (TSR-149) | Media |
+| Mesas / cuentas abiertas | Full-stack; una cuenta de bar **es** una mesa dinámica | ⏸️ Deshabilitado | TSR-154/158, TSR-333 | **Pestaña Mesas deshabilitada en el POS integrado** (`POS_TABLES_ENABLED = false`) hasta que existan las pantallas de administración. Verificar que no aparece | Baja |
 | Combos | Explotan en componentes al agregar al carrito | ✅ | TSR-154 | Un combo con 13% y exento **no puede ser una línea plana** en un comprobante fiscal | **Alta** |
 | Servicio 10% | Línea propia, nunca recargo sobre el total | ✅ | TSR-154 | Se excluye de su propia base o se compone en cada recálculo | Alta |
 | Cuenta dividida | Por línea o en partes iguales; N documentos | ✅ | TSR-154 | `sharesReconcile` verifica que las partes sumen la cuenta original | Alta |

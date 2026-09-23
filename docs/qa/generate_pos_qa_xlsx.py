@@ -30,6 +30,7 @@ ESTADOS = {
     "⚠️ Sin verificar": "FE implementado pero el contrato del endpoint NO está confirmado (TODO(verify-endpoint))",
     "🔒 Bloqueado por backend": "FE listo; el backend correspondiente es stub o no existe",
     "❌ Faltante": "No implementado, no accesible, o código muerto",
+    "⏸️ Deshabilitado": "Implementado, pero apagado a propósito con un flag del producto hasta completarlo",
 }
 
 STATUS_FILL = {
@@ -38,6 +39,7 @@ STATUS_FILL = {
     "⚠️": "FFD8B0",  # naranja
     "🔒": "D9D2E9",  # morado
     "❌": "FFC7CE",  # rojo
+    "⏸️": "E7E6E6",  # gris
 }
 
 # (hoja, [filas]) — cada fila sigue COLS
@@ -115,13 +117,18 @@ MODULES = [
     ]),
     ("Sesiones-Puestos", [
         ["Sesiones", "SessionsPage + SessionConfig (creación multi-paso)", "✅ Completo", "—", "Tormenta de refetch ya corregida (cache 5 min) — verificar que no regresó", "Media"],
-        ["Puestos (sucursales/terminales)", "PuestosPage, catálogo de tipos de sucursal", "🟡 Parcial", "—", "useBranchTypes con TODO — catálogo en proceso en cross-app-be", "Media"],
+        ["Puestos (sucursales/terminales)", "PuestosPage, catálogo de tipos de sucursal", "✅ Completo", "TSR-139", "Catálogo branch_types implementado en store-be (4 rutas); las sucursales se direccionan por code entero, no UUID (TSR-149)", "Baja"],
+        ["Detalle de terminal", "TerminalDetailPage: datos, consecutivo por tipo de documento (último número + próximo consecutivo) y documentos emitidos", "✅ Completo", "TSR-327, TSR-328", "Tarjetas gateadas por admin:consecutives:read y documents:emitted:read", "Media"],
+        ["Consecutivos (Administración interna)", "ConsecutivesPage: filtros sucursal → terminal → tipo de documento con el DSL search=, persistidos en la URL", "✅ Completo", "TSR-327, TSR-329", "Verificar que el filtro sobrevive a recargar y que cambiar de sucursal limpia la terminal", "Media"],
+        ["Ajuste manual de consecutivo", "Drawer en dos pasos con confirmación y acuse; el BE solo permite subir el número, con bloqueo de fila y bitácora", "✅ Completo", "TSR-327", "Sensible fiscal: número menor → error; venta concurrente → 409; sin admin:consecutives:update → 403 y botón oculto", "Alta"],
         ["Aprobación de cierres", "Autorización de cierre de caja", "🔒 Bloqueado por backend", "TSR-010", "is_manager default True en BE — cualquier usuario aprueba cierres", "Alta"],
     ]),
     ("Roles-RBAC", [
-        ["Gestión de miembros", "Invitar, asignar rol, remover", "✅ Completo", "TSR-024", "—", "Media"],
+        ["Gestión de miembros", "Invitar, asignar roles (varios por miembro), quitar roles, remover", "✅ Completo", "TSR-024, TSR-330", "Al menos un rol por miembro; el último propietario conserva owner; nadie edita sus propios roles", "Media"],
+        ["Cambio de rol en sesión", "Perfil → Rol en esta organización: elegir el rol activo sin cerrar sesión", "✅ Completo", "TSR-330", "Permisos del rol activo, nunca la unión", "Media"],
+        ["Cambios de permisos en vivo", "Cambios de rol/permisos llegan por AppSync al POS abierto", "✅ Completo", "TSR-331", "Requiere la política IAM de management-be; probar con dos sesiones", "Alta"],
         ["Roles y matriz de permisos", "RolesPage + RoleDrawerForm + PermissionMatrix org-scoped; catálogo espejo 1:1 del sidebar", "✅ Completo", "TSR-037", "—", "Media"],
-        ["Gating de acciones app-wide", "133 elementos gateados (hide-not-disable) + nav + doc-types + org-settings por tarjeta", "✅ Completo", "TSR-110, TSR-038, TSR-109, TSR-107", "usePermissions() fail-open mientras RBAC_ENFORCEMENT=log — no confiable hasta el flip (TSR-027)", "Alta"],
+        ["Gating de acciones app-wide", "133 elementos gateados (hide-not-disable) + nav + doc-types + org-settings por tarjeta", "✅ Completo", "TSR-110, TSR-038, TSR-109, TSR-107, TSR-332", "usePermissions() fail-closed (2026-09-22); sidebar desde módulos disponibles; agregar→create, editar→update, estado/eliminar→delete. BE aún en RBAC_ENFORCEMENT=log (TSR-027)", "Alta"],
     ]),
     ("Config-Organización", [
         ["9 tarjetas de configuración", "Hub + sub-páginas con RBAC por tarjeta; falso 'Pendiente' resuelto", "✅ Completo", "TSR-107, TSR-108", "Endpoints puntuales de storefront-settings con TODO(verify-endpoint) (migración 05)", "Media"],
@@ -197,7 +204,7 @@ MODULES = [
         ["Fechas de pedidos manuales", "YYYY-MM-DD se leía como medianoche UTC → se mostraba un día antes en Costa Rica; el formateador estaba duplicado en dos páginas", "✅ Completo", "TSR-264", "Los pedidos importados (DD/MM/YYYY) nunca tuvieron el fallo: sólo se ve en pedidos capturados en el POS. Verificar creación y entrega en lista y detalle", "Media"],
         ["SelectField", "Listbox propio, teclado + ARIA; 32 archivos convertidos sin tocar handlers", "✅ Completo", "TSR-153", "Un <option> nativo no se puede estilizar; el popup lo dibuja el SO", "Media"],
         ["Menú 'Más' de pagos", "Bug de capas CSS: .dropdown-menu fuera de @layer ganaba a las utilities", "✅ Completo", "TSR-153", "Verificado en el CSS compilado", "Alta"],
-        ["Mesas / cuentas abiertas", "Full-stack; una cuenta de bar es una mesa dinámica", "✅ Completo", "TSR-154", "Direccionadas por branch_code entero (TSR-149)", "Media"],
+        ["Mesas / cuentas abiertas", "Full-stack; una cuenta de bar es una mesa dinámica", "⏸️ Deshabilitado", "TSR-154, TSR-333", "Pestaña Mesas deshabilitada en el POS integrado (POS_TABLES_ENABLED = false) hasta que existan las pantallas de administración", "Baja"],
         ["Combos", "Explotan en componentes al agregar al carrito", "✅ Completo", "TSR-154", "Un combo con 13% y exento no puede ser una línea plana en un comprobante fiscal", "Alta"],
         ["Servicio 10%", "Línea propia, nunca recargo sobre el total", "✅ Completo", "TSR-154", "Se excluye de su propia base o se compone en cada recálculo", "Alta"],
         ["Cuenta dividida", "Por línea o en partes iguales; N documentos", "✅ Completo", "TSR-154", "sharesReconcile verifica que las partes sumen la cuenta original", "Alta"],
