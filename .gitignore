@@ -59,3 +59,6 @@ templates/vintage-fashion/
 # Python bytecode (docs/qa generator, scripts)
 __pycache__/
 *.pyc
+
+# Claude Code local settings (may contain tokens) — never commit
+/.claude/settings.local.json
