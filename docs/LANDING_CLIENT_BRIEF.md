@@ -1,270 +1,83 @@
-# Tsuru (formerly JMarkets) Landing Client - Executive Design Brief
+# Tsuru landing — current client brief
 
-## Project Overview
+**Updated:** 2026-09-23
+**Purpose:** Working brief for the public landing and its visual identity.
+**Content source:** `fe/landing/src/content/` (especially `landing.json`, `billing.json`, `features.json`, `plans.json`, `branding.json`, and `themes.json`). The logo handoff is [`LOGO_DEFINITION.md`](./LOGO_DEFINITION.md).
 
-**Product Name:** Tsuru  
-**Product Type:** Multi-Tenant SaaS E-commerce Platform  
-**Target Audience:** Small to medium businesses wanting to launch online stores  
-**Industry:** E-commerce Technology / SaaS  
-**Website:** tsuru.jcampos.dev
+## Product, audience, positioning
 
-## Brand Essence
+Tsuru is a Costa Rican point of sale and digital storefront for small merchants. Its immediate value is **free electronic invoicing before Hacienda** plus tools to sell in person and share a catalog online. Its longer-term vision is a digital home for local fairs, barter, and the social solidarity economy. **Tsuru** is the public brand; JMarkets is a former name, not a customer-facing label.
 
-### Core Value Proposition
-Tsuru empowers businesses to launch professional online stores in minutes without technical knowledge. A complete e-commerce solution with custom domains, beautiful templates, and enterprise-grade infrastructure.
+Lead with people who need to formalize and sell without a costly or complicated setup: home businesses, food producers, artisans, feria vendors, pulperías, and small shops. Cooperatives and businesses with teams are the next audience. Fair organizers are a future, consultative audience. The fiscal product and pricing are Costa Rica-specific; the landing is Spanish-first, with English content available.
 
-### Brand Personality
-- **Professional** - Enterprise-quality platform accessible to everyone
-- **Modern** - Cutting-edge technology with contemporary design
-- **Empowering** - Puts powerful tools in the hands of small businesses
-- **Trustworthy** - Secure, reliable, AWS-backed infrastructure
-- **Accessible** - Simple to use, no technical expertise required
+**Positioning:** “Vende legal. Vende fácil. Vende en comunidad.” Today Tsuru helps a small Costa Rican business invoice and sell; it is building the community layer openly.
 
-### Key Differentiators
-1. **Instant Deployment** - Launch your store in minutes, not weeks
-2. **Custom Subdomains** - Professional branded URLs (yourstore.tsuru.jcampos.dev)
-3. **Multi-Tenant Architecture** - Isolated, secure environments per organization
-4. **AWS Infrastructure** - Enterprise-grade reliability and performance
-5. **Beautiful Templates** - 8+ pre-designed industry-specific themes
-6. **Free Tier** - Start selling with zero upfront costs
+## Landing approach
 
-## Product Features (for visual representation)
+1. **Start with the practical promise.** The hero names free Hacienda invoicing, point of sale, and an online store shared through WhatsApp. Primary CTA: **“Crear mi cuenta gratis”** to `https://app.tsuru.jcampos.dev/register`; secondary CTA: **“Ver ejemplos”** to `/ejemplos`.
+2. **Show the path into the product.** Explain account setup, product publishing, and sharing a store link in three short steps. Use real product screens and merchant contexts when visual proof is needed.
+3. **Prove the invoicing pillar.** The home page has a dedicated section about v4.4 receipts, digital signing, Hacienda submission, PDF/email, and mobile/offline use. `/facturacion` resolves to that home-page section. The features page also covers the POS, catalog/QR/WhatsApp, templates, online address, and team roles.
+4. **Present plans without implying checkout is live.** The home page has a four-plan teaser; `/planes` carries comparison, solidarity promise, FAQ, and details. Amounts are marked preliminary and plan CTAs display **“Próximamente”** while entitlement and billing work is pending.
+5. **Explain the mission honestly.** Values and community sections connect legal selling, online selling, and selling together. Ferias, trueque, and mutual-support features must be identified as **“en construcción” / “muy pronto”** wherever they appear. Tell the origin story accurately: the project began in **Puntarenas** and was inspired by the Feria del Trueque Verde Manantial in **Guápiles**.
+6. **Close with one clear action.** Return to free registration; avoid extra conversion promises without operational backing.
 
-### Core Capabilities
-- 🏪 **Complete E-commerce Platform** - Product catalog, shopping cart, checkout
-- 📊 **Analytics Dashboard** - Real-time sales tracking and insights
-- ⚡ **CDN Performance** - Lightning-fast global content delivery
-- 🌐 **Custom Domains** - Professional branded subdomains included
-- 🎨 **Theme Customization** - Beautiful, responsive templates
-- 💳 **Payment Processing** - Secure payment gateway integration
-- 📦 **Inventory Management** - Stock tracking and order fulfillment
-- 👥 **24/7 Support** - Dedicated customer success team
-- 🔒 **SSL Security** - Enterprise-grade encryption and privacy
+The current home sequence in `fe/landing/src/pages/Landing.tsx` is hero → how it works → invoicing → plan teaser → values → community pillars → final CTA. Preserve that priority: the page is for a merchant deciding whether Tsuru helps them sell legally, rather than a generic SaaS infrastructure pitch.
 
-### Technical Highlights
-- **Serverless Architecture** - AWS Lambda, API Gateway, CloudFront
-- **Multi-Language Support** - Built-in internationalization
-- **Dark/Light Mode** - Modern UI with theme switching
-- **Mobile Responsive** - Perfect experience on all devices
-- **SEO Optimized** - Built for search engine visibility
+### Copy and proof rules
 
-## Pricing Tiers
+- Warm, direct, community-minded Spanish. Preserve the published Costa Rican phrasing; English is a faithful second language, not a separate market promise.
+- State available capabilities in the present tense. Label planned capabilities explicitly. Do not invent customer counts, testimonials, support hours, security certifications, or guaranteed fair-trade outcomes.
+- Keep infrastructure mostly out of primary copy. AWS, serverless, and multi-tenant design are implementation context, not the merchant's reason to sign up.
+- Do not imply Tsuru is live across Latin America; Hacienda invoicing is specific to Costa Rica.
+- Use real product examples and local merchant settings. Avoid generic stock-tech imagery and false “active fair” examples.
 
-### Free Plan - $0/month
-- 1 online store
-- 50 products
-- Basic analytics
-- Community support
-- Perfect for: Startups and testing
+## Current published plan model
 
-### Pro Plan - $29/month (Coming Soon)
-- Unlimited products
-- Advanced analytics
-- Priority support
-- Custom domain
-- Perfect for: Growing businesses
+The public model is **four tiers in colones (CRC)**, following a harvest metaphor. `fe/landing/src/content/plans.json` is the source for names, copy, prices, and flags. **Paid amounts are drafts, include IVA, and are not yet purchasable** (`draftPricing: true`, `ctaComingSoon: true`). The owner-level plan and organization quota have been implemented (`TSR-284`); feature entitlements, upgrade UX, and billing remain planned (`TSR-145/146`). Do not describe the published feature allowances as enforced today.
 
-### Enterprise - Custom Pricing (Coming Soon)
-- Everything in Pro
-- Dedicated infrastructure
-- White-label options
-- SLA guarantees
-- Perfect for: Large organizations
+| Plan | Published price | Intended customer and shape |
+|---|---|---|
+| **Semilla** | **₡0, forever** | Small seller starting out. Invoicing and legal essentials remain available; current published allowance is 30 receipts/month, 50 products, 30 clients, one branch and one terminal, plus catalog/QR/WhatsApp. Receipt volume is planned as a **soft allowance**, never a reason to block issuing a legal document. |
+| **Cosecha** | **Draft: ₡20.000/month or ₡180.000/year** | Growing business: unlimited products/clients and receipts, own domain, up to five team members, advanced reports, and premium templates. |
+| **Cooperativa** | **Draft: ₡35.000/month or ₡315.000/year** | Multi-branch and larger teams: unlimited branches/terminals and seats, fine-grained roles, consolidated reporting, and assisted migration. |
+| **Feria** | **A conversar** | Fair organizers and community projects: several organizations in one fair, public directory, barter, and community support. Consultative provisioning; no self-service purchase or fixed price. Fair capabilities are roadmap items. |
 
-## Target User Personas
+The annual drafts reflect **12 months for the price of 9**. Do not turn draft prices into finalized advertising until `draftPricing` is cleared and implementation is ready.
 
-### Primary: Small Business Owner
-- Age: 28-45
-- Needs: Quick online presence, affordable solution
-- Pain Points: Technical complexity, high costs, time constraints
-- Goals: Start selling online quickly without hiring developers
+In the management backend, the **plan belongs to the user** (`users.plan`); organizations derive it from their owner. The implemented owner quotas are **Semilla 1 organization, Cosecha 3, Cooperativa unlimited, Feria 3**. This is product behavior, not an extra feature row currently advertised on `/planes`. `docs/roadmap/tsuru_plans_implementation.md` began before this owner-level decision; use `be/management-be/src/lib/plans.ts` and roadmap `TSR-284` for the current quota model.
 
-### Secondary: Entrepreneur/Startup Founder
-- Age: 25-40
-- Needs: Scalable platform, professional appearance
-- Pain Points: Limited budget, need to move fast
-- Goals: Launch MVP, test market, grow business
+### Promises across every tier
 
-### Tertiary: Retail Store Owner
-- Age: 35-55
-- Needs: Expand to online sales, manage inventory
-- Pain Points: Unfamiliar with technology, need reliability
-- Goals: Complement physical store with online presence
+- Electronic invoicing remains free, including **all receipt types** (FE, TE, NC, ND, FC, FEX) and **ATV contingency mode**. Legal ability to issue a document must not depend on payment.
+- **No commission on sales.**
+- **Data export is free.**
+- **Semilla does not expire and needs no card.**
 
-## Design Requirements
+These promises are published on `/planes` and constrain future product and design work. Paid tiers sell scale and convenience, not legal capability.
 
-### Logo Design Needs
+## Visual identity for the landing
 
-**Primary Logo:**
-- Modern, clean, professional aesthetic
-- Should work in both light and dark modes
-- Scalable (from favicon to billboard)
-- Memorable and distinctive
-- Technology-forward but approachable
+The implemented palette is warm and grounded, inspired by natural pigments; the landing currently uses these colors in `themes.json`:
 
-**Logo Variations Needed:**
-1. Full logo with wordmark (horizontal)
-2. Stacked version (vertical)
-3. Icon/symbol only (for app icons, favicons)
-4. Monochrome version (black/white)
-5. Simplified version (for small sizes)
+| Role | Color |
+|---|---|
+| Primary burgundy / wordmark | `#6B2A22` |
+| CTA red | `#D9381E` |
+| Secondary forest green | `#2E5033` |
+| Warm sand background | `#F4EFE6` |
+| Body charcoal | `#3D4045` |
+| Golden accent | `#E8B83A` |
 
-### Color Palette Suggestions
+The page pairs **Playfair Display** headings with readable sans-serif body text. Keep typography warm and editorial, with generous space, clear card grouping, and subtle motion. The brand should feel useful, trustworthy, local, and approachable. Light and dark modes both need a legible logo.
 
-**Current Theme Colors:**
-- Primary: HSL-based (customizable)
-- Secondary: Complementary accent
-- Background: White/Dark slate
-- Supports: Light mode and dark mode
+The raster package in `docs/brand/logo/tsuru_brand_package/` is live on the landing, admin dashboard, and POS (2026-09-23). The landing navbar/footer use the light and reverse wordmarks; its favicon switches with the color mode; and `seo.json` points to the supplied social card. The POS manifest uses the supplied app icons. Editable vector masters remain a later production step. See [`LOGO_DEFINITION.md`](./LOGO_DEFINITION.md) for the asset family and handoff.
 
-**Desired Color Psychology:**
-- Trust and reliability (blues, teals)
-- Growth and success (greens)
-- Energy and innovation (vibrant accents)
-- Professional and modern (neutrals)
+The name story may be told with attribution to Bribri culture. **Do not introduce Bribri sacred symbols, an Ú-sure/cacao cosmology mark, etnogeometric patterns, or pre-Columbian motifs into logo or landing assets without the consultation/partnership required by `docs/roadmap/tsuru_rebrand_plan.md` §1.3.** A neutral botanical seed or leaf is acceptable as generic nature imagery; a wordmark-only logo is also valid.
 
-### Typography Considerations
-- **Headings:** Serif font (elegant, professional)
-- **Body:** Sans-serif (clean, readable)
-- **Code/Technical:** Monospace (for developer appeal)
+## Source and status references
 
-### Visual Style
-- **Modern Minimalism** - Clean lines, ample whitespace
-- **Gradient Accents** - Subtle gradients for depth
-- **Card-Based UI** - Organized, scannable content
-- **Smooth Animations** - Professional transitions and interactions
-- **Icon-Driven** - Clear visual communication
-
-## Competitive Landscape
-
-### Similar Platforms
-- Shopify (market leader, expensive)
-- WooCommerce (WordPress-based, complex)
-- BigCommerce (enterprise-focused)
-- Wix/Squarespace (website builders with e-commerce)
-
-### Tsuru Positioning
-**"The AWS-powered Shopify alternative for modern businesses"**
-- More affordable than Shopify
-- Easier than WooCommerce
-- More powerful than Wix
-- Built on enterprise infrastructure
-
-## Use Cases & Applications
-
-### Logo Will Appear On:
-1. **Website** - Landing page header, favicon
-2. **Dashboard** - Admin panel branding
-3. **Store Templates** - Customer-facing stores (8 templates)
-4. **Marketing Materials** - Social media, ads, presentations
-5. **Documentation** - Technical docs, guides
-6. **Email Communications** - Transactional emails, newsletters
-7. **Mobile Apps** - Future iOS/Android applications
-
-### Brand Touchpoints:
-- Landing page (tsuru.jcampos.dev)
-- Admin dashboard (admin.tsuru.jcampos.dev)
-- Customer stores (*.tsuru.jcampos.dev)
-- Social media profiles
-- Email signatures
-- Support documentation
-- Marketing campaigns
-
-## Technical Context
-
-### Platform Architecture
-- **Frontend:** React 18 + TypeScript + Tailwind CSS
-- **Backend:** Node.js + Express + AWS Lambda
-- **Database:** PostgreSQL (Supabase)
-- **Infrastructure:** AWS (S3, CloudFront, API Gateway, Cognito)
-- **Deployment:** Serverless, multi-region CDN
-
-### Current Status
-- ✅ MVP launched and operational
-- ✅ 8 industry-specific templates deployed
-- ✅ Free tier available for registration
-- 🚧 Pro and Enterprise tiers in development
-- 🚧 Payment processing integration upcoming
-
-## Deliverables Requested
-
-### Essential Assets
-1. **Primary Logo** (SVG, PNG, multiple sizes)
-2. **Logo Variations** (horizontal, vertical, icon-only)
-3. **Color Palette** (hex codes, HSL values)
-4. **Favicon** (16x16, 32x32, 64x64)
-5. **Social Media Assets** (profile images, cover photos)
-
-### Optional/Future Assets
-6. **Brand Guidelines** (usage rules, spacing, colors)
-7. **Marketing Templates** (social media posts, ads)
-8. **Illustration Style** (for landing page graphics)
-9. **Icon Set** (custom icons for features)
-10. **Email Templates** (branded email designs)
-
-## Brand Keywords & Associations
-
-**Positive Associations:**
-- Fast, Instant, Quick
-- Professional, Enterprise, Reliable
-- Modern, Innovative, Cutting-edge
-- Simple, Easy, Accessible
-- Powerful, Scalable, Robust
-- Secure, Trusted, Safe
-- Beautiful, Elegant, Polished
-
-**Avoid:**
-- Cheap, Budget, Basic
-- Complex, Complicated, Technical
-- Outdated, Legacy, Old
-- Risky, Unstable, Experimental
-
-## Success Metrics
-
-**A successful logo/brand will:**
-1. Be instantly recognizable at any size
-2. Convey professionalism and trustworthiness
-3. Appeal to non-technical business owners
-4. Stand out from competitors
-5. Work seamlessly in light and dark modes
-6. Scale from favicon to billboard
-7. Be memorable after one viewing
-8. Communicate "modern e-commerce platform"
-
-## Additional Context
-
-### Project Timeline
-- **Current Phase:** MVP operational, seeking brand identity
-- **Next Phase:** Marketing launch, user acquisition
-- **Future:** Mobile apps, international expansion
-
-### Business Model
-- Freemium SaaS (free tier + paid upgrades)
-- Transaction-free (no commission on sales)
-- Subscription-based revenue
-- B2B and B2C focus
-
-### Geographic Focus
-- Initial: Spanish-speaking markets (multi-language support)
-- Expansion: Global reach via AWS infrastructure
-- Localization: Built-in i18n support
-
----
-
-## Summary for AI Designer
-
-**Create a modern, professional logo for Tsuru** - a multi-tenant SaaS e-commerce platform that helps small businesses launch online stores instantly. The brand should feel trustworthy, innovative, and accessible. Think "Shopify meets AWS" - enterprise-grade technology made simple for everyone.
-
-**Key Requirements:**
-- Works in light and dark modes
-- Scalable from 16px favicon to large formats
-- Modern, clean, professional aesthetic
-- Memorable and distinctive
-- Technology-forward but approachable
-- Multiple variations (horizontal, vertical, icon-only)
-
-**Target Audience:** Small business owners (28-55 years old) who want to sell online but lack technical expertise.
-
-**Brand Personality:** Professional, Modern, Empowering, Trustworthy, Accessible
-
-**Competitive Positioning:** The AWS-powered Shopify alternative for modern businesses - more affordable, easier to use, built on enterprise infrastructure.
+- Landing structure and copy: `fe/landing/src/pages/Landing.tsx`, `fe/landing/src/content/landing.json`, `billing.json`, `features.json`
+- Plans and CTA state: `fe/landing/src/content/plans.json`, `fe/landing/src/pages/Planes.tsx`
+- Identity slots and colors: `fe/landing/src/content/branding.json`, `themes.json`, `seo.json`, `fe/landing/src/components/layout/brand-logo.tsx`
+- Strategy and cultural boundary: `docs/roadmap/tsuru_rebrand_plan.md` §1–2; production asset context: `docs/roadmap/tsuru_brand_asset_guide.md`
+- Implemented owner plan and quota: `be/management-be/src/lib/plans.ts` and roadmap `TSR-284`; remaining entitlement work: `docs/roadmap/tsuru_plans_implementation.md` and roadmap `TSR-145/146`

@@ -2,6 +2,8 @@
 
 Practical guide for generating every visual asset the JMarkets → Tsuru rebrand needs: what to create, exact specs, where each file goes in each repo, generation prompts you can paste into an image tool, and the loading-pattern system. Companion to `tsuru_rebrand_plan.md` (brand strategy) — this doc is the production checklist.
 
+**2026-09-23 implementation note:** The selected Option 2 raster package is in `docs/brand/logo/tsuru_brand_package/`. Its light/reverse wordmarks, icon derivatives, and social card are live in landing, admin, and POS under `public/brand/`. Browser favicons and visible wordmarks switch with light/dark mode. The POS manifest points at the supplied 192/512 icons, and the POS service worker precaches the brand assets. Paths and pending checkboxes below are the original production plan; editable SVG masters remain outstanding.
+
 > **Hard rule from the rebrand plan (§1.3, RIBCA gate):** ship the *name*, the *story paragraph*, and the *natural-pigment palette* only. **No Bribri sacred symbols, no Ú-sure (conical house) mark, no etnogeometric patterns (Jaba/Kó/Penéch), no precolombian iconography** — those are Tier 2, blocked until a real partnership with Bribri organizations exists. For launch: a **wordmark-first logo**, optionally with a *generic botanical* motif (cacao pod / seed / leaf treated as neutral botany, no cultural symbolism).
 
 ---
@@ -70,7 +72,7 @@ Upload images through the admin Media library (writes to `public/media/`) or pla
 
 ### 3.2 POS — `tsuru-pos-system` repo (`templates/pos-system/`)
 
-⚠️ `public/manifest.json` currently references `/icon-192.png` and `/icon-512.png` that **do not exist** — the PWA install icon is broken today. This set fixes it.
+The original `/icon-192.png` and `/icon-512.png` manifest paths were broken. The current manifest points to the supplied `/brand/icon-192.png` and `/brand/icon-512.png` in `fe/pos-system/public/`.
 
 | Asset | Spec | Destination |
 |---|---|---|
