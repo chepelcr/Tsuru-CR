@@ -32,6 +32,7 @@ uses the same safe, catalog-backed DTO.
 | §4c | └ zod request DTOs | ✅ done | `management-be` `4e83294` — all mutation bodies + 7 query surfaces; HTTP validation fixtures |
 | §4d | └ OpenAPI regeneration | ✅ done | `management-be` `4e83294` — 90 paths / 116 operations / 0 camelCase data or query names |
 | §4e | └ SNS `eventType` attribute + FilterPolicy | ✅ done | `management-be` `327a7cb` + `sales-be` `5987bbf` — fixture pinned both sides |
+| §4e′ | └ TEMPLATE_UPDATED (template repos → provisioner) | ✅ done (code) 2026-09-23 | Missed by §4e: 8 template workflows still published `eventType`/`templateId` and the DTO lacked the `_type` alias, so every event dead-lettered. `sales-be` `69e4436` (contract test pins the workflow payload) + 8 template repos; deploy pending (roadmap §7 step 24) |
 | §4f | └ `fe/pos-system` mirror types | ✅ done | `pos-system` `e7722ef` — type/style check + 386 tests |
 | §4g | └ `fe/landing` (separate repo) | ✅ done | `landing` `06a07ee` — typecheck + production build |
 | §7 | Common backend error response DTO | ✅ done (code) | management `d95c031`, data `23e48a4`, sales `674ae1f`, store `c369185` — enum-backed exceptions + framework/unhandled normalization |
