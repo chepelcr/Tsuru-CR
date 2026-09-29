@@ -757,6 +757,7 @@ The earlier list (migrate, seed, **catalog reseed**, commit, mirror, swagger) is
 ## 8. Changelog
 
 | Date | Change |
+| 2026-09-28 (landing footer) | Landing footer padding tightened to match Sokol: `py-12` → `pt-8 pb-6`, bottom bar `mt-8 pt-8` → `mt-6 pt-5` (tsuru-landing `6f8267b`, deploys via its own GH Actions). Cosmetic, no TSR row. |
 | 2026-09-27 (TSR-357 historical) | Historical documents list moved to the range syntax too (`emission_date: "a~b"`): sales-be `2c38dd3` deployed by hand (hacienda-history, sales-api); POS follows. Every document list now speaks one date syntax. |
 | 2026-09-27 (TSR-357 range syntax) | Documents date and amount filters switched to the range syntax: sales-be `676ca29` (sales-api Lambda) + pos-system `2831404`; `start_date`/`end_date` remain only on the historical list. |
 | 2026-09-27 (TSR-357) | Search consolidation deployed: POS `5c1b7ae`/`868b349`, store-be `71c276e` (+ snake-only), sales-be `e3a1cb1` (sales-api Lambda). Client pickers, document date/amount/sort filters and the order search now actually filter; all store-be list searches go through `lib/search`, snake_case only. |
