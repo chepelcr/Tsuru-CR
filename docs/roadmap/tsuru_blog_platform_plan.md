@@ -10,7 +10,7 @@
 - Its `/admin/blog` is a **development-only** JSON editor. Saving writes to the local Vite plugin in development or downloads JSON elsewhere; the production GitHub Pages build removes the admin. It is not the live `admin.tsuru.jcampos.dev` console.
 - The live platform console in `fe/dashboard` has no blog route. `fe/pos-system` has no writer section. `be/management-be` has no blog model or API.
 - Three posts attributed to unconnected organizations (`article2`, `article4`, `article5`) have been removed from the landing site. All three `Equipo Tsuru` posts (`article1`, `article3`, `article6`) remain by owner decision, including the Manantial story. The live sitemap contains only these three article routes; a removed route returns 404.
-- The previous transition held the old detail route while `BlogDetail` read the new URL, briefly rendering the not-found state. The route now passes its matched slug to the detail component; this fix is deployed. A full browser navigation regression check remains part of the new-site acceptance pass.
+- The previous transition held the old detail route while `BlogDetail` read the new URL, briefly rendering the not-found state. The route now passes its matched slug to the detail component; this fix is deployed. Live browser navigation from the retained article back to the blog showed the list without the false not-found view.
 
 ## 2. Product flows and authority
 
@@ -71,7 +71,7 @@ GitHub Pages setup for the new repository: configure `blogs.tsuru.jcampos.dev` i
 
 ## 6. Delivery order and acceptance
 
-1. **Immediate source cleanup and transition fix — deployed** — retained only the three team-authored posts in the current landing source and passed matched route params to detail. Type-check, build, prerender, Pages deploy, live sitemap, and a removed-URL 404 were verified. Browser return-navigation check remains in the broader UI acceptance pass.
+1. **Immediate source cleanup and transition fix — deployed** — retained only the three team-authored posts in the current landing source and passed matched route params to detail. Type-check, build, prerender, Pages deploy, live sitemap, a removed-URL 404, and article-to-list browser navigation were verified.
 2. **Design contract** — low and high fidelity layouts for home, article, editor, and moderation states at desktop/mobile widths; ES/EN sample copy and real team images; token, spacing, typography, and image alignment specification. Review with the owner before building the new public UI.
 3. **Sóköl-style content plane and landing migration** — create the dedicated content service with document/revision tables and media, expose its public reads via the existing SigV4 guest gateway and edits via the isolated admin gateway, import public landing entities, implement typed runtime queries and API-fed SEO prerender, build the production landing-content editor in the admin dashboard, and remove public JSON imports. Compare every route in ES/EN before cutting over. Existing API-fed template examples stay API-fed.
 4. **Blog backend vertical slice in the same content plane** — post/revision migration, typed block schema, draft/revision/status APIs on the authenticated user gateway, isolated admin moderation endpoints, public published projection, media upload, and contract tests for the state machine and gateway/auth boundaries.
