@@ -12,7 +12,7 @@ cd "${REPO_ROOT}"
 command -v pnpm >/dev/null 2>&1 || { echo "pnpm is required" >&2; exit 1; }
 
 echo "Refreshing admin dashboard configuration from SSM..."
-pnpm --dir fe/dashboard env:ssm -- "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"
+pnpm --dir fe/dashboard env:ssm "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"
 
 echo "Stopping local processes on configured development ports..."
 for port in "${PORTS[@]}"; do
@@ -32,7 +32,7 @@ done
 
 mkdir -p logs
 echo "Starting server, landing, admin dashboard, POS, and POS landing..."
-nohup pnpm run dev:all:full > logs/server.log 2>&1 &
+nohup env pnpm_config_verify_deps_before_run=false pnpm run dev:all:full > logs/server.log 2>&1 &
 process_id=$!
 sleep 3
 
