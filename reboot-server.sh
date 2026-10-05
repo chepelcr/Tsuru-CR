@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Restart the local Tsuru workspace after refreshing admin dashboard config.
+# Restart the local Tsuru workspace after refreshing frontend config from SSM.
 # Usage: ./reboot-server.sh [dev|stag|prod] [aws-profile|-]
 set -euo pipefail
 
@@ -13,6 +13,9 @@ command -v pnpm >/dev/null 2>&1 || { echo "pnpm is required" >&2; exit 1; }
 
 echo "Refreshing admin dashboard configuration from SSM..."
 pnpm --dir fe/dashboard env:ssm "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"
+
+echo "Refreshing landing configuration from SSM..."
+pnpm --dir fe/landing env:ssm "${ENVIRONMENT}" "${AWS_PROFILE_NAME}"
 
 echo "Stopping local processes on configured development ports..."
 for port in "${PORTS[@]}"; do
