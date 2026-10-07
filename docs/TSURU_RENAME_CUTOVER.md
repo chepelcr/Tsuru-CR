@@ -46,3 +46,9 @@ Old names remain only as explicit migration inputs and previously applied SQL hi
 - The public organization slug check returned HTTP 200; the data gateway requires authentication as expected.
 - Landing HTML includes absolute Open Graph/Twitter social-card URLs without requiring JavaScript. The published PNG returns HTTP 200, uses image/png and measures 1200×630.
 - Store and infrastructure references already used canonical live resource names; no resource replacement or SSM prefix copy was required.
+
+## Additional deployment checks
+
+- Spanish and English published landing HTML each has one Open Graph image and one Twitter image tag, absolute HTTPS URLs, 1200×630 dimensions, PNG type and localized image descriptions. The live image SHA-256 matches the updated source artwork.
+- Read-only Lambda requests successfully returned country catalog data and Hacienda document version 4.4 after the namespace rename.
+- Startup probes identified a pre-existing missing `openpyxl` dependency in pharmaceutical forms. The dependency is now declared in both requirements and package metadata and deployed through the data workflow.
