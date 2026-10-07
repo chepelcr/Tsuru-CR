@@ -371,7 +371,7 @@ Registrados en el tablero `docs/roadmap/tsuru_roadmap.md` §2 en esta sesión:
 |---|---|---|---|
 | **TSR-119** | Fugas de i18n: español hardcodeado en componentes de documentos | **Resuelto 2026-08-06:** acciones, estados, filtros y ordenamiento usan llaves ES/EN; llaves muertas `clients.orders.comingSoon*` eliminadas | Media |
 | **TSR-120** | Páginas huérfanas sin decisión de producto | `AnalyticsPage.tsx` y `AssignmentsPage.tsx` sin ruta; flujo cajero `src/pages/pos/*` sin cablear. Decidir: migrar a rutas o eliminar | Baja |
-| **TSR-121** | Higiene de repo: `.env.example` y README obsoletos | `.env.example` aún apunta a `markets-api.jcampos.dev`/`orders-api.jcampos.dev` (dominios muertos pre-rebrand) y nombra "JMarkets POS"; `README.md` es boilerplate npm en un repo pnpm | Baja |
+| **TSR-121** | Higiene de repo: `.env.example` y README obsoletos | `.env.example` aún apunta a `markets-api.jcampos.dev`/`orders-api.jcampos.dev` (dominios muertos pre-rebrand) y nombra "Tsuru POS"; `README.md` es boilerplate npm en un repo pnpm | Baja |
 | **TSR-122** | Carrito compartido entre tabs de documento | El estado del carrito no se persiste/restaura por tab (TASKS.md T7.4-futuro); editar dos documentos en paralelo mezcla líneas | Media |
 | **TSR-123** | Este documento de análisis QA (md + xlsx) | Entregable de preparación de QA — Done | — |
 | **TSR-124** | Exoneraciones v4.4 sin UI | **Resuelto 2026-09-12.** El bloque se modela **por impuesto** (como en el XML, donde `Exoneracion` va dentro de cada `Impuesto`) y no por línea; en el pedido viaja dentro del JSONB `order_line.taxes` que ya espeja la forma del impuesto del documento, así que no hubo migración. sales-be no necesitó nada: ya validaba, persistía y mapeaba el bloque. | Alta |

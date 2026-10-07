@@ -8,7 +8,7 @@
 
 Design a distinctive, warm, restrained identity for **Tsuru**, the Costa Rican point of sale and storefront that gives small merchants free Hacienda electronic invoicing. Its first impression should be a helpful local business tool: clear enough for an invoice or browser tab, welcoming enough for an artisan or feria vendor, and credible for a growing cooperative. The public story is legal selling today and community commerce being built for the future.
 
-The **exact wordmark is “Tsuru”** (capital T, lowercase s-u-r-u). The logo must not read “JMarkets,” “Tsiru,” or a generic shopping platform name. Make the wordmark the primary asset; a symbol is secondary and should come from the same idea.
+The **exact wordmark is “Tsuru”** (capital T, lowercase s-u-r-u). The logo must not read “Tsuru,” “Tsiru,” or a generic shopping platform name. Make the wordmark the primary asset; a symbol is secondary and should come from the same idea.
 
 ### Creative direction
 
@@ -47,7 +47,7 @@ Deliver the final masters as **editable SVG** with clean paths and a sensible `v
 
 - `favicon.svg` plus 16×16 and 32×32 PNG (or a multi-size `.ico`), simplified from L3 where needed.
 - 180×180 Apple touch icon, and 192×192 / 512×512 square app icons on warm sand. Provide maskable 192/512 variants with sufficient inset for circular and rounded crops.
-- 1200×630 social sharing image: L4 on warm sand with a short, legible “Vende legal. Vende fácil.” line. Keep a text-free L4 master separate from this card.
+- 1200×630 social sharing image: L4 on warm sand with a short, legible “Vendé a tu ritmo.” line. Keep a text-free L4 master separate from this card.
 - Preview sheet showing L1–L6 on light `#F4EFE6`, white, and a dark field, plus 16, 32, and 96 px size tests.
 
 **Sizing checks:** the primary wordmark must remain readable at **96 px wide**. The symbol must be recognizable at **16 px** without its color accent. Allow at least one capital-T height of clear space around the full lockups; document any optical adjustment. Inspect the reversed version on the landing's actual dark theme before delivery.
@@ -65,7 +65,7 @@ The PNGs have transparent padding, so the FE logo components crop only their dis
 
 ## Ready-to-send agent prompt
 
-> Create a wordmark-first logo system for **Tsuru**, a Costa Rican POS and digital storefront for small merchants. The current landing message is “Vende legal. Vende fácil. Vende en comunidad.” Free Hacienda invoicing and selling tools exist today; community fairs and barter are being built. Design warm, clear serif lettering for the exact word **Tsuru**, with an optional simple abstract T or neutral botanical seed/leaf/cacao-pod silhouette. Use `#6B2A22` as the main color, `#F4EFE6` for the reverse/light canvas, and only restrained accents from `#2E5033` or `#E8B83A`. It must work at 32 px navbar height and as a 16 px favicon. Show 2–3 wordmark-first directions, then develop one chosen direction into primary, reverse, standalone mark, horizontal and stacked lockups, and black/white variants. Provide editable SVG masters, transparent PNG exports, favicon/app icons, a 1200×630 sharing card, and a preview sheet. Keep the forms flat and legible. Do not use sacred or Indigenous symbols, Ú-sure architecture, etnogeometric or pre-Columbian patterns, shopping carts, cloud imagery, gradients, or 3D effects. Do not claim the final vector is ready if the lettering or paths still need manual cleanup.
+> Create a wordmark-first logo system for **Tsuru**, a Costa Rican POS and digital storefront for small merchants. The current landing message is “Vendé a tu ritmo.” Free Hacienda invoicing and selling tools exist today; community fairs and barter are being built. Design warm, clear serif lettering for the exact word **Tsuru**, with an optional simple abstract T or neutral botanical seed/leaf/cacao-pod silhouette. Use `#6B2A22` as the main color, `#F4EFE6` for the reverse/light canvas, and only restrained accents from `#2E5033` or `#E8B83A`. It must work at 32 px navbar height and as a 16 px favicon. Show 2–3 wordmark-first directions, then develop one chosen direction into primary, reverse, standalone mark, horizontal and stacked lockups, and black/white variants. Provide editable SVG masters, transparent PNG exports, favicon/app icons, a 1200×630 sharing card, and a preview sheet. Keep the forms flat and legible. Do not use sacred or Indigenous symbols, Ú-sure architecture, etnogeometric or pre-Columbian patterns, shopping carts, cloud imagery, gradients, or 3D effects. Do not claim the final vector is ready if the lettering or paths still need manual cleanup.
 
 ## Acceptance checklist
 

@@ -65,7 +65,7 @@ export function VsCompetition() {
                     <LogoIcon size={14} />
                   </div>
                   <div className="flex-1">
-                    <div className="text-[11px] font-display font-bold uppercase tracking-wider text-primary">JMarkets POS</div>
+                    <div className="text-[11px] font-display font-bold uppercase tracking-wider text-primary">Tsuru POS</div>
                     <div className="text-sm font-semibold flex items-center gap-1.5 mt-0.5">
                       <Icon name="BadgeCheck" size={14} className="text-primary shrink-0" />
                       {r.jm}

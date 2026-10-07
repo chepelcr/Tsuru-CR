@@ -116,10 +116,10 @@ All dashboard UI text has been translated from English to Spanish.
 
 ### 8. VSCompetitionTab.tsx ✅
 - "Language:" → "Idioma:"
-- "This section compares..." → "Esta sección compara tu producto (JMarkets POS) contra dos tipos de competidores"
+- "This section compares..." → "Esta sección compara tu producto (Tsuru POS) contra dos tipos de competidores"
 - "Feature Name" → "Nombre de Característica"
 - "e.g., Modelo de pago" → "ej., Modelo de pago"
-- "JMarkets POS" → "JMarkets POS"
+- "Tsuru POS" → "Tsuru POS"
 - "Your value" → "Tu valor"
 - "Competitor 1" → "Competidor 1"
 - "Competitor 2" → "Competidor 2"

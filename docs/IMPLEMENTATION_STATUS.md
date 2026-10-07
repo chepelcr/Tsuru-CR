@@ -18,7 +18,7 @@
 
 ### Deals Pages (100% - 8/8)
 - ✅ beauty-essentials
-- ✅ jmarkets-demo
+- ✅ tsuru-demo
 - ✅ tech-gadgets
 - ✅ vintage-fashion
 - ✅ artisan-crafts
@@ -28,7 +28,7 @@
 
 ### Services Pages (100% - 8/8)
 - ✅ beauty-essentials
-- ✅ jmarkets-demo
+- ✅ tsuru-demo
 - ✅ tech-gadgets
 - ✅ vintage-fashion
 - ✅ artisan-crafts
@@ -38,7 +38,7 @@
 
 ### Programs Pages (100% - 8/8)
 - ✅ beauty-essentials
-- ✅ jmarkets-demo
+- ✅ tsuru-demo
 - ✅ tech-gadgets
 - ✅ vintage-fashion
 - ✅ artisan-crafts
@@ -48,7 +48,7 @@
 
 ### About Pages (100% - 8/8)
 - ✅ beauty-essentials
-- ✅ jmarkets-demo
+- ✅ tsuru-demo
 - ✅ tech-gadgets
 - ✅ vintage-fashion
 - ✅ artisan-crafts
@@ -58,7 +58,7 @@
 
 ### Routing Updates (100% - 8/8)
 - ✅ beauty-essentials/App.tsx - /deals, /services, /programs, /about
-- ✅ jmarkets-demo/App.tsx - /deals, /services, /programs, /about
+- ✅ tsuru-demo/App.tsx - /deals, /services, /programs, /about
 - ✅ tech-gadgets/App.tsx - /deals, /services, /programs, /about
 - ✅ vintage-fashion/App.tsx - /deals, /services, /programs, /about
 - ✅ artisan-crafts/App.tsx - /deals, /services, /programs, /about
@@ -99,7 +99,7 @@ npx tsx src/seeds/template-products-seed.ts
 ## 📝 Template Styling Summary
 
 - **beauty-essentials**: Pink/primary, serif fonts, rounded-2xl
-- **jmarkets-demo**: Orange-blue gradient, card-modern
+- **tsuru-demo**: Orange-blue gradient, card-modern
 - **tech-gadgets**: Cyan/electric, tech-gradient, card-tech
 - **vintage-fashion**: Burgundy/cream, serif, VintageCard components
 - **artisan-crafts**: Primary/organic, handdrawn-underline, shadow-artisan

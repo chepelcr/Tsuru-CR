@@ -4,7 +4,7 @@ TSURU BRAND PACKAGE
 Selected direction: Option 2
 Wordmark: Tsuru
 Core symbol: the sprouting capital T integrated into the wordmark
-Slogan used on social artwork: Vende legal, vende fácil
+Slogan used on social artwork: Vendé a tu ritmo.
 
 Palette
 -------
@@ -47,3 +47,5 @@ Notes
 - These assets are raster concept/export files generated during the design session.
 - The warm-sand favicon/app derivatives use the exact requested background #F4EFE6.
 - Editable production SVG masters still require vector tracing/redrawing/cleanup before final production delivery.
+
+2026-10-07: Slogan in current artwork is “Vendé a tu ritmo.”, one line aligned beneath the T. Primary/reverse wordmarks, social card, Facebook cover and brand board updated. Icons and text-free variants keep their existing artwork.

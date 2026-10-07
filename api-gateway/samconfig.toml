@@ -2,9 +2,9 @@ version = 0.1
 
 [dev]
 [dev.global.parameters]
-stack_name          = "jmarkets-dev-api-gateway"
+stack_name          = "tsuru-dev-api-gateway"
 s3_bucket           = "tsuru-dev-sam-deployments"
-s3_prefix           = "jmarkets-api-gateway"
+s3_prefix           = "tsuru-api-gateway"
 region              = "us-east-1"
 confirm_changeset   = false
 capabilities        = "CAPABILITY_IAM"
@@ -12,9 +12,9 @@ parameter_overrides = "Environment=dev HostedZoneId=Z05336353K95HTG1OQ5PH Domain
 
 [stag]
 [stag.global.parameters]
-stack_name          = "jmarkets-stag-api-gateway"
+stack_name          = "tsuru-stag-api-gateway"
 s3_bucket           = "tsuru-stag-sam-deployments"
-s3_prefix           = "jmarkets-api-gateway"
+s3_prefix           = "tsuru-api-gateway"
 region              = "us-east-1"
 confirm_changeset   = false
 capabilities        = "CAPABILITY_IAM"
@@ -22,9 +22,9 @@ parameter_overrides = "Environment=stag HostedZoneId=Z05336353K95HTG1OQ5PH Domai
 
 [prod]
 [prod.global.parameters]
-stack_name          = "jmarkets-prod-api-gateway"
+stack_name          = "tsuru-prod-api-gateway"
 s3_bucket           = "tsuru-prod-sam-deployments"
-s3_prefix           = "jmarkets-api-gateway"
+s3_prefix           = "tsuru-api-gateway"
 region              = "us-east-1"
 confirm_changeset   = false
 capabilities        = "CAPABILITY_IAM"

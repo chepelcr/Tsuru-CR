@@ -3,7 +3,7 @@
 # Script to add CMS imports and hooks to template HomePage/Home files
 
 TEMPLATES=(
-  "jmarkets-demo:Home.tsx"
+  "tsuru-demo:Home.tsx"
   "tech-gadgets:HomePage.tsx"
   "vintage-fashion:HomePage.tsx"
   "artisan-crafts:HomePage.tsx"

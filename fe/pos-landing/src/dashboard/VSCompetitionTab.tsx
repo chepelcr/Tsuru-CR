@@ -45,7 +45,7 @@ export function VSCompetitionTab() {
       ...rows,
       {
         feature: 'New feature',
-        jm: 'JMarkets value',
+        jm: 'Tsuru value',
         alt1: 'Competitor 1 value',
         alt2: 'Competitor 2 value',
       },
@@ -108,7 +108,7 @@ export function VSCompetitionTab() {
         <div className="p-4 rounded-lg bg-muted/50 border border-border">
           <p className="text-sm text-muted-foreground">
             <Icon name="Info" size={14} className="inline mr-1" />
-            Esta sección compara tu producto (JMarkets POS) contra dos tipos de competidores.
+            Esta sección compara tu producto (Tsuru POS) contra dos tipos de competidores.
           </p>
         </div>
 
@@ -135,7 +135,7 @@ export function VSCompetitionTab() {
                       label={
                         <span className="text-primary">
                           <Icon name="BadgeCheck" size={12} className="inline mr-1" />
-                          JMarkets POS
+                          Tsuru POS
                         </span>
                       }
                       value={row.jm}

@@ -116,7 +116,7 @@ paths; content from management-be `/api/public/...`); add **Amplify guest auth**
 ## W5 — Per-template repos (monorepo-split skill) ✅ DONE (2026-06-20)
 
 8 storefront templates snapshotted into their existing public repos `chepelcr/template-{artisan-crafts,
-beauty-essentials,fitness-hub,gourmet-foods,jmarkets-demo,pet-care,tech-gadgets,vintage-fashion}`
+beauty-essentials,fitness-hub,gourmet-foods,tsuru-demo,pet-care,tech-gadgets,vintage-fashion}`
 (clean snapshot; repos flipped **public** so Pages is allowed; monorepo `.gitignore` split markers
 added, files still tracked). All converted to **pnpm** (packageManager pin + `pnpm-lock.yaml` +
 `preinstall only-allow pnpm`). `pos-landing` (POS marketing) + `pollo-porteno` (no repo) deferred.

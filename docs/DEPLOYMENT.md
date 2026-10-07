@@ -1,6 +1,6 @@
-# JMarkets AWS Infrastructure Deployment Guide
+# Tsuru AWS Infrastructure Deployment Guide
 
-This guide covers the complete setup and deployment of the JMarkets AWS infrastructure including Cognito, Lambda, API Gateway, S3, CloudFront, and CodePipeline.
+This guide covers the complete setup and deployment of the Tsuru AWS infrastructure including Cognito, Lambda, API Gateway, S3, CloudFront, and CodePipeline.
 
 ## Table of Contents
 
@@ -22,14 +22,14 @@ This guide covers the complete setup and deployment of the JMarkets AWS infrastr
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│                    JMarkets Architecture                        │
+│                    Tsuru Architecture                        │
 ├────────────────────────────────────────────────────────────────┤
 │                                                                │
 │  GitHub                    CodePipeline                        │
 │    ↓                           ↓                               │
 │  [main branch]  →  [CodeBuild] →  [Lambda Update]              │
 │                                      ↓                         │
-│                              jmarkets-api-handler               │
+│                              tsuru-api-handler               │
 │                              (Node.js 20)                       │
 │                                      ↓                         │
 │                    ┌──────────────────┴──────────────────┐     │
@@ -174,7 +174,7 @@ For advanced users or CI/CD integration.
 
 ```bash
 aws cloudformation create-stack \
-  --stack-name jmarkets-pipeline-roles \
+  --stack-name tsuru-pipeline-roles \
   --template-body file://cloudformation/pipeline-roles.yml \
   --capabilities CAPABILITY_NAMED_IAM \
   --region us-east-1 \
@@ -187,7 +187,7 @@ aws cloudformation create-stack \
 
 ### 1. Cognito Authentication
 
-Stack: `jmarkets-cognito`
+Stack: `tsuru-cognito`
 
 ```bash
 ./deploys/deploy-cognito.sh
@@ -202,7 +202,7 @@ Creates user pool, app client, and email configuration.
 
 ### 2. Pipeline Roles & S3
 
-Stack: `jmarkets-pipeline-roles`
+Stack: `tsuru-pipeline-roles`
 
 ```bash
 ./deploys/deploy-pipeline-roles.sh
@@ -212,7 +212,7 @@ Creates IAM roles and S3 bucket for CodePipeline.
 
 ### 3. Lambda Function
 
-Stack: `jmarkets-lambda`
+Stack: `tsuru-lambda`
 
 ```bash
 ./deploys/deploy-lambda.sh
@@ -233,7 +233,7 @@ Stack: `jmarkets-lambda`
 
 ### 4. API Gateway
 
-Stack: `jmarkets-api-gateway`
+Stack: `tsuru-api-gateway`
 
 ```bash
 ./deploys/deploy-api-gateway.sh
@@ -273,14 +273,14 @@ aws cloudfront create-invalidation \
 
 ### 6. CodePipeline CI/CD
 
-Stack: `jmarkets-codepipeline`
+Stack: `tsuru-codepipeline`
 
 ```bash
 ./deploys/deploy-pipeline.sh
 ```
 
 **Interactive Prompts:**
-- Pipeline name (default: jmarkets-pipeline)
+- Pipeline name (default: tsuru-pipeline)
 - CodeBuild project name
 - GitHub CodeStar connection ARN
 - GitHub repository (owner/repo)
@@ -307,7 +307,7 @@ COGNITO_CLIENT_ID=your-client-id
 COGNITO_CLIENT_SECRET=your-client-secret
 
 # Lambda
-LAMBDA_FUNCTION_NAME=jmarkets-api-handler
+LAMBDA_FUNCTION_NAME=tsuru-api-handler
 LAMBDA_FUNCTION_ARN=arn:aws:lambda:us-east-1:123456789:function:...
 
 # API Gateway
@@ -316,13 +316,13 @@ API_GATEWAY_URL=https://abcdef1234.execute-api.us-east-1.amazonaws.com/dev
 API_DOMAIN_NAME=https://api.tsuru.jcampos.dev
 
 # Static Website
-CLIENT_BUCKET_NAME=jmarkets-website-dev-123456789
+CLIENT_BUCKET_NAME=tsuru-website-dev-123456789
 CLIENT_CLOUDFRONT_ID=E1234ABCD
 CLIENT_CLOUDFRONT_URL=https://tsuru.jcampos.dev
 
 # CodePipeline
-CODEPIPELINE_NAME=jmarkets-pipeline
-CODEBUILD_PROJECT_NAME=jmarkets-build
+CODEPIPELINE_NAME=tsuru-pipeline
+CODEBUILD_PROJECT_NAME=tsuru-build
 GITHUB_CONNECTION_ARN=arn:aws:codestar-connections:...
 ```
 
@@ -384,7 +384,7 @@ If CodePipeline fails:
 # Push code to trigger pipeline
 git push origin main
 
-# Monitor at: CodePipeline → jmarkets-pipeline
+# Monitor at: CodePipeline → tsuru-pipeline
 ```
 
 ---
@@ -396,7 +396,7 @@ git push origin main
 ```bash
 # Check stack events
 aws cloudformation describe-stack-events \
-  --stack-name jmarkets-pipeline-roles \
+  --stack-name tsuru-pipeline-roles \
   --region us-east-1 \
   --profile J-CAMPOS
 ```
@@ -431,7 +431,7 @@ aws route53 list-resource-record-sets \
 ```bash
 # Verify Lambda exists
 aws lambda get-function \
-  --function-name jmarkets-api-handler \
+  --function-name tsuru-api-handler \
   --region us-east-1 \
   --profile J-CAMPOS
 ```
@@ -453,7 +453,7 @@ aws cloudfront create-invalidation \
 ```bash
 # Manual trigger
 aws codepipeline start-pipeline-execution \
-  --pipeline-name jmarkets-pipeline \
+  --pipeline-name tsuru-pipeline \
   --region us-east-1 \
   --profile J-CAMPOS
 ```
@@ -466,13 +466,13 @@ aws codepipeline start-pipeline-execution \
 
 ```bash
 # View Lambda logs
-aws logs tail /aws/lambda/jmarkets-api-handler \
+aws logs tail /aws/lambda/tsuru-api-handler \
   --follow \
   --region us-east-1 \
   --profile J-CAMPOS
 
 # View CodeBuild logs
-aws logs tail /aws/codebuild/jmarkets-build \
+aws logs tail /aws/codebuild/tsuru-build \
   --follow \
   --region us-east-1 \
   --profile J-CAMPOS

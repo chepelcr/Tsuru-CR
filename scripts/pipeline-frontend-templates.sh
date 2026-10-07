@@ -9,7 +9,7 @@ ROOT_DOMAIN="${ROOT_DOMAIN:-tsuru.jcampos.dev}"
 
 # Template slugs (must match templates/ folder names)
 TEMPLATES=(
-  jmarkets-demo
+  tsuru-demo
   tech-gadgets
   vintage-fashion
   artisan-crafts
@@ -20,7 +20,7 @@ TEMPLATES=(
   pollo-porteno
 )
 
-echo "=== JMarkets Frontend Deploy: Templates (${#TEMPLATES[@]} apps) ==="
+echo "=== Tsuru Frontend Deploy: Templates (${#TEMPLATES[@]} apps) ==="
 echo "  Environment : $ENVIRONMENT"
 echo "  Region      : $REGION"
 echo "  Base domain : $FRONTEND_DOMAIN"
@@ -46,8 +46,8 @@ echo "Deploying CFN stacks in parallel..."
 declare -A STACK_PIDS
 
 for TMPL in "${TEMPLATES[@]}"; do
-  STACK_NAME="jmarkets-${ENVIRONMENT}-frontend-${TMPL}"
-  BUCKET_NAME="jmarkets-${ENVIRONMENT}-${TMPL}"
+  STACK_NAME="tsuru-${ENVIRONMENT}-frontend-${TMPL}"
+  BUCKET_NAME="tsuru-${ENVIRONMENT}-${TMPL}"
   DOMAIN="${TMPL}-example.${FRONTEND_DOMAIN}"
 
   echo "  Starting stack: ${STACK_NAME} → https://${DOMAIN}"
@@ -72,9 +72,9 @@ FAILED=0
 for TMPL in "${TEMPLATES[@]}"; do
   PID=${STACK_PIDS[$TMPL]}
   if wait "$PID"; then
-    echo "  ✓ jmarkets-${ENVIRONMENT}-frontend-${TMPL}"
+    echo "  ✓ tsuru-${ENVIRONMENT}-frontend-${TMPL}"
   else
-    echo "  ✗ jmarkets-${ENVIRONMENT}-frontend-${TMPL} FAILED"
+    echo "  ✗ tsuru-${ENVIRONMENT}-frontend-${TMPL} FAILED"
     cat "/tmp/cfn-${TMPL}.log" || true
     FAILED=$((FAILED + 1))
   fi
@@ -90,8 +90,8 @@ echo ""
 
 # ── Phase 2: S3 sync + CloudFront invalidation per template ──────────────────
 for TMPL in "${TEMPLATES[@]}"; do
-  STACK_NAME="jmarkets-${ENVIRONMENT}-frontend-${TMPL}"
-  BUCKET_NAME="jmarkets-${ENVIRONMENT}-${TMPL}"
+  STACK_NAME="tsuru-${ENVIRONMENT}-frontend-${TMPL}"
+  BUCKET_NAME="tsuru-${ENVIRONMENT}-${TMPL}"
   DIST_DIR="dist/templates/${TMPL}"
   DOMAIN="${TMPL}-example.${FRONTEND_DOMAIN}"
 

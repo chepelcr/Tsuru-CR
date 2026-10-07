@@ -1,4 +1,4 @@
-# Tsuru (formerly JMarkets) - Beauty Market SaaS Platform
+# Tsuru (formerly Tsuru) - Beauty Market SaaS Platform
 
 A multi-tenant SaaS platform for beauty product management and sales with AWS serverless infrastructure.
 

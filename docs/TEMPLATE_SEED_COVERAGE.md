@@ -3,7 +3,7 @@
 ## ✅ All 8 Templates Covered
 
 The seed script properly handles **ALL 8 templates**:
-1. ✅ jmarkets-demo
+1. ✅ tsuru-demo
 2. ✅ beauty-essentials
 3. ✅ tech-gadgets
 4. ✅ vintage-fashion
@@ -49,7 +49,7 @@ Each template has **personalized categories**:
 - gourmet-foods: Cheese & Dairy, Pantry
 - fitness-hub: Equipment, Training
 - pet-care: Dog Supplies, Cat Supplies
-- jmarkets-demo: Featured, New Arrivals
+- tsuru-demo: Featured, New Arrivals
 
 ## ✅ All Products Seeded
 
@@ -67,7 +67,7 @@ Each template has **personalized products** with proper attributes:
 - gourmet-foods: 5 products (4 products + 1 service)
 - fitness-hub: 8 products (4 products + 1 service + 3 programs)
 - pet-care: 6 products (4 products + 2 services)
-- jmarkets-demo: 4 products (3 products + 1 service)
+- tsuru-demo: 4 products (3 products + 1 service)
 
 ## ✅ Smart Update Logic
 

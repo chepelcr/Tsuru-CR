@@ -18,7 +18,7 @@
 
 **Templates to implement:**
 - beauty-essentials
-- jmarkets-demo
+- tsuru-demo
 - tech-gadgets
 - vintage-fashion
 - artisan-crafts

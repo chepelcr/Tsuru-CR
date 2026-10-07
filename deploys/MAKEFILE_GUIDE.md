@@ -92,7 +92,7 @@ Uses AWS SAM CLI to deploy CloudFormation stacks:
 ## Customization
 
 Edit `Makefile` to change:
-- Stack names (default: `jmarkets-*`)
+- Stack names (default: `tsuru-*`)
 - AWS region (default: `us-east-1`)
 - AWS profile (default: `J-CAMPOS`)
 

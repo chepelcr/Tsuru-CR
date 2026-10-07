@@ -8,7 +8,7 @@ Audit deliverable. Sources: code in `E:/dev/BeautyMarket` (TS control-plane serv
 
 | System | Language/DB access | Primary persistence | Public endpoint |
 |---|---|---|---|
-| BeautyMarket/server (J-Markets control plane) | TS, Drizzle ORM (`server/src/config/database.ts`) | PostgreSQL (own connection, `NEW_DATABASE_URL`/SSM) | `api.tsuru.jcampos.dev` |
+| BeautyMarket/server (Tsuru control plane) | TS, Drizzle ORM (`server/src/config/database.ts`) | PostgreSQL (own connection, `NEW_DATABASE_URL`/SSM) | `api.tsuru.jcampos.dev` |
 | cross-app-be (POS backend) | Python, SQLAlchemy 2.0 | **Shared** PostgreSQL (with biller-apps) | (POS data API) |
 | biller-apps/auth (e-invoicing core, multi-Lambda) | Python, SQLAlchemy 2.0 + central Alembic | **Same shared** PostgreSQL as cross-app-be (`biller-apps/auth/alembic/env.py` excludes cross-app-be-owned tables) | `sales-api.tsuru.jcampos.dev` |
 | biller-apps/data-services (fiscal catalogs) | Python, SQLAlchemy 2.0 | **Same shared** PostgreSQL (cross-app-be reads its `cabys` table directly — `cross-app-be/app/services/cabys_service.py` lines 3–6) | `data-api.tsuru.jcampos.dev` |
@@ -189,7 +189,7 @@ erDiagram
 
 ## 3. Fiscal Catalogs Domain (biller-apps/data-services)
 
-**Owner:** data-services (~30 CRUD micro-Lambdas + 4 `consumer-*` Hacienda-proxy Lambdas) at `data-api.tsuru.jcampos.dev`. **No tenancy** — zero `organization_id` columns; scope keys are `country_code` (numeric ISO, 188 = CR) and `document_version_id` (Hacienda spec version, 1 = v4.4). Canonical shape from the 4-level base-model hierarchy `SimpleBase→GlobalCatalog→Catalog→CodedCatalog→Hacienda` in `shared/jmarkets_common/models/hacienda_base_model.py`: `id, code, description, country_code, status (1/2/3), deleted_on, document_version_id`.
+**Owner:** data-services (~30 CRUD micro-Lambdas + 4 `consumer-*` Hacienda-proxy Lambdas) at `data-api.tsuru.jcampos.dev`. **No tenancy** — zero `organization_id` columns; scope keys are `country_code` (numeric ISO, 188 = CR) and `document_version_id` (Hacienda spec version, 1 = v4.4). Canonical shape from the 4-level base-model hierarchy `SimpleBase→GlobalCatalog→Catalog→CodedCatalog→Hacienda` in `shared/tsuru_common/models/hacienda_base_model.py`: `id, code, description, country_code, status (1/2/3), deleted_on, document_version_id`.
 
 | Entity group | Tables/services | Owner / notes |
 |---|---|---|
@@ -307,7 +307,7 @@ Publishing is blocked unless `organization_settings.infrastructureStatus === 'ac
 - **NotificationStatus**: `PENDING → SENT | FAILED`, webhook `CALLBACK_OK | CALLBACK_ERROR` (`hacienda/enums/notification_status.py`).
 
 ### 5.6 Catalog lifecycle (data-services)
-Universal `StatusCodes` enum `1 ACTIVE / 2 INACTIVE / 3 REMOVED` + `deleted_on` soft delete (`shared/jmarkets_common/models/hacienda_base_model.py`; same enum replicated in `jbiller_common/enums/status_codes.py`). PATCH = status change; DELETE = soft delete. Every catalog is versioned by `document_version_id` (Hacienda spec axis) and scoped by `country_code` — multi-country design, **single-country (CR=188) reality** (consumer-identifications hardcodes the CR fallback). `consumer-*` services are read-through caches: every search/lookup **upserts** into local Postgres.
+Universal `StatusCodes` enum `1 ACTIVE / 2 INACTIVE / 3 REMOVED` + `deleted_on` soft delete (`shared/tsuru_common/models/hacienda_base_model.py`; same enum replicated in `jbiller_common/enums/status_codes.py`). PATCH = status change; DELETE = soft delete. Every catalog is versioned by `document_version_id` (Hacienda spec axis) and scoped by `country_code` — multi-country design, **single-country (CR=188) reality** (consumer-identifications hardcodes the CR fallback). `consumer-*` services are read-through caches: every search/lookup **upserts** into local Postgres.
 
 ### 5.7 POS session/cash lifecycle (cross-app-be) — verified in source
 - `sales_sessions → assignments (session+branch+terminal) → closings (session+assignment+branch+terminal)` with CASCADE deletes session→assignment→closing (`app/models/{session,assignment,closing}.py`); `SessionProduct` pins products to a session (unique constraint).
@@ -365,5 +365,5 @@ BeautyMarket docs claim product/order/customer management; **no such entities or
 ### 6.7 Dead/legacy entity inventory (for cleanup tracking)
 - BeautyMarket: `homePageContent` + repository (no controller), `Category.ts` legacy constants, permissions middleware unused, `lambda.cts` SQS branch stubs, no-op RLS on 23 tables.
 - biller-apps/auth: `app/hacienda-history` legacy lambda overlapping document-validator's `VALIDATE_HISTORY_DOCUMENT`; lambda-authorizer dormant; doc-vs-code drift ("stub" docstrings over an implemented pipeline).
-- data-services: no-op cache decorators with live CacheController invalidation endpoints (`shared/jmarkets_common/utils/cache_utils.py` TODO); `biller-apps/loctions` (sic) legacy duplicate of locations.
+- data-services: no-op cache decorators with live CacheController invalidation endpoints (`shared/tsuru_common/utils/cache_utils.py` TODO); `biller-apps/loctions` (sic) legacy duplicate of locations.
 - landing-client: ~290-line dead `useAuth.ts`, `useOrganization.ts`, `auth-navbar.tsx`, multi-tenant `apiUtils.ts` builders — drag aws-amplify into the bundle with no routed auth flow.

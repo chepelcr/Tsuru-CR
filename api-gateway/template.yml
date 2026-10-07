@@ -25,7 +25,7 @@ Resources:
   ApiGatewayLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub "/aws/apigateway/jmarkets-${Environment}-api"
+      LogGroupName: !Sub "/aws/apigateway/tsuru-${Environment}-api"
       RetentionInDays: 14
 
   ApiGatewayAccount:
@@ -37,7 +37,7 @@ Resources:
   ApiGatewayRestApi:
     Type: AWS::Serverless::Api
     Properties:
-      Name: !Sub "jmarkets-${Environment}-api"
+      Name: !Sub "tsuru-${Environment}-api"
       StageName: !Ref Environment
       AccessLogSetting:
         DestinationArn: !GetAtt ApiGatewayLogGroup.Arn
@@ -51,8 +51,8 @@ Resources:
       DefinitionBody:
         openapi: '3.0.1'
         info:
-          title: !Sub "jmarkets-${Environment}-api"
-          description: JMarkets Multi-Tenant Marketplace API
+          title: !Sub "tsuru-${Environment}-api"
+          description: Tsuru Multi-Tenant Marketplace API
           version: '1.0.0'
         servers:
           - url: !Sub "https://${DomainName}"
@@ -68,11 +68,11 @@ Resources:
               x-amazon-apigateway-authorizer:
                 type: cognito_user_pools
                 providerARNs:
-                  - Fn::ImportValue: "jmarkets-cognito-UserPoolArn"
+                  - Fn::ImportValue: "tsuru-cognito-UserPoolArn"
         paths:
           /api/components:
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get all components
               parameters:
                 - name: type
@@ -97,7 +97,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -132,7 +132,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/components/{id}":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get component by ID
               parameters:
                 - name: id
@@ -157,7 +157,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -192,7 +192,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/invitations/accept/{token}":
             post:
-              operationId: jmarkets_post
+              operationId: tsuru_post
               summary: Accept an invitation
               parameters:
                 - name: token
@@ -221,7 +221,7 @@ Resources:
                   description: Not Found
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -256,7 +256,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/invitations/token/{token}":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get invitation by token
               parameters:
                 - name: token
@@ -279,7 +279,7 @@ Resources:
                   description: Not Found
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -314,7 +314,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           /api/organizations:
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get all organizations
               responses:
                 '200':
@@ -333,12 +333,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             post:
-              operationId: jmarkets_post
+              operationId: tsuru_post
               summary: Create a new organization (Step 1 of onboarding)
               requestBody:
                 required: true
@@ -363,7 +363,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -398,7 +398,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/organizations/by-slug/{slug}":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get organization by slug
               parameters:
                 - name: slug
@@ -423,7 +423,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -458,7 +458,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/organizations/by-subdomain/{subdomain}":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get organization by subdomain
               parameters:
                 - name: subdomain
@@ -481,7 +481,7 @@ Resources:
                   description: Not Found
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -516,7 +516,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/organizations/check-slug/{slug}":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Check if slug is available
               parameters:
                 - name: slug
@@ -539,7 +539,7 @@ Resources:
                   description: Not Found
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -574,7 +574,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/organizations/check-subdomain/{subdomain}":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Check if subdomain is available
               parameters:
                 - name: subdomain
@@ -599,7 +599,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -634,7 +634,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/organizations/{id}":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get organization by ID
               parameters:
                 - name: id
@@ -659,12 +659,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             put:
-              operationId: jmarkets_put
+              operationId: tsuru_put
               summary: Update an organization
               parameters:
                 - name: id
@@ -695,12 +695,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             delete:
-              operationId: jmarkets_delete
+              operationId: tsuru_delete
               summary: Delete an organization
               parameters:
                 - name: id
@@ -725,7 +725,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -760,7 +760,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/organizations/{id}/onboarding/step2":
             post:
-              operationId: jmarkets_post
+              operationId: tsuru_post
               summary: Complete onboarding step 2 (contact information)
               parameters:
                 - name: id
@@ -791,7 +791,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -826,7 +826,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/organizations/{id}/onboarding/step3":
             post:
-              operationId: jmarkets_post
+              operationId: tsuru_post
               summary: Complete onboarding step 3 (apply template and finalize)
               parameters:
                 - name: id
@@ -857,7 +857,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -892,7 +892,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/organizations/{id}/settings":
             put:
-              operationId: jmarkets_put
+              operationId: tsuru_put
               summary: Update organization settings
               parameters:
                 - name: id
@@ -923,7 +923,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -958,7 +958,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/public/organizations/{orgId}":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get organization details
               parameters:
                 - name: orgId
@@ -981,7 +981,7 @@ Resources:
                   description: Not Found
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -1016,7 +1016,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/public/organizations/{orgId}/contact":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get organization contact information
               parameters:
                 - name: orgId
@@ -1039,7 +1039,7 @@ Resources:
                   description: Not Found
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -1074,7 +1074,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/public/organizations/{orgId}/pages":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get organization pages
               parameters:
                 - name: orgId
@@ -1097,7 +1097,7 @@ Resources:
                   description: Not Found
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -1132,7 +1132,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/public/organizations/{orgId}/pages/{slug}":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get organization page by slug
               parameters:
                 - name: orgId
@@ -1160,7 +1160,7 @@ Resources:
                   description: Not Found
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -1195,7 +1195,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/public/organizations/{orgId}/theme":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get organization theme settings
               parameters:
                 - name: orgId
@@ -1218,7 +1218,7 @@ Resources:
                   description: Not Found
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -1253,7 +1253,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/memberships":
             post:
-              operationId: jmarkets_post
+              operationId: tsuru_post
               summary: Add a member to an organization
               parameters:
                 - name: userId
@@ -1284,7 +1284,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -1319,7 +1319,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/memberships/default":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: "Get user's default organization"
               parameters:
                 - name: userId
@@ -1344,7 +1344,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -1379,7 +1379,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/memberships/default/{organizationId}":
             put:
-              operationId: jmarkets_put
+              operationId: tsuru_put
               summary: "Set user's default organization"
               parameters:
                 - name: userId
@@ -1415,7 +1415,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -1450,7 +1450,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/memberships/organization/{organizationId}":
             delete:
-              operationId: jmarkets_delete
+              operationId: tsuru_delete
               summary: Remove a member from an organization
               parameters:
                 - name: userId
@@ -1480,7 +1480,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -1515,7 +1515,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/memberships/organization/{organizationId}/count":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get member count for an organization
               parameters:
                 - name: userId
@@ -1545,7 +1545,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -1580,7 +1580,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/memberships/organization/{organizationId}/members":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get all members of an organization
               parameters:
                 - name: userId
@@ -1610,7 +1610,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -1645,7 +1645,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/memberships/organizations":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get all organizations a user belongs to
               parameters:
                 - name: userId
@@ -1670,7 +1670,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -1705,7 +1705,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/memberships/{memberId}":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get member by ID
               parameters:
                 - name: userId
@@ -1735,7 +1735,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -1770,7 +1770,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/memberships/{memberId}/role":
             put:
-              operationId: jmarkets_put
+              operationId: tsuru_put
               summary: "Update member's role"
               parameters:
                 - name: userId
@@ -1806,7 +1806,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -1841,7 +1841,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/deployments":
             post:
-              operationId: jmarkets_post
+              operationId: tsuru_post
               summary: Trigger auto-deployment for organization
               requestBody:
                 required: true
@@ -1866,7 +1866,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -1901,7 +1901,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/deployments/history":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get deployment history for organization
               responses:
                 '200':
@@ -1920,7 +1920,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -1955,7 +1955,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/deployments/status":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get deployment status for organization
               responses:
                 '200':
@@ -1974,7 +1974,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -2009,7 +2009,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/invitations":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get all invitations for an organization
               parameters:
                 - name: organizationId
@@ -2034,12 +2034,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             post:
-              operationId: jmarkets_post
+              operationId: tsuru_post
               summary: Create a new invitation
               requestBody:
                 required: true
@@ -2064,7 +2064,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -2099,7 +2099,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/invitations/expire-old":
             post:
-              operationId: jmarkets_post
+              operationId: tsuru_post
               summary: Expire old invitations
               requestBody:
                 required: true
@@ -2124,7 +2124,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -2159,7 +2159,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/invitations/pending/{email}":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get pending invitations for an email
               parameters:
                 - name: email
@@ -2184,7 +2184,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -2219,7 +2219,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/invitations/{id}":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get invitation by ID
               parameters:
                 - name: id
@@ -2244,12 +2244,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             delete:
-              operationId: jmarkets_delete
+              operationId: tsuru_delete
               summary: Cancel an invitation
               parameters:
                 - name: id
@@ -2274,7 +2274,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -2309,7 +2309,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/invitations/{id}/resend":
             post:
-              operationId: jmarkets_post
+              operationId: tsuru_post
               summary: Resend an invitation
               parameters:
                 - name: id
@@ -2340,7 +2340,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -2375,7 +2375,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/pages":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get all pages for an organization
               parameters:
                 - name: userId
@@ -2410,12 +2410,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             post:
-              operationId: jmarkets_post
+              operationId: tsuru_post
               summary: Create a new page
               parameters:
                 - name: userId
@@ -2451,7 +2451,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -2486,7 +2486,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/pages/{pageId}":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get page by ID
               parameters:
                 - name: userId
@@ -2521,12 +2521,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             put:
-              operationId: jmarkets_put
+              operationId: tsuru_put
               summary: Update a page
               parameters:
                 - name: userId
@@ -2567,12 +2567,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             delete:
-              operationId: jmarkets_delete
+              operationId: tsuru_delete
               summary: Delete a page
               parameters:
                 - name: userId
@@ -2607,7 +2607,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -2642,7 +2642,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/pages/{pageId}/sections":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get all sections for a page
               parameters:
                 - name: userId
@@ -2682,12 +2682,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             post:
-              operationId: jmarkets_post
+              operationId: tsuru_post
               summary: Create a new section
               parameters:
                 - name: userId
@@ -2728,7 +2728,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -2763,7 +2763,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/pages/{pageId}/sections/{sectionId}":
             put:
-              operationId: jmarkets_put
+              operationId: tsuru_put
               summary: Update a section
               parameters:
                 - name: userId
@@ -2809,12 +2809,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             delete:
-              operationId: jmarkets_delete
+              operationId: tsuru_delete
               summary: Delete a section
               parameters:
                 - name: userId
@@ -2854,7 +2854,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -2889,7 +2889,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/pages/{pageId}/sections/{sectionId}/content":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get all content for a section
               parameters:
                 - name: userId
@@ -2929,7 +2929,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -2964,7 +2964,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/pages/{pageId}/sections/{sectionId}/content/bulk":
             post:
-              operationId: jmarkets_post
+              operationId: tsuru_post
               summary: Bulk upsert content for a section
               parameters:
                 - name: userId
@@ -3010,7 +3010,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -3045,7 +3045,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/pages/{pageId}/sections/{sectionId}/content/{contentId}":
             put:
-              operationId: jmarkets_put
+              operationId: tsuru_put
               summary: Update a content item
               parameters:
                 - name: userId
@@ -3096,12 +3096,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             delete:
-              operationId: jmarkets_delete
+              operationId: tsuru_delete
               summary: Delete a content item
               parameters:
                 - name: userId
@@ -3146,7 +3146,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -3181,7 +3181,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/pre-deployments":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get all pre-deployments
               responses:
                 '200':
@@ -3200,7 +3200,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -3235,7 +3235,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/pre-deployments/active":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get active pre-deployment
               responses:
                 '200':
@@ -3254,7 +3254,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -3289,7 +3289,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/pre-deployments/{id}":
             delete:
-              operationId: jmarkets_delete
+              operationId: tsuru_delete
               summary: Delete a pre-deployment
               parameters:
                 - name: id
@@ -3314,7 +3314,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -3349,7 +3349,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/rbac/actions":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get all available actions
               responses:
                 '200':
@@ -3368,7 +3368,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -3403,7 +3403,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/rbac/check-permission":
             post:
-              operationId: jmarkets_post
+              operationId: tsuru_post
               summary: Check if user has permission
               requestBody:
                 required: true
@@ -3428,7 +3428,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -3463,7 +3463,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/rbac/modules":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get all modules with submodules
               responses:
                 '200':
@@ -3482,7 +3482,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -3517,7 +3517,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/rbac/roles":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get all system roles
               responses:
                 '200':
@@ -3536,12 +3536,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             post:
-              operationId: jmarkets_post
+              operationId: tsuru_post
               summary: Create a new role
               requestBody:
                 required: true
@@ -3566,7 +3566,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -3601,7 +3601,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/rbac/roles/organization":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get roles for an organization (includes system roles)
               parameters:
                 - name: organizationId
@@ -3626,7 +3626,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -3661,7 +3661,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/rbac/roles/{id}":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get role by ID
               parameters:
                 - name: id
@@ -3686,12 +3686,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             put:
-              operationId: jmarkets_put
+              operationId: tsuru_put
               summary: Update a role
               parameters:
                 - name: id
@@ -3722,12 +3722,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             delete:
-              operationId: jmarkets_delete
+              operationId: tsuru_delete
               summary: Delete a role
               parameters:
                 - name: id
@@ -3752,7 +3752,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -3787,7 +3787,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/rbac/roles/{id}/permissions":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get permissions for a role
               parameters:
                 - name: id
@@ -3812,12 +3812,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             put:
-              operationId: jmarkets_put
+              operationId: tsuru_put
               summary: Set permissions for a role
               parameters:
                 - name: id
@@ -3848,7 +3848,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -3883,7 +3883,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/rbac/user-role":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: "Get user's role in an organization"
               parameters:
                 - name: userId
@@ -3913,7 +3913,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -3948,7 +3948,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/settings/contact":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get contact settings for an organization
               parameters:
                 - name: userId
@@ -3978,12 +3978,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             put:
-              operationId: jmarkets_put
+              operationId: tsuru_put
               summary: Update contact settings for an organization
               parameters:
                 - name: userId
@@ -4019,7 +4019,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -4054,7 +4054,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/settings/payment":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get payment settings for an organization
               parameters:
                 - name: userId
@@ -4084,12 +4084,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             put:
-              operationId: jmarkets_put
+              operationId: tsuru_put
               summary: Update payment settings for an organization
               parameters:
                 - name: userId
@@ -4125,7 +4125,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -4160,7 +4160,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/settings/shipping":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get shipping settings for an organization
               parameters:
                 - name: userId
@@ -4190,12 +4190,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             put:
-              operationId: jmarkets_put
+              operationId: tsuru_put
               summary: Update shipping settings for an organization
               parameters:
                 - name: userId
@@ -4231,7 +4231,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -4266,7 +4266,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/settings/theme":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get theme settings for an organization
               parameters:
                 - name: userId
@@ -4296,12 +4296,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             put:
-              operationId: jmarkets_put
+              operationId: tsuru_put
               summary: Update theme settings for an organization
               parameters:
                 - name: userId
@@ -4337,7 +4337,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -4372,7 +4372,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/organization/{orgId}/upload/presigned":
             post:
-              operationId: jmarkets_post
+              operationId: tsuru_post
               summary: Get presigned URL for S3 upload
               requestBody:
                 required: true
@@ -4397,7 +4397,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -4432,7 +4432,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/profile":
             get:
-              operationId: jmarkets_get
+              operationId: tsuru_get
               summary: Get user profile
               parameters:
                 - name: userId
@@ -4457,12 +4457,12 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
             put:
-              operationId: jmarkets_put
+              operationId: tsuru_put
               summary: Update user profile
               parameters:
                 - name: userId
@@ -4493,7 +4493,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -4528,7 +4528,7 @@ Resources:
                       method.response.header.Access-Control-Expose-Headers: "'X-Page-Number,X-Page-Size,X-Total-Elements,X-Total-Pages'"
           "/api/users/{userId}/verify-email-complete":
             post:
-              operationId: jmarkets_post
+              operationId: tsuru_post
               summary: Complete email verification process (fetches user data from Cognito by userId)
               parameters:
                 - name: userId
@@ -4559,7 +4559,7 @@ Resources:
                 - CognitoAuthorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
-                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:jmarkets-${Environment}-api-handler/invocations"
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:tsuru-${Environment}-api-handler/invocations"
                 passthroughBehavior: when_no_match
                 contentHandling: CONVERT_TO_TEXT
                 type: aws_proxy
@@ -4670,7 +4670,7 @@ Resources:
   LambdaPermissionBackend:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: !Sub "jmarkets-${Environment}-api-handler"
+      FunctionName: !Sub "tsuru-${Environment}-api-handler"
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayRestApi}/*"

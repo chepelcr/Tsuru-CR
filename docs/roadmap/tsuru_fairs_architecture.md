@@ -32,12 +32,12 @@ Repo: new `chepelcr/tsuru-fairs-be` (or `fairs-be` folder pending the user's rep
    landing (static, GH Pages)            ▼
    tsuru.jcampos.dev ── link ──▶ ┌─────────────────────┐
    /ferias page stays JSON DXP   │  FAIRS PUBLIC SPA   │  new Vite SPA
-                                 │ ferias.j-markets..  │  S3+CloudFront (§6)
+                                 │ ferias.tsuru..  │  S3+CloudFront (§6)
                                  └─────────┬───────────┘
                                            │ public endpoints (no JWT)
 ┌─────────────────────┐                    ▼
 │  POS app (merchant) │ org-scoped  ┌──────────────────────┐   admin endpoints  ┌─────────────────────────┐
-│ pos.j-markets..     │────────────▶│      FAIRS BE        │◀──────────────────│  TSURU ADMIN            │
+│ pos.tsuru..     │────────────▶│      FAIRS BE        │◀──────────────────│  TSURU ADMIN            │
 │ new "Ferias" section│  JWT +      │  FastAPI + Mangum    │  Cognito JWT      │  (landing-client/src/   │
 │ fairsApi client     │  x-user-id  │  fairs-api.tsuru.. │  platform-admin   │  admin, BE-connected    │
 └─────────┬───────────┘             └──────┬───────┬───────┘  group claim      │  "Ferias (online)" grp) │

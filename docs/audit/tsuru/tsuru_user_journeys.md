@@ -2,7 +2,7 @@
 
 **Author:** UX Architect (multidisciplinary audit team)
 **Date:** 2026-06-11
-**Primary evidence:** `templates/pos-system/src` (Routes.tsx, routePaths.ts, pages, hooks, components), `landing-client/src`, `templates/jmarkets-demo/src`, plus backend discovery data.
+**Primary evidence:** `templates/pos-system/src` (Routes.tsx, routePaths.ts, pages, hooks, components), `landing-client/src`, `templates/tsuru-demo/src`, plus backend discovery data.
 **Method:** Journeys reconstructed from the actual route table and page code, not from docs. Where docs and code diverge, code wins (and the divergence is flagged).
 
 ---
@@ -39,7 +39,7 @@ Landing SPA (static) → markets-api (templates list only) → **legacy** dashbo
 - **The funnel hands prospects to the wrong app.** Auth/registration was migrated to the POS app (`pos.tsuru.jcampos.dev`, `templates/pos-system/src/pages/Register.tsx` etc.; see memory `project_pos_dashboard_migration.md`), but the landing still routes signups to the old dashboard at `admin.tsuru.jcampos.dev`. Two divergent signup experiences exist depending on entry point.
 - The links are hardcoded despite `VITE_APP_URL` being passed as a build secret in `landing-client/.github/workflows/deploy.yml` and read by nothing — config exists, code ignores it.
 - **The Contact form sends nothing.** `handleSubmit` awaits a 1-second `setTimeout` then shows success (`landing-client/src/pages/Contact.tsx:24-38`); `settings.json` honestly records `contact.delivery='none'`. A prospect who "contacted sales" was silently dropped.
-- Brand confusion in the journey: site is "Tsuru" at tsuru.jcampos.dev, but `src/content/seo.json` still titles pages "JMarkets" at `tsuru.jcampos.dev`, and the app the CTA leads to is branded J-Markets. Three names in one funnel.
+- Brand confusion in the journey: site is "Tsuru" at tsuru.jcampos.dev, but `src/content/seo.json` still titles pages "Tsuru" at `tsuru.jcampos.dev`, and the app the CTA leads to is branded Tsuru. Three names in one funnel.
 
 ---
 
@@ -155,12 +155,12 @@ markets-api (org, settings categories, members/invitations/RBAC, SES invite emai
 
 ### Steps as built
 1. Consumer reaches a storefront — either a demo (`{template}-example.tsuru.jcampos.dev`, 8-9 Vite template apps under `templates/`) or, in theory, an org's own subdomain provisioned by the infra microservice.
-2. Browses Home/Products/ProductDetail/Deals (e.g. `templates/jmarkets-demo/src/pages/`), adds to a zustand cart.
-3. **Checkout** (`templates/jmarkets-demo/src/components/cart/checkout-modal.tsx`): name, phone, CR province/canton/district cascade **from a client-side static dataset** (`@/data/locations`), delivery method → builds a WhatsApp message and `window.open("https://wa.me/{phone}?text=…")` (`checkout-modal.tsx:144-145`). Cart cleared, done.
+2. Browses Home/Products/ProductDetail/Deals (e.g. `templates/tsuru-demo/src/pages/`), adds to a zustand cart.
+3. **Checkout** (`templates/tsuru-demo/src/components/cart/checkout-modal.tsx`): name, phone, CR province/canton/district cascade **from a client-side static dataset** (`@/data/locations`), delivery method → builds a WhatsApp message and `window.open("https://wa.me/{phone}?text=…")` (`checkout-modal.tsx:144-145`). Cart cleared, done.
 
 ### Reality check
 - **No order is ever created in any backend.** cross-app-be "orders" are wholesale POs ingested from Excel (`app/services/excel_parser.py`), not storefront orders; markets-api has no order endpoints at all. The end-to-end "e-commerce platform" customer journey terminates in a WhatsApp chat.
-- The demo template doesn't fetch runtime CMS content (no `by-subdomain`/`/api/public` calls found in `jmarkets-demo/src`) — catalog/content are bundled, so the CMS-edit→storefront-update loop (J8) is not demonstrably closed for these templates.
+- The demo template doesn't fetch runtime CMS content (no `by-subdomain`/`/api/public` calls found in `tsuru-demo/src`) — catalog/content are bundled, so the CMS-edit→storefront-update loop (J8) is not demonstrably closed for these templates.
 - The publish pipeline behind "your store is live" is largely simulated server-side: publish uploads a `config.json` and immediately marks success (`server/src/services/DeploymentService.ts:58-88`).
 - **Verdict:** J7 is a demo/sales artifact, not a live consumer journey. The real revenue journeys today are J3/J4 (POS + e-invoicing) and the cross-docking ops flows (Excel-driven, no SPA journey of their own beyond Orders/Confirmations pages in the POS dashboard).
 
@@ -195,7 +195,7 @@ The third CMS copy — the old dashboard app's content editor — still exists a
 | 3 | Login/Register ignore `?redirect=` and `redirectAfterLogin` — invitation + deep-link context lost | J6, all auth re-entry | `Login.tsx:42-46`, `Routes.tsx:72` (write-only), `AcceptInvitation.tsx:119,127` | High |
 | 4 | Landing CTAs hardcode the legacy dashboard URL; contact form is fake | J1 | `navbar.tsx:130-137`, `Contact.tsx:24-38` | High (top-of-funnel) |
 | 5 | Checkout default `activity_code='722000'` ignores the org's registered fiscal activities | J3/J5 | `CheckoutDrawer.tsx:48` | High (fiscal correctness) |
-| 6 | Storefront "purchase" = WhatsApp link; no orders exist anywhere; publish pipeline simulated | J7/J8a | `jmarkets-demo .../checkout-modal.tsx:144-145`, `DeploymentService.ts:58-88` | High (product-truth) |
+| 6 | Storefront "purchase" = WhatsApp link; no orders exist anywhere; publish pipeline simulated | J7/J8a | `tsuru-demo .../checkout-modal.tsx:144-145`, `DeploymentService.ts:58-88` | High (product-truth) |
 | 7 | Plaintext password stashed in sessionStorage for post-OTP auto-login | J2 | `Register.tsx:140`, `Login.tsx:48-52` | Medium-high |
 | 8 | Roles/permissions journey manages RBAC that no backend enforces; `customer` default role passes the only FE gate | J5/J2 | `Routes.tsx:49,76-78`; server discovery (permissions middleware unmounted) | Medium-high (security illusion) |
 | 9 | Shift "start" is local-only; assignment requirement fails late at payment confirm | J3 | `SessionSetupScreen.tsx:90-105`, `POSIntegratedPage.tsx:163-167` | Medium |

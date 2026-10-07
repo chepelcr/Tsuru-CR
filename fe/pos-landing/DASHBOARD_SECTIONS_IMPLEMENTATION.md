@@ -18,7 +18,7 @@ Successfully created 6 new dashboard tabs to edit all card-based sections in the
 
 2. **VS Competition Tab** (`/dashboard/vs`)
    - Edit comparison table rows
-   - Each row compares: JMarkets POS vs 2 competitors
+   - Each row compares: Tsuru POS vs 2 competitors
    - Fields: feature name, your value, competitor 1, competitor 2
 
 3. **How It Works Tab** (`/dashboard/how-it-works`)

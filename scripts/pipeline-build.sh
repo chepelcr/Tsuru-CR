@@ -3,7 +3,7 @@
 # Replaces the local `npm run package:lambda` which uses PowerShell/Compress-Archive.
 set -euo pipefail
 
-echo "=== JMarkets Lambda Build ==="
+echo "=== Tsuru Lambda Build ==="
 echo "  Environment : ${ENVIRONMENT:-dev}"
 echo "  Region      : ${REGION:-us-east-1}"
 echo ""

@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# JMarkets Organization Events SNS Topic Deployment Script
+# Tsuru Organization Events SNS Topic Deployment Script
 
 set -e
 
 # Configuration
 ENVIRONMENT=${1:-dev}
-STACK_NAME="jmarkets-${ENVIRONMENT}-organization-events"
+STACK_NAME="tsuru-${ENVIRONMENT}-organization-events"
 TEMPLATE_FILE="cloudformation/organization-publish-topic.yml"
 REGION="us-east-1"
 AWS_PROFILE=${AWS_PROFILE:-"J-CAMPOS"}
@@ -31,7 +31,7 @@ upsert_env() {
   fi
 }
 
-echo -e "${GREEN}🚀 Deploying JMarkets Organization Events SNS Topic${NC}"
+echo -e "${GREEN}🚀 Deploying Tsuru Organization Events SNS Topic${NC}"
 echo "Stack Name:  $STACK_NAME"
 echo "Region:      $REGION"
 echo "Environment: $ENVIRONMENT"
@@ -153,5 +153,5 @@ echo "  2. Redeploy Lambda: bash deploys/deploy-lambda.sh $ENVIRONMENT"
 echo "  3. Infrastructure microservice: subscribe its SQS queue to this topic"
 echo ""
 echo -e "${YELLOW}ℹ️  Note:${NC} ORGANIZATION_TOPIC_ARN is no longer a Lambda env var."
-echo "     It is stored in SSM at /tsuru/${ENVIRONMENT}/jmarkets/sns/organization-topic-arn"
+echo "     It is stored in SSM at /tsuru/${ENVIRONMENT}/platform/sns/organization-topic-arn"
 echo "     and resolved at runtime via AppConfig."

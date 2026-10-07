@@ -128,10 +128,10 @@ This document specifies requirements for adding two site sharing features to the
 #### Acceptance Criteria
 
 1. WHEN a Custom_Domain is added, THE Domain_Settings_Page SHALL display DNS TXT record instructions
-2. THE Domain_Settings_Page SHALL display the TXT record name as "_j-markets-verification"
+2. THE Domain_Settings_Page SHALL display the TXT record name as "_tsuru-verification"
 3. THE Domain_Settings_Page SHALL display the TXT record value as the Verification_Token
 4. THE Domain_Settings_Page SHALL provide a copy button to copy the Verification_Token to clipboard
-5. THE Domain_Settings_Page SHALL display the expected DNS record format: "_j-markets-verification.{customDomain} TXT {verificationToken}"
+5. THE Domain_Settings_Page SHALL display the expected DNS record format: "_tsuru-verification.{customDomain} TXT {verificationToken}"
 6. THE Domain_Settings_Page SHALL provide a link to common DNS provider documentation
 
 ### Requirement 10: Verify Custom Domain Ownership
@@ -141,7 +141,7 @@ This document specifies requirements for adding two site sharing features to the
 #### Acceptance Criteria
 
 1. THE Domain_Settings_Page SHALL provide a "Verify Domain" button
-2. WHEN the user clicks "Verify Domain", THE System SHALL perform a DNS TXT record lookup for "_j-markets-verification.{customDomain}"
+2. WHEN the user clicks "Verify Domain", THE System SHALL perform a DNS TXT record lookup for "_tsuru-verification.{customDomain}"
 3. WHEN the DNS TXT record value matches the Verification_Token, THE System SHALL set domainVerified to true
 4. WHEN the DNS TXT record is not found OR the value does not match, THE System SHALL display an error message with troubleshooting guidance
 5. WHEN domainVerified is set to true, THE Domain_Settings_Page SHALL display a success message indicating the domain is verified

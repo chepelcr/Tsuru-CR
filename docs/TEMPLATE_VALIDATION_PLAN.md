@@ -4,7 +4,7 @@
 
 ### Infrastructure Files Deployed (8/8)
 - ✅ beauty-essentials
-- ✅ jmarkets-demo
+- ✅ tsuru-demo
 - ✅ tech-gadgets
 - ✅ vintage-fashion
 - ✅ artisan-crafts

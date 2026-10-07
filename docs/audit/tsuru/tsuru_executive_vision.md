@@ -8,7 +8,7 @@
 
 ## 1. Executive Summary
 
-Tsuru (publicly branded "JMarkets") is marketed as a Social Solidarity Economy community platform — free no-code stores, WhatsApp commerce, community fairs, barter, mutual-aid networks. What actually works, end to end and in production, is something different and arguably more valuable: a **Costa Rica point-of-sale and Hacienda v4.4 electronic-invoicing system** — offline-first sale capture, XAdES XML signing, ATV submission, validation polling, PDF generation, and document delivery (`biller-apps/auth/app/sales-api/src/services/sales_pipeline.py`; `templates/pos-system`). That merchant loop is the **only complete production-credible user journey** in the nine-system ecosystem (`tsuru_user_journeys.md`).
+Tsuru (publicly branded "Tsuru") is marketed as a Social Solidarity Economy community platform — free no-code stores, WhatsApp commerce, community fairs, barter, mutual-aid networks. What actually works, end to end and in production, is something different and arguably more valuable: a **Costa Rica point-of-sale and Hacienda v4.4 electronic-invoicing system** — offline-first sale capture, XAdES XML signing, ATV submission, validation polling, PDF generation, and document delivery (`biller-apps/auth/app/sales-api/src/services/sales_pipeline.py`; `templates/pos-system`). That merchant loop is the **only complete production-credible user journey** in the nine-system ecosystem (`tsuru_user_journeys.md`).
 
 The reconciliation verdict is stark: of 27 audited landing promises, **14 are Not built** — including every flagship SSE differentiator (fairs, barter, mutual networks, fair-trade guarantee) and every trust/compliance claim (contact response, GDPR, cookie banner, data security) — while the strongest implemented capability, free legal e-invoicing for micro-sellers, appears in **zero** of the landing's 22 content entities (`tsuru_reconciliation_report.md`).
 
@@ -31,9 +31,9 @@ Strip away the names — none can be trusted (`tsuru_system_discovery.md` §6: "
    - `biller-apps/auth` ("jbiller", sales-api): the e-invoicing core — clave/consecutive generation, XML build, XAdES signing, ATV submission, an idempotent SNS/SQS FIFO pipeline for validation→PDF→notification, plus the per-org AWS infrastructure provisioner.
    - `biller-apps/data-services` (data-api): 34 read-only Lambdas serving Hacienda fiscal reference catalogs (taxes, CABYS, geography, taxpayer lookup, exchange rates).
 
-2. **J-Markets storefront SaaS (the half-built product).**
+2. **Tsuru storefront SaaS (the half-built product).**
    - `BeautyMarket/server` (markets-api): tenant control plane only — organizations, onboarding, memberships, RBAC metadata, storefront CMS, template gallery/cloning. **Zero commerce endpoints** despite docs claiming them (`server/src/routes.ts`).
-   - 8 demo storefront SPAs whose live-org product browsing 404s (endpoints missing from `PublicOrgController.ts`) and whose checkout is a WhatsApp deep link persisting nothing (`templates/jmarkets-demo/src/components/cart/checkout-modal.tsx`).
+   - 8 demo storefront SPAs whose live-org product browsing 404s (endpoints missing from `PublicOrgController.ts`) and whose checkout is a WhatsApp deep link persisting nothing (`templates/tsuru-demo/src/components/cart/checkout-modal.tsx`).
    - `landing-client` (repo `chepelcr/tsuru-landing`): a well-engineered 100%-static marketing SPA with a git-backed dev-only CMS, selling the SSE story.
 
 **Plain-language verdict:** Tsuru is a free, Spanish-first, offline-tolerant tool that legally formalizes Costa Rica's smallest sellers — wrapped in the marketing of a community marketplace that does not exist, and resting on an authorization layer that was modeled but never turned on.

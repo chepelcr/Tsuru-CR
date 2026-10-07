@@ -1,6 +1,6 @@
-# JMarkets Deployment Guide
+# Tsuru Deployment Guide
 
-Complete guide for deploying the JMarkets platform to AWS infrastructure.
+Complete guide for deploying the Tsuru platform to AWS infrastructure.
 
 ## 📋 Table of Contents
 
@@ -15,7 +15,7 @@ Complete guide for deploying the JMarkets platform to AWS infrastructure.
 
 ## 🏗️ Infrastructure Overview
 
-The JMarkets platform consists of multiple AWS components:
+The Tsuru platform consists of multiple AWS components:
 
 ### Backend Infrastructure
 - **Lambda Function**: Node.js 20.x serverless Express app (`server/`)
@@ -38,7 +38,7 @@ CloudFormation Templates (this repo):
 └── organization-publish-topic.yml  # SNS topic for org events
 
 Managed in infra repo (Infrastructure/):
-├── cognito/jmarkets-cognito.yml    # User authentication
+├── cognito/tsuru-cognito.yml    # User authentication
 └── policies/tsuru-iam-policies.yaml  # IAM policies
 
 Frontend deployment (no CloudFormation):
@@ -89,7 +89,7 @@ SES_SMTP_USERNAME=your_ses_username_here
 SES_SMTP_PASSWORD=your_ses_password_here
 
 # CloudFront
-AWS_CLOUDFRONT_URL=https://cloudfront.dev.jmarkets.io
+AWS_CLOUDFRONT_URL=https://cloudfront.dev.tsuru.io
 ```
 
 ### 3. Install Dependencies
@@ -123,7 +123,7 @@ brew install awscli
 - Displays access credentials (save them immediately!)
 
 **Outputs:**
-- Policy ARN: `jmarkets-iam-dev-BackendPolicyArn`
+- Policy ARN: `tsuru-iam-dev-BackendPolicyArn`
 - Access credentials for local development
 
 ### Step 2: Cognito User Pool
@@ -156,7 +156,7 @@ brew install awscli
 - Imports IAM policy from Step 1
 
 **Outputs:**
-- Lambda Function ARN: `jmarkets-lambda-LambdaArn`
+- Lambda Function ARN: `tsuru-lambda-LambdaArn`
 
 **Build Process:**
 ```bash
@@ -232,7 +232,7 @@ curl http://localhost:5000/api/organizations/check-slug/test-org
 ### 2. Test Lambda via AWS Console
 
 1. Go to AWS Lambda Console
-2. Find function: `jmarkets-api-handler`
+2. Find function: `tsuru-api-handler`
 3. Click "Test" tab
 4. Create test event:
 
@@ -255,7 +255,7 @@ curl http://localhost:5000/api/organizations/check-slug/test-org
 ```bash
 # Get API Gateway URL
 aws cloudformation describe-stacks \
-  --stack-name jmarkets-api-gateway \
+  --stack-name tsuru-api-gateway \
   --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayUrl'].OutputValue" \
   --output text \
   --profile J-CAMPOS
@@ -288,7 +288,7 @@ curl https://api.tsuru.jcampos.dev/api/users/[userId]/profile \
 sam build --template cloudformation/template.yaml --profile J-CAMPOS
 
 sam deploy \
-  --stack-name jmarkets-lambda \
+  --stack-name tsuru-lambda \
   --no-confirm-changeset \
   --profile J-CAMPOS
 ```
@@ -297,10 +297,10 @@ sam deploy \
 
 ```bash
 # View recent logs
-aws logs tail /aws/lambda/jmarkets-lambda --follow --profile J-CAMPOS
+aws logs tail /aws/lambda/tsuru-lambda --follow --profile J-CAMPOS
 
 # Filter errors
-aws logs tail /aws/lambda/jmarkets-lambda --filter-pattern "ERROR" --profile J-CAMPOS
+aws logs tail /aws/lambda/tsuru-lambda --filter-pattern "ERROR" --profile J-CAMPOS
 ```
 
 ---
@@ -382,7 +382,7 @@ ls dist/
 - Verify Lambda permission for API Gateway
 
 **Error: "Internal Server Error (500)"**
-- Check Lambda logs: `aws logs tail /aws/lambda/jmarkets-lambda --follow`
+- Check Lambda logs: `aws logs tail /aws/lambda/tsuru-lambda --follow`
 - Verify environment variables are set correctly
 
 ### Dashboard Issues
@@ -436,7 +436,7 @@ If changes don't appear:
 ```bash
 # Get distribution ID
 aws cloudfront list-distributions \
-  --query "DistributionList.Items[?Aliases.Items[?contains(@,'admin.jmarkets')]].Id" \
+  --query "DistributionList.Items[?Aliases.Items[?contains(@,'admin.tsuru')]].Id" \
   --output text \
   --profile J-CAMPOS
 
@@ -460,21 +460,21 @@ aws cloudfront create-invalidation \
 
 ### Architecture Comparison
 
-| Component | JCampos-Biller | JMarkets | Notes |
+| Component | JCampos-Biller | Tsuru | Notes |
 |-----------|----------------|----------|-------|
-| Lambda | ✅ CloudFormation | ✅ SAM | JMarkets uses SAM (AWS::Serverless) |
+| Lambda | ✅ CloudFormation | ✅ SAM | Tsuru uses SAM (AWS::Serverless) |
 | API Gateway | ✅ CloudFormation | ✅ CloudFormation | Both use REST API with custom domain |
-| Dockerfile | ✅ Used | ❌ Not used | JMarkets uses SAM build with Makefile |
+| Dockerfile | ✅ Used | ❌ Not used | Tsuru uses SAM build with Makefile |
 | Update Script | `update-lambda.sh` | `deploy-lambda.sh` | Both update Lambda code |
 | Frontend | Individual scripts | ✅ `setup-template-bucket.js` | Single script for all frontends |
 
 ### Environment-Specific Stacks
 
 All stacks use `-dev` suffix for development:
-- `jmarkets-iam-dev`
-- `jmarkets-cognito-dev`
-- `jmarkets-lambda`
-- `jmarkets-api-gateway`
+- `tsuru-iam-dev`
+- `tsuru-cognito-dev`
+- `tsuru-lambda`
+- `tsuru-api-gateway`
 
 For production, change stack names in deployment scripts.
 
@@ -499,7 +499,7 @@ Before going live:
 
 ---
 
-**🎉 Your JMarkets platform is now deployed to AWS!**
+**🎉 Your Tsuru platform is now deployed to AWS!**
 
 Dashboard: `https://admin.tsuru.jcampos.dev`
 API: `https://api.tsuru.jcampos.dev`

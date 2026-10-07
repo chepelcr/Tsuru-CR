@@ -166,7 +166,7 @@ CREATE TABLE organization_settings (
 
 1. **Create/check** an `organization_settings` row for the org (upsert by `organization_id`)
 2. Set `infrastructure_status = 'provisioning'`
-3. **Provision S3 bucket**: `s3_bucket_name` — conventionally `jmarkets-org-{slug}`
+3. **Provision S3 bucket**: `s3_bucket_name` — conventionally `tsuru-org-{slug}`
    - The main service uploads `config.json` to this bucket
    - Must be configured for static website hosting or read by CloudFront
 4. **Provision CloudFront distribution** pointing at the S3 bucket

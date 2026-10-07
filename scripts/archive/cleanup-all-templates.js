@@ -47,18 +47,18 @@ const route53Client = new Route53Client({
 
 // Old beauty-themed buckets to delete
 const OLD_BUCKETS = [
-  'beauty-demo-example-jmarkets-tsuru-dev',
-  'bella-natural-example-jmarkets-tsuru-dev',
-  'glam-studio-example-jmarkets-tsuru-dev',
-  'royal-hair-example-jmarkets-tsuru-dev',
-  'skin-love-example-jmarkets-tsuru-dev',
-  'pro-nails-example-jmarkets-tsuru-dev',
-  'beauty-salon-example-jmarkets-tsuru-dev',
+  'beauty-demo-example-tsuru-tsuru-dev',
+  'bella-natural-example-tsuru-tsuru-dev',
+  'glam-studio-example-tsuru-tsuru-dev',
+  'royal-hair-example-tsuru-tsuru-dev',
+  'skin-love-example-tsuru-tsuru-dev',
+  'pro-nails-example-tsuru-tsuru-dev',
+  'beauty-salon-example-tsuru-tsuru-dev',
 ];
 
 // New template subdomains (to delete CloudFront and Route53)
 const NEW_TEMPLATES = [
-  'jmarkets-demo-example',
+  'tsuru-demo-example',
   'tech-gadgets-example',
   'vintage-fashion-example',
   'artisan-crafts-example',

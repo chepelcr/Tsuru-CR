@@ -52,8 +52,8 @@ templates/artisan-crafts/
 templates/beauty-essentials/
 templates/fitness-hub/
 templates/gourmet-foods/
-templates/jmarkets-demo/
-# jmarkets-demo was rebranded 2026-07-03 → repo chepelcr/template-tsuru-demo (clone lands in templates/tsuru-demo)
+templates/tsuru-demo/
+# tsuru-demo was rebranded 2026-07-03 → repo chepelcr/template-tsuru-demo (clone lands in templates/tsuru-demo)
 templates/tsuru-demo/
 templates/pet-care/
 templates/tech-gadgets/

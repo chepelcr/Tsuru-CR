@@ -65,7 +65,7 @@ export function TopNav() {
           }}
         >
           <LogoIcon size={32} />
-          <span className="leading-none">JMARKETS<span className="text-primary">·</span>POS</span>
+          <span className="leading-none">TSURU<span className="text-primary">·</span>POS</span>
         </Link>
 
         {/* Desktop nav */}

@@ -20,7 +20,7 @@
 ### 3. Deals Pages (All 8 Templates)
 Each with custom styling matching template design:
 - ✅ beauty-essentials/src/pages/DealsPage.tsx
-- ✅ jmarkets-demo/src/pages/DealsPage.tsx
+- ✅ tsuru-demo/src/pages/DealsPage.tsx
 - ✅ tech-gadgets/src/pages/DealsPage.tsx
 - ✅ vintage-fashion/src/pages/DealsPage.tsx
 - ✅ artisan-crafts/src/pages/DealsPage.tsx

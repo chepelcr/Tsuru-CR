@@ -147,7 +147,7 @@ dashboard/how-it-works/
 **Landing Components:**
 - `src/components/sections/VSCompetition.tsx`
   - Comparison table
-  - Feature rows (JMarkets vs Competitors)
+  - Feature rows (Tsuru vs Competitors)
 
 **Dashboard Components to Create:**
 ```
@@ -155,7 +155,7 @@ dashboard/vs-competition/
 ├── ComparisonTable.tsx          (table orchestrator)
 └── ComparisonRow.tsx            (single row editor)
     ├── FeatureCell.tsx          (feature name)
-    ├── JMarketsCell.tsx         (JMarkets value)
+    ├── TsuruCell.tsx         (Tsuru value)
     └── CompetitorCell.tsx       (competitor value)
 ```
 

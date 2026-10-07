@@ -122,7 +122,7 @@ Successfully completed both tasks:
 
 #### Info Messages:
 - "These addon cards appear at the bottom..." → "Estas tarjetas de addon aparecen al final de la sección de precios."
-- "This section compares your product..." → "Esta sección compara tu producto (JMarkets POS) contra dos tipos de competidores."
+- "This section compares your product..." → "Esta sección compara tu producto (Tsuru POS) contra dos tipos de competidores."
 - "Catalog of feature concepts..." → "Catálogo de conceptos de características. Usar como sugerencias al agregar características a planes..."
 
 ---

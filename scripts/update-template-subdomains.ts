@@ -4,7 +4,7 @@ import { organizations } from './server/src/entities/index.js';
 import { eq } from 'drizzle-orm';
 
 const TEMPLATE_SUBDOMAINS = [
-  { slug: 'jmarkets-demo-example', subdomain: 'jmarkets-demo-example' },
+  { slug: 'tsuru-demo-example', subdomain: 'tsuru-demo-example' },
   { slug: 'tech-gadgets-example', subdomain: 'tech-gadgets-example' },
   { slug: 'vintage-fashion-example', subdomain: 'vintage-fashion-example' },
   { slug: 'artisan-crafts-example', subdomain: 'artisan-crafts-example' },

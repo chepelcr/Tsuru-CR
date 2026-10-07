@@ -33,7 +33,7 @@ const cloudFrontClient = new CloudFrontClient({
   credentials: fromIni({ profile: AWS_PROFILE }),
 });
 
-const DASHBOARD_BUCKET = 'admin-jmarkets-tsuru-dev';
+const DASHBOARD_BUCKET = 'admin-tsuru-tsuru-dev';
 const DASHBOARD_DISTRIBUTION_ID = 'E32CF99EJB1AO2';
 const BUILD_DIR = join(__dirname, 'dist', 'dashboard');
 

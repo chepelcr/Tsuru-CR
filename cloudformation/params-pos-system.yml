@@ -2,7 +2,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: >
   Pollos Porteños Sales — SSM Parameters.
   Path prefix: /tsuru/{env}/pollos-sales
-  Shares Cognito pool with jmarkets (same user base).
+  Shares Cognito pool with tsuru (same user base).
 
 Parameters:
 
@@ -30,23 +30,23 @@ Resources:
       Type: String
       Value: !Ref AWS::Region
 
-  # /tsuru/{env}/pollos-sales/cognito/user-pool-id  (shared with jmarkets)
+  # /tsuru/{env}/pollos-sales/cognito/user-pool-id  (shared with tsuru)
   CognitoUserPoolId:
     Type: AWS::SSM::Parameter
     Properties:
       Name: !Sub "/tsuru/${Environment}/pollos-sales/cognito/user-pool-id"
       Type: String
       Value:
-        Fn::ImportValue: "jmarkets-cognito-UserPoolId"
+        Fn::ImportValue: "tsuru-cognito-UserPoolId"
 
-  # /tsuru/{env}/pollos-sales/cognito/client-id  (shared with jmarkets)
+  # /tsuru/{env}/pollos-sales/cognito/client-id  (shared with tsuru)
   CognitoClientId:
     Type: AWS::SSM::Parameter
     Properties:
       Name: !Sub "/tsuru/${Environment}/pollos-sales/cognito/client-id"
       Type: String
       Value:
-        Fn::ImportValue: "jmarkets-cognito-UserPoolClientId"
+        Fn::ImportValue: "tsuru-cognito-UserPoolClientId"
 
   # /tsuru/{env}/pollos-sales/api/url  (same backend)
   ApiUrl:

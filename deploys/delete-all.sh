@@ -19,19 +19,19 @@ AWS_PROFILE=${AWS_PROFILE:-"J-CAMPOS"}
 
 # Stack names in deletion order (reverse of creation)
 STACKS=(
-    "jmarkets-codepipeline"
-    "jmarkets-static-website"
-    "jmarkets-api-gateway"
-    "jmarkets-lambda"
-    "jmarkets-pipeline-roles"
-    "jmarkets-cognito"
+    "tsuru-codepipeline"
+    "tsuru-static-website"
+    "tsuru-api-gateway"
+    "tsuru-lambda"
+    "tsuru-pipeline-roles"
+    "tsuru-cognito"
 )
 
 echo -e "${RED}"
 echo "╔════════════════════════════════════════════════════════════╗"
 echo "║                    ⚠️  WARNING  ⚠️                          ║"
 echo "║                                                            ║"
-echo "║  This will DELETE ALL JMarkets AWS infrastructure:        ║"
+echo "║  This will DELETE ALL Tsuru AWS infrastructure:        ║"
 echo "║                                                            ║"
 echo "║  • CodePipeline and CodeBuild                             ║"
 echo "║  • CloudFront distributions                               ║"
@@ -142,7 +142,7 @@ if [ -f ".env" ]; then
 fi
 
 # Empty artifacts bucket
-ARTIFACTS_BUCKET="jmarkets-pipeline-artifacts-dev-$(aws sts get-caller-identity --profile $AWS_PROFILE --query Account --output text)"
+ARTIFACTS_BUCKET="tsuru-pipeline-artifacts-dev-$(aws sts get-caller-identity --profile $AWS_PROFILE --query Account --output text)"
 echo -e "${YELLOW}  Emptying artifacts bucket: ${ARTIFACTS_BUCKET}${NC}"
 aws s3 rm s3://$ARTIFACTS_BUCKET --recursive --region $AWS_REGION --profile $AWS_PROFILE 2>/dev/null || true
 echo -e "${GREEN}  ✓ Artifacts bucket emptied${NC}"

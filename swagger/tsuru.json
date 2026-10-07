@@ -1,11 +1,11 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "JMarkets API Documentation",
+    "title": "Tsuru API Documentation",
     "version": "1.0.0",
     "description": "Multi-tenant marketplace platform API with CMS, authentication, RBAC, and auto-deployment",
     "contact": {
-      "name": "JMarkets Support",
+      "name": "Tsuru Support",
       "url": "https://tsuru.jcampos.dev"
     }
   },

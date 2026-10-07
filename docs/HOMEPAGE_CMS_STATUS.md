@@ -66,7 +66,7 @@ Each template needs its HomePage.tsx and Footer.tsx updated individually to:
 4. **Maintain template-specific styling** (colors, fonts, layouts)
 
 Templates to update:
-- [ ] jmarkets-demo
+- [ ] tsuru-demo
 - [ ] tech-gadgets
 - [ ] vintage-fashion
 - [ ] artisan-crafts

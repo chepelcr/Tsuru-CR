@@ -8,32 +8,32 @@
 
 ## 1. Branding & Identity
 
-### 1.1 The brand the public sees is "JMarkets", not "Tsuru"
+### 1.1 The brand the public sees is "Tsuru", not "Tsuru"
 
-Despite the repo being named `tsuru-landing` (`landing-client/package.json` → `"name": "tsuru-landing"`), **the string "Tsuru" never appears in public-facing content**. Every consumer touchpoint brands the product as **JMarkets**:
+Despite the repo being named `tsuru-landing` (`landing-client/package.json` → `"name": "tsuru-landing"`), **the string "Tsuru" never appears in public-facing content**. Every consumer touchpoint brands the product as **Tsuru**:
 
 | Surface | Evidence |
 |---|---|
-| Company name | `src/content/branding.json` → `"companyName": "JMarkets"` |
-| Navbar / footer brand | `src/content/navbar.json` → `"brand": {"es": "JMarkets"}`; `src/content/footer.json` → same + copyright `"© 2026 JMarkets. Todos los derechos reservados."` |
-| HTML title | `index.html` → `<title>JMarkets - Tu comunidad, tu mercado</title>` |
-| SEO defaults | `src/content/seo.json` → `"defaultTitle": {"es": "JMarkets - Tu comunidad, tu mercado"}`, `siteUrl: "https://tsuru.jcampos.dev"` |
-| Page title suffixes | `contact.json`, `terms.json`, `privacy.json`, `cookies.json`, `blog-chrome.json` → `"docTitleSuffix": " | JMarkets"` |
+| Company name | `src/content/branding.json` → `"companyName": "Tsuru"` |
+| Navbar / footer brand | `src/content/navbar.json` → `"brand": {"es": "Tsuru"}`; `src/content/footer.json` → same + copyright `"© 2026 Tsuru. Todos los derechos reservados."` |
+| HTML title | `index.html` → `<title>Tsuru - Tu comunidad, tu mercado</title>` |
+| SEO defaults | `src/content/seo.json` → `"defaultTitle": {"es": "Tsuru - Tu comunidad, tu mercado"}`, `siteUrl: "https://tsuru.jcampos.dev"` |
+| Page title suffixes | `contact.json`, `terms.json`, `privacy.json`, `cookies.json`, `blog-chrome.json` → `"docTitleSuffix": " | Tsuru"` |
 
-"Tsuru" exists only in **internal/dev tooling**: the dev-only admin chrome (`src/translations/en.json` → `"admin.appName": "Tsuru Admin"`), DOM event names (`"tsuru:content-saved"` in `src/lib/admin-store.ts`, `src/components/admin/AdminTopbar.tsx`), and the package name. **Conclusion: "Tsuru" is the internal ecosystem/repo codename; "JMarkets" is the implemented consumer brand of this landing.**
+"Tsuru" exists only in **internal/dev tooling**: the dev-only admin chrome (`src/translations/en.json` → `"admin.appName": "Tsuru Admin"`), DOM event names (`"tsuru:content-saved"` in `src/lib/admin-store.ts`, `src/components/admin/AdminTopbar.tsx`), and the package name. **Conclusion: "Tsuru" is the internal ecosystem/repo codename; "Tsuru" is the implemented consumer brand of this landing.**
 
 ### 1.2 Brand narrative (origin story)
 
 The brand is anchored in a specific, verifiable-sounding origin story, repeated verbatim in `branding.json` (tagline) and `about.json` (subtitle):
 
-> "JMarkets nació en Guápiles, Costa Rica, como un proyecto universitario comunitario en tiempos de pandemia para reconectar comunidades aisladas a través de sus ferias y redes de trueque." — `src/content/branding.json` (`tagline.es`)
+> "Tsuru nació en Guápiles, Costa Rica, como un proyecto universitario comunitario en tiempos de pandemia para reconectar comunidades aisladas a través de sus ferias y redes de trueque." — `src/content/branding.json` (`tagline.es`)
 
 Expanded in `about.json` (`queEs.description`, `story.paras`):
 
 - Born from the **TCU "Comer Orgánico"** (Trabajo Comunal Universitario) of the **Universidad de Costa Rica**.
 - In partnership with the **"Feria del Trueque Verde Manantial"** in Guápiles, Costa Rica.
 - Built during COVID-19 as "una recreación digital de las ferias que existían antes" ("a digital recreation of the fairs that existed before").
-- Self-described as documentation-driven: "documentamos cada paso de este proceso... Esa documentación vive en JMarkets" (`about.json` → `story.paras[2]`).
+- Self-described as documentation-driven: "documentamos cada paso de este proceso... Esa documentación vive en Tsuru" (`about.json` → `story.paras[2]`).
 
 The origin story is also embedded in the legal copy: Terms §1 and §5 (`terms.json`) restate that the platform "nació del TCU \"Comer Orgánico\" de la Universidad de Costa Rica" and is IP "producida como parte del TCU".
 
@@ -84,18 +84,18 @@ Explicitly named audiences, with evidence:
 | 9 | **No hidden fees** / transparent pricing: "Sin cargos ocultos, sin sorpresas." / "Sin costos ocultos." | `landing.json` → `values.items[3]`; `community.json` → `values[3]`; `about.json` → `values[3]` | Strong commercial promise stated as a core value. |
 | 10 | Fair trade guarantee: "Garantizamos condiciones justas y precios transparentes para todos los participantes del ecosistema." | `landing.json` → `values.items[0]` | Note the verb "Garantizamos" (we guarantee) — strongest-worded claim on the site; legally softened in `terms.json` §4/§6 (platform is only a "facilitador", provided "as is"). |
 | 11 | **Barter system (trueque)**: members can "intercambiar productos o servicios sin dinero. Habilidades, tiempo, bienes — todo tiene valor." with a 3-step flow (list / find / agree & exchange) | `community.json` → `barter` | Presented as an existing product feature ("Nuestro sistema de trueque permite..."); also Blog article4 "Trueque 101: Cómo Hacer Tu Primer Intercambio... en la plataforma" (`blog.json`). **No barter functionality is evidenced in the platform's documented backend (products/orders/categories CMS)** — flagship differentiator, apparently aspirational. |
-| 12 | **Fairs (ferias)** as organized events — three types: virtual fairs, local/physical fairs, barter & exchange fairs | `fairs.json` → `types` | Virtual fairs "Promovidos en toda la comunidad JMarkets". |
+| 12 | **Fairs (ferias)** as organized events — three types: virtual fairs, local/physical fairs, barter & exchange fairs | `fairs.json` → `types` | Virtual fairs "Promovidos en toda la comunidad Tsuru". |
 | 13 | Fair participation flow: set up store → "Inscríbete en una feria... solicita participar como vendedor" → sell & connect | `fairs.json` → `howJoin` | Implies a fair-registration/application feature; no public UI on the landing performs this (CTA routes to generic register URL `admin.tsuru.jcampos.dev/register`, `branding.json`). |
 | 14 | Mutual support networks: "Encuentra colaboradores, mentores y clientes que creen en el comercio local." | `community.json` → `mutual` | Community/social-graph promise; no corresponding feature evidenced. |
 | 15 | Preserve and document community fair culture: "Preserva y documenta la cultura de ferias comunitarias" | `about.json` → `queEs.points[3]`, `story.paras[2]` | Mission-level promise unique to this brand. |
 | 16 | Traction claim: "Únete a miles de emprendedores que ya venden con propósito." (thousands of entrepreneurs) | `features.json` → `cta.subtitle` | Unverifiable marketing number; in tension with the project's stated young/university scale. |
 | 17 | Testimonial claims: "ahora tengo 200 clientes fieles"; barter of design-for-legal-services; cooperative got digital presence "sin necesitar un programador ni pagar una fortuna" | `community.json` → `stories[0..2]` | Named personas (María González/Buenos Aires, Carlos Ruiz/Medellín, Ana Morales/Oaxaca) — read as illustrative placeholder testimonials, not verified customers. |
 | 18 | Contact responsiveness: "Generalmente respondemos a todas las consultas dentro de 24 horas durante los días laborales." | `contact.json` → `responseTimeDesc` | **Contradicted by implementation**: the contact form is a fake submit — `src/pages/Contact.tsx` resolves a 1s `setTimeout` then shows success; `src/content/settings.json` → `"contact": {"delivery": "none"}`. No message is delivered anywhere. |
-| 19 | Contact channels: `hola@jmarkets.com`, phone "+506 XXXX-XXXX" (placeholder), "San José, Costa Rica" | `contact.json` → `contactInfo` | Phone is literally an unfilled placeholder shipped in content. |
+| 19 | Contact channels: `hola@tsuru.com`, phone "+506 XXXX-XXXX" (placeholder), "San José, Costa Rica" | `contact.json` → `contactInfo` | Phone is literally an unfilled placeholder shipped in content. |
 | 20 | Newsletter: "Suscríbete a nuestro boletín... Respetamos tu privacidad. Puedes desuscribirte en cualquier momento." | `blog-chrome.json` → `newsletter`, `privacyNote` | Subscribe UI promise; no backend evidenced in this static site. |
 | 21 | Data security: "Tus datos se almacenan en servidores seguros con tecnología de cifrado" + physical/electronic/procedural safeguards | `privacy.json` → §3 | |
-| 22 | **GDPR compliance**: "Cumplimos con las regulaciones de protección de datos aplicables, incluyendo el GDPR" + data-subject rights (access/correct/delete/port) via `privacy@jmarkets.com` | `privacy.json` → §7, §6 | Strong compliance claim for a university-born community project. |
-| 23 | Cookie consent banner: "Cuando visitas JMarkets por primera vez, mostramos un banner de consentimiento de cookies" with accept/reject/customize, changeable "a través de la configuración de tu cuenta" | `cookies.json` → `manageSections[1]` | **Not implemented on the landing** — no consent banner component exists in `src/components/` or `src/App.tsx`. Claim references account settings that belong to the separate admin app. |
+| 22 | **GDPR compliance**: "Cumplimos con las regulaciones de protección de datos aplicables, incluyendo el GDPR" + data-subject rights (access/correct/delete/port) via `privacy@tsuru.com` | `privacy.json` → §7, §6 | Strong compliance claim for a university-born community project. |
+| 23 | Cookie consent banner: "Cuando visitas Tsuru por primera vez, mostramos un banner de consentimiento de cookies" with accept/reject/customize, changeable "a través de la configuración de tu cuenta" | `cookies.json` → `manageSections[1]` | **Not implemented on the landing** — no consent banner component exists in `src/components/` or `src/App.tsx`. Claim references account settings that belong to the separate admin app. |
 | 24 | Users keep ownership of their content; platform gets non-exclusive display license | `terms.json` → §5 | Creator-friendly IP stance, consistent with brand values. |
 | 25 | Platform is facilitator only; user-to-user transactions/barter are between the parties | `terms.json` → §4, §6 | Defines the marketplace model: no payment intermediation claimed. |
 | 26 | Community commitment pledge: users agree to participate "con respeto, honestidad y solidaridad... pedimos a cada usuario que honre ese espíritu en cada interacción." | `terms.json` → `acceptanceNotice` | Values codified into the ToS — unusual and on-brand. |
@@ -142,7 +142,7 @@ Explicitly named audiences, with evidence:
 
 ## 6. Observations
 
-1. **Brand split: internal "Tsuru" vs public "JMarkets".** The ecosystem/repo identity (Tsuru — `package.json`, admin chrome, the standalone repos `tsuru-landing`/`tsuru-pos-system`) is invisible to users; all public content says JMarkets. Any rebranding to "Tsuru" would require touching essentially every content file (`branding.json`, `navbar.json`, `footer.json`, `seo.json`, all `docTitleSuffix` fields, `terms.json`/`privacy.json` body copy, `index.html`).
+1. **Brand split: internal "Tsuru" vs public "Tsuru".** The ecosystem/repo identity (Tsuru — `package.json`, admin chrome, the standalone repos `tsuru-landing`/`tsuru-pos-system`) is invisible to users; all public content says Tsuru. Any rebranding to "Tsuru" would require touching essentially every content file (`branding.json`, `navbar.json`, `footer.json`, `seo.json`, all `docTitleSuffix` fields, `terms.json`/`privacy.json` body copy, `index.html`).
 2. **Deployment-identity drift.** `seo.json` declares `siteUrl: "https://tsuru.jcampos.dev"` and `branding.json` points CTAs at `https://admin.tsuru.jcampos.dev`, while the repo's own `landing-client/CLAUDE.md` states the site is hosted at `https://tsuru.jcampos.dev`. Canonical URLs, sitemap, and OG tags generated from `seo.json` would therefore point at the old domain.
 3. **Marketing vs implemented platform gap.** The landing sells an SSE community/barter/fairs platform, but the monorepo platform it fronts (multi-tenant store builder: templates, products, orders, subdomains — see root `CLAUDE.md`) only evidences promises #1–#7. The flagship differentiators — **barter system (#11), fair registration (#12–13), mutual support networks (#14)** — have no visible implementation and should be treated as **aspirational/roadmap claims presented in present tense**.
 4. **Broken promise in the contact flow.** `contact.json` promises a 24h response, but `src/pages/Contact.tsx` fakes submission (1s `setTimeout` → success toast) and `settings.json` sets `contact.delivery: "none"`. Messages are silently discarded — a trust liability for a brand whose #1 value is "Transparencia".

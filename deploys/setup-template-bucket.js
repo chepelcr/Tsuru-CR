@@ -50,7 +50,7 @@ const AWS_PROFILE = 'J-CAMPOS';
 const REGION = process.env.AWS_REGION || 'us-east-1';
 
 // Project Configuration
-const TEMPLATE_BUCKET = process.env.TEMPLATE_SOURCE_BUCKET || 'j-markets-template-market';
+const TEMPLATE_BUCKET = process.env.TEMPLATE_SOURCE_BUCKET || 'tsuru-template-market';
 const CLIENT_DIST_FOLDER = './dist/public';
 const LANDING_DIST_FOLDER = './dist/landing';
 const DASHBOARD_DIST_FOLDER = './dist/dashboard'; // Fixed: dashboard builds to dist/dashboard, not dashboard/dist
@@ -63,7 +63,7 @@ let AWS_ACCOUNT_ID = null;
 
 // Template organizations from seed data
 const TEMPLATE_ORGS = [
-  'jmarkets-demo-example',
+  'tsuru-demo-example',
   'tech-gadgets-example',
   'vintage-fashion-example',
   'artisan-crafts-example',
@@ -76,7 +76,7 @@ const TEMPLATE_ORGS = [
 
 // Map template subdomains to their build directories
 const TEMPLATE_BUILD_PATHS = {
-  'jmarkets-demo-example': './dist/templates/jmarkets-demo',
+  'tsuru-demo-example': './dist/templates/tsuru-demo',
   'tech-gadgets-example': './dist/templates/tech-gadgets',
   'vintage-fashion-example': './dist/templates/vintage-fashion',
   'artisan-crafts-example': './dist/templates/artisan-crafts',
@@ -575,9 +575,9 @@ async function getOrCreateOriginAccessControl() {
       new ListOriginAccessControlsCommand({})
     );
 
-    // Check if we already have an OAC for jmarkets
+    // Check if we already have an OAC for tsuru
     const existingOac = listResponse.OriginAccessControlList?.Items?.find(
-      (oac) => oac.Name === 'j-markets-template-oac'
+      (oac) => oac.Name === 'tsuru-template-oac'
     );
 
     if (existingOac) {
@@ -589,8 +589,8 @@ async function getOrCreateOriginAccessControl() {
     const createResponse = await cloudFrontClient.send(
       new CreateOriginAccessControlCommand({
         OriginAccessControlConfig: {
-          Name: 'j-markets-template-oac',
-          Description: 'Origin Access Control for J-Markets template organizations',
+          Name: 'tsuru-template-oac',
+          Description: 'Origin Access Control for Tsuru template organizations',
           OriginAccessControlOriginType: 's3',
           SigningBehavior: 'always',
           SigningProtocol: 'sigv4',

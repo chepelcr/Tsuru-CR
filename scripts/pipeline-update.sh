@@ -4,9 +4,9 @@ set -euo pipefail
 
 ENVIRONMENT="${ENVIRONMENT:-dev}"
 REGION="${REGION:-us-east-1}"
-FUNCTION_NAME="jmarkets-${ENVIRONMENT}-api-handler"
+FUNCTION_NAME="tsuru-${ENVIRONMENT}-api-handler"
 
-echo "=== JMarkets Lambda Update ==="
+echo "=== Tsuru Lambda Update ==="
 echo "  Function    : ${FUNCTION_NAME}"
 echo "  Region      : ${REGION}"
 echo ""

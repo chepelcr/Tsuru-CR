@@ -222,7 +222,7 @@ All templates follow WCAG 2.1 AA standards:
 4. **Gourmet Foods** - Red/green/amber
 5. **Fitness Hub** - Orange/lime/dark gray
 6. **Pet Care** - Purple/blue/coral
-7. **JMarkets Demo** - Pink/modern (reference)
+7. **Tsuru Demo** - Pink/modern (reference)
 
 ## Contributing
 

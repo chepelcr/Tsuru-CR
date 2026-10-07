@@ -2,7 +2,7 @@
 
 ## Summary
 
-Successfully built the **Fitness Hub** template for the BeautyMarket/JMarkets multi-template architecture. This is a premium fitness equipment and wellness e-commerce template featuring an energetic, motivational design.
+Successfully built the **Fitness Hub** template for the BeautyMarket/Tsuru multi-template architecture. This is a premium fitness equipment and wellness e-commerce template featuring an energetic, motivational design.
 
 ## Template Specifications
 
@@ -321,4 +321,4 @@ All tasks completed successfully:
 
 ## Template is Complete and Ready for Deployment! 🎉
 
-The Fitness Hub template is now ready to be installed, built, and deployed alongside the other JMarkets templates (tech-gadgets, vintage-fashion, etc.).
+The Fitness Hub template is now ready to be installed, built, and deployed alongside the other Tsuru templates (tech-gadgets, vintage-fashion, etc.).

@@ -1,4 +1,4 @@
-# JMarkets Deployment Scripts
+# Tsuru Deployment Scripts
 
 This directory contains all deployment scripts for AWS infrastructure and application deployment.
 
@@ -280,12 +280,12 @@ aws cloudformation describe-stacks --profile J-CAMPOS
 
 ### Lambda Logs
 ```bash
-aws logs tail /aws/lambda/jmarkets-api-handler --follow --profile J-CAMPOS
+aws logs tail /aws/lambda/tsuru-api-handler --follow --profile J-CAMPOS
 ```
 
 ### CodePipeline Status
 ```bash
-aws codepipeline get-pipeline-state --name jmarkets-pipeline --profile J-CAMPOS
+aws codepipeline get-pipeline-state --name tsuru-pipeline --profile J-CAMPOS
 ```
 
 ### CloudFront Invalidation Status
@@ -347,7 +347,7 @@ aws cloudformation validate-template --template-body file://cloudformation/<temp
 
 ### Check Lambda Configuration
 ```bash
-aws lambda get-function-configuration --function-name jmarkets-api-handler --profile J-CAMPOS
+aws lambda get-function-configuration --function-name tsuru-api-handler --profile J-CAMPOS
 ```
 
 ### Test API Gateway

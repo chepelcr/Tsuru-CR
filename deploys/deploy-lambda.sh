@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# JMarkets - Lambda Deployment Script (Simple CloudFormation)
-STACK_NAME="jmarkets-lambda"
+# Tsuru - Lambda Deployment Script (Simple CloudFormation)
+STACK_NAME="tsuru-lambda"
 ENVIRONMENT=${1:-dev}
 PROFILE="J-CAMPOS"
 REGION="us-east-1"
 
-echo "🚀 JMarkets Lambda Deployment (Simple CloudFormation)"
+echo "🚀 Tsuru Lambda Deployment (Simple CloudFormation)"
 echo "   Environment: $ENVIRONMENT"
 
 # Check AWS credentials
@@ -44,7 +44,7 @@ fi
 
 # Deploy lambda stack
 # Note: no DatabaseURLParam — DB credentials are resolved at runtime via
-# SSM (/tsuru/{env}/jmarkets/aws/database) → Secrets Manager (tsuru/{env}/database)
+# SSM (/tsuru/{env}/platform/aws/database) → Secrets Manager (tsuru/{env}/database)
 echo "🚀 Deploying $STACK_NAME..."
 aws cloudformation deploy \
     --template-file cloudformation/lambda.yml \
@@ -52,7 +52,7 @@ aws cloudformation deploy \
     --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
     --parameter-overrides \
         Environment="$ENVIRONMENT" \
-        FunctionNameParam="jmarkets-${ENVIRONMENT}-api-handler" \
+        FunctionNameParam="tsuru-${ENVIRONMENT}-api-handler" \
     --profile $PROFILE \
     --region $REGION
 
@@ -65,7 +65,7 @@ echo "✅ $STACK_NAME deployed successfully!"
 # Update Lambda function code with the actual package
 echo "🔄 Updating Lambda function code..."
 aws lambda update-function-code \
-    --function-name "jmarkets-${ENVIRONMENT}-api-handler" \
+    --function-name "tsuru-${ENVIRONMENT}-api-handler" \
     --zip-file fileb://lambda-package.zip \
     --region $REGION \
     --profile $PROFILE >/dev/null 2>&1

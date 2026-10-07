@@ -123,11 +123,11 @@ Every backend error response uses `message` as a stable code. The admin control 
 | `documents` | `003` | `DOCUMENT_TYPE_REQUEST` | 422 | Se ha presentado un error en la solicitud del tipo de documento | `be/data-be/app/documents/src/enums/exception_codes.py` |
 | `documents` | `201` | `DOCUMENT_TYPE_INVALID_STATUS` | 422 | Codigo de estado invalido | `be/data-be/app/documents/src/enums/exception_codes.py` |
 | `documents` | `404` | `NOT_FOUND` | 404 | Not Found | `be/data-be/app/documents/src/enums/exception_codes.py` |
-| `economic-activities` | `001` | `ECONOMIC_ACTIVITY_FOUND` | 409 | La actividad economica ya se encuentra previamente registrada | `be/data-be/shared/jmarkets_common/economic_activities/enums/exception_codes.py` |
-| `economic-activities` | `002` | `ECONOMIC_ACTIVITY_NOT_FOUND` | 404 | La actividad economica no se encuentra registrada | `be/data-be/shared/jmarkets_common/economic_activities/enums/exception_codes.py` |
-| `economic-activities` | `003` | `ECONOMIC_ACTIVITY_REQUEST` | 422 | Se ha presentado un error en la solicitud de la actividad economica | `be/data-be/shared/jmarkets_common/economic_activities/enums/exception_codes.py` |
-| `economic-activities` | `004` | `ECONOMIC_ACTIVITY_INVALID_STATUS` | 422 | Codigo de estado invalido | `be/data-be/shared/jmarkets_common/economic_activities/enums/exception_codes.py` |
-| `economic-activities` | `404` | `NOT_FOUND` | 404 | Not Found | `be/data-be/shared/jmarkets_common/economic_activities/enums/exception_codes.py` |
+| `economic-activities` | `001` | `ECONOMIC_ACTIVITY_FOUND` | 409 | La actividad economica ya se encuentra previamente registrada | `be/data-be/shared/tsuru_common/economic_activities/enums/exception_codes.py` |
+| `economic-activities` | `002` | `ECONOMIC_ACTIVITY_NOT_FOUND` | 404 | La actividad economica no se encuentra registrada | `be/data-be/shared/tsuru_common/economic_activities/enums/exception_codes.py` |
+| `economic-activities` | `003` | `ECONOMIC_ACTIVITY_REQUEST` | 422 | Se ha presentado un error en la solicitud de la actividad economica | `be/data-be/shared/tsuru_common/economic_activities/enums/exception_codes.py` |
+| `economic-activities` | `004` | `ECONOMIC_ACTIVITY_INVALID_STATUS` | 422 | Codigo de estado invalido | `be/data-be/shared/tsuru_common/economic_activities/enums/exception_codes.py` |
+| `economic-activities` | `404` | `NOT_FOUND` | 404 | Not Found | `be/data-be/shared/tsuru_common/economic_activities/enums/exception_codes.py` |
 | `exemptions` | `001` | `EXEMPTION_FOUND` | 409 | La exoneracion ya se encuentra previamente registrada | `be/data-be/app/exemptions/src/enums/exception_codes.py` |
 | `exemptions` | `002` | `EXEMPTION_NOT_FOUND` | 404 | La exoneracion no se encuentra registrada | `be/data-be/app/exemptions/src/enums/exception_codes.py` |
 | `exemptions` | `003` | `EXEMPTION_REQUEST` | 422 | Se ha presentado un error en la solicitud de la exoneracion | `be/data-be/app/exemptions/src/enums/exception_codes.py` |
@@ -243,11 +243,11 @@ Every backend error response uses `message` as a stable code. The admin control 
 | `references` | `003` | `REFERENCE_REQUEST` | 422 | Se ha presentado un error en la solicitud de la referencia | `be/data-be/app/references/src/enums/exception_codes.py` |
 | `references` | `004` | `REFERENCE_INVALID_STATUS` | 422 | Codigo de estado invalido | `be/data-be/app/references/src/enums/exception_codes.py` |
 | `references` | `404` | `NOT_FOUND` | 404 | Not Found | `be/data-be/app/references/src/enums/exception_codes.py` |
-| `regimes` | `001` | `REGIME_FOUND` | 409 | El regimen ya se encuentra previamente registrado | `be/data-be/shared/jmarkets_common/regimes/enums/exception_codes.py` |
-| `regimes` | `002` | `REGIME_NOT_FOUND` | 404 | El regimen no se encuentra registrado | `be/data-be/shared/jmarkets_common/regimes/enums/exception_codes.py` |
-| `regimes` | `003` | `REGIME_REQUEST` | 422 | Se ha presentado un error en la solicitud del regimen | `be/data-be/shared/jmarkets_common/regimes/enums/exception_codes.py` |
-| `regimes` | `004` | `REGIME_INVALID_STATUS` | 422 | Codigo de estado invalido | `be/data-be/shared/jmarkets_common/regimes/enums/exception_codes.py` |
-| `regimes` | `404` | `NOT_FOUND` | 404 | Not Found | `be/data-be/shared/jmarkets_common/regimes/enums/exception_codes.py` |
+| `regimes` | `001` | `REGIME_FOUND` | 409 | El regimen ya se encuentra previamente registrado | `be/data-be/shared/tsuru_common/regimes/enums/exception_codes.py` |
+| `regimes` | `002` | `REGIME_NOT_FOUND` | 404 | El regimen no se encuentra registrado | `be/data-be/shared/tsuru_common/regimes/enums/exception_codes.py` |
+| `regimes` | `003` | `REGIME_REQUEST` | 422 | Se ha presentado un error en la solicitud del regimen | `be/data-be/shared/tsuru_common/regimes/enums/exception_codes.py` |
+| `regimes` | `004` | `REGIME_INVALID_STATUS` | 422 | Codigo de estado invalido | `be/data-be/shared/tsuru_common/regimes/enums/exception_codes.py` |
+| `regimes` | `404` | `NOT_FOUND` | 404 | Not Found | `be/data-be/shared/tsuru_common/regimes/enums/exception_codes.py` |
 | `registered-organizations` | `003` | `ORGANIZATION_NOT_FOUND` | 404 | La organización no se encuentra registrada. | `be/sales-be/app/registered-organizations/src/enums/exception_codes.py` |
 | `registered-organizations` | `050` | `REGISTERED_ORG_NOT_FOUND` | 404 | La información fiscal no ha sido configurada. | `be/sales-be/app/registered-organizations/src/enums/exception_codes.py` |
 | `registered-organizations` | `051` | `IDENTIFICATION_FORMAT_INVALID` | 422 | El número de identificación no corresponde con el tipo seleccionado. | `be/sales-be/app/registered-organizations/src/enums/exception_codes.py` |

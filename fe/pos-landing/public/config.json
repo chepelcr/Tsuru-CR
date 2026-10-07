@@ -1,7 +1,7 @@
 {
   "_version": 1,
   "meta": {
-    "siteTitle": "JMarkets POS — Punto de Venta · Facturación Electrónica 4.4",
+    "siteTitle": "Tsuru POS — Punto de Venta · Facturación Electrónica 4.4",
     "siteDescription": "El punto de venta costarricense con facturación electrónica 4.4 — sin renta mensual.",
     "siteUrl": "https://pos-landing.tsuru.jcampos.dev",
     "appUrl": "https://pos.tsuru.jcampos.dev",
@@ -315,10 +315,10 @@
       "vs": {
         "eyebrow": "Por qué cambiar",
         "headline": "Precios {{claros}}. Sin {{trucos}}.",
-        "subheadline": "Mientras otros te cobran por bloque de documentos o te atan con contratos largos, JMarkets POS te da flexibilidad mensual o anual con descuento.",
+        "subheadline": "Mientras otros te cobran por bloque de documentos o te atan con contratos largos, Tsuru POS te da flexibilidad mensual o anual con descuento.",
         "cols": [
           "Característica",
-          "JMarkets POS",
+          "Tsuru POS",
           "Facturador postpago",
           "Suscripción mensual"
         ],
@@ -425,7 +425,7 @@
               {
                 "icon": "FileSignature",
                 "title": "Firma y envío automático",
-                "desc": "Firmás con tu llave criptográfica, JMarkets envía y reintenta hasta validar."
+                "desc": "Firmás con tu llave criptográfica, Tsuru envía y reintenta hasta validar."
               },
               {
                 "icon": "FileText",
@@ -489,7 +489,7 @@
           {
             "icon": "FileSignature",
             "title": "Subí tu llave Hacienda",
-            "desc": "Llave criptográfica + usuario ATV. JMarkets se encarga del resto del trámite técnico."
+            "desc": "Llave criptográfica + usuario ATV. Tsuru se encarga del resto del trámite técnico."
           },
           {
             "icon": "ShoppingCart",
@@ -516,7 +516,7 @@
           {
             "icon": "ShieldCheck",
             "title": "Plan de contingencia",
-            "desc": "Si ATV está caído, seguís facturando. JMarkets reenvía cuando el servicio vuelve."
+            "desc": "Si ATV está caído, seguís facturando. Tsuru reenvía cuando el servicio vuelve."
           },
           {
             "icon": "FileText",
@@ -744,7 +744,7 @@
       },
       "testimonials": {
         "eyebrow": "Quien ya cambió",
-        "headline": "Negocios costarricenses que confían en JMarkets POS.",
+        "headline": "Negocios costarricenses que confían en Tsuru POS.",
         "items": [
           {
             "quote": "El plan anual con 2 meses gratis fue la mejor decisión. Ahorramos y tenemos todo lo que necesitamos.",
@@ -849,7 +849,7 @@
             ]
           }
         ],
-        "copyright": "© 2026 JMarkets POS. Todos los derechos reservados.",
+        "copyright": "© 2026 Tsuru POS. Todos los derechos reservados.",
         "version": "v4.4 · API 2.1.0"
       },
       "demo": {
@@ -890,7 +890,7 @@
           "tenderedLabel": "Efectivo recibido",
           "changeLabel": "Vuelto",
           "exactLabel": "Exacto",
-          "cardNote": "Insertá la tarjeta en el datáfono. JMarkets POS detecta automáticamente la respuesta del banco.",
+          "cardNote": "Insertá la tarjeta en el datáfono. Tsuru POS detecta automáticamente la respuesta del banco.",
           "sinpeNote": "El cliente envía un SINPE al número del comercio. Confirmás manualmente la recepción.",
           "confirmLabel": "Confirmar cobro",
           "processingTitle": "Firmando XML 4.4…",
@@ -986,10 +986,10 @@
       "vs": {
         "eyebrow": "Why switch",
         "headline": "Clear pricing. No tricks.",
-        "subheadline": "While others charge you per document block or lock you into long contracts, JMarkets POS gives you monthly or annual flexibility with discounts.",
+        "subheadline": "While others charge you per document block or lock you into long contracts, Tsuru POS gives you monthly or annual flexibility with discounts.",
         "cols": [
           "Feature",
-          "JMarkets POS",
+          "Tsuru POS",
           "Post-paid invoicer",
           "Monthly subscription"
         ],
@@ -1096,7 +1096,7 @@
               {
                 "icon": "FileSignature",
                 "title": "Automatic signature and sending",
-                "desc": "You sign with your cryptographic key, JMarkets sends and retries until validated."
+                "desc": "You sign with your cryptographic key, Tsuru sends and retries until validated."
               },
               {
                 "icon": "FileText",
@@ -1160,7 +1160,7 @@
           {
             "icon": "FileSignature",
             "title": "Upload your Hacienda key",
-            "desc": "Cryptographic key + ATV user. JMarkets takes care of the rest of the technical process."
+            "desc": "Cryptographic key + ATV user. Tsuru takes care of the rest of the technical process."
           },
           {
             "icon": "ShoppingCart",
@@ -1187,7 +1187,7 @@
           {
             "icon": "ShieldCheck",
             "title": "Contingency plan",
-            "desc": "If ATV is down, you keep invoicing. JMarkets resends when the service returns."
+            "desc": "If ATV is down, you keep invoicing. Tsuru resends when the service returns."
           },
           {
             "icon": "FileText",
@@ -1211,7 +1211,7 @@
       },
       "testimonials": {
         "eyebrow": "Who already switched",
-        "headline": "Costa Rican businesses that trust JMarkets POS.",
+        "headline": "Costa Rican businesses that trust Tsuru POS.",
         "items": [
           {
             "quote": "The annual plan with 2 free months was the best decision. We save money and have everything we need.",
@@ -1520,7 +1520,7 @@
             ]
           }
         ],
-        "copyright": "© 2026 JMarkets POS. All rights reserved.",
+        "copyright": "© 2026 Tsuru POS. All rights reserved.",
         "version": "v4.4 · API 2.1.0"
       }
     }

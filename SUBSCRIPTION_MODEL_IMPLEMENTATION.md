@@ -168,7 +168,7 @@ const monthlySavings = isSubscription && billingCycle === 'annual' && plan.price
 | Alegra | $15-$80 USD | 10% OFF |
 | Scrampi | ₡13,000-₡42,000 | 15% OFF |
 | Factura Professional | $11.29-$29.99 USD | ~10% OFF |
-| **JMarkets POS** | **₡20,000** | **16.67% OFF** ✅ |
+| **Tsuru POS** | **₡20,000** | **16.67% OFF** ✅ |
 
 ---
 

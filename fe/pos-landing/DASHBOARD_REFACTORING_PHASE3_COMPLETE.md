@@ -48,7 +48,7 @@ All complex dashboard tabs have been successfully refactored using the shared co
 - ✅ Maintained 3-column comparison layout
 
 **Key Features**:
-- Comparison table: Feature vs JMarkets vs 2 Competitors
+- Comparison table: Feature vs Tsuru vs 2 Competitors
 - Row numbering with visual badges
 - Move up/down for rows
 - Delete confirmation modal

@@ -11,7 +11,7 @@ NC='\033[0m'
 AWS_PROFILE=${AWS_PROFILE:-"J-CAMPOS"}
 
 echo -e "${GREEN}========================================${NC}"
-echo -e "${GREEN}  J-Markets Frontend Deploy${NC}"
+echo -e "${GREEN}  Tsuru Frontend Deploy${NC}"
 echo -e "${GREEN}  Base domain: tsuru.jcampos.dev${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo ""

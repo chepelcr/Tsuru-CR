@@ -121,7 +121,7 @@ GET /api/users/:userId/organization/:orgId/products
 ## DNS Pattern
 
 Templates use `-example` suffix:
-- `jmarkets-demo-example.tsuru.jcampos.dev`
+- `tsuru-demo-example.tsuru.jcampos.dev`
 - `beauty-essentials-example.tsuru.jcampos.dev`
 - `tech-gadgets-example.tsuru.jcampos.dev`
 - `vintage-fashion-example.tsuru.jcampos.dev`

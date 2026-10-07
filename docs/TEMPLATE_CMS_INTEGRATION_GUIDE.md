@@ -113,7 +113,7 @@ const { data: contact } = useContact();
 - HomePage: ✅ Fully dynamic
 - Footer: ✅ Fully dynamic
 
-### ✅ jmarkets-demo
+### ✅ tsuru-demo
 - File: `src/pages/Home.tsx`
 - Footer: `src/components/layout/Footer.tsx`
 - Status: ✅ Complete

@@ -1,8 +1,10 @@
 # Tsuru Brand Asset Generation Guide
 
-Practical guide for generating every visual asset the JMarkets → Tsuru rebrand needs: what to create, exact specs, where each file goes in each repo, generation prompts you can paste into an image tool, and the loading-pattern system. Companion to `tsuru_rebrand_plan.md` (brand strategy) — this doc is the production checklist.
+Practical guide for generating every visual asset the Tsuru → Tsuru rebrand needs: what to create, exact specs, where each file goes in each repo, generation prompts you can paste into an image tool, and the loading-pattern system. Companion to `tsuru_rebrand_plan.md` (brand strategy) — this doc is the production checklist.
 
 **2026-09-23 implementation note:** The selected Option 2 raster package is in `docs/brand/logo/tsuru_brand_package/`. Its light/reverse wordmarks, icon derivatives, and social card are live in landing, admin, and POS under `public/brand/`. Browser favicons and visible wordmarks switch with light/dark mode. The POS manifest points at the supplied 192/512 icons, and the POS service worker precaches the brand assets. Paths and pending checkboxes below are the original production plan; editable SVG masters remain outstanding.
+
+**2026-10-07 artwork update:** The current image slogan is **“Vendé a tu ritmo.”**, on one line aligned under the left foot of the T. Light/reverse wordmarks, the social card, Facebook cover and brand boards use this line. The landing hero may retain its separate supporting sentence about organizing orders.
 
 > **Hard rule from the rebrand plan (§1.3, RIBCA gate):** ship the *name*, the *story paragraph*, and the *natural-pigment palette* only. **No Bribri sacred symbols, no Ú-sure (conical house) mark, no etnogeometric patterns (Jaba/Kó/Penéch), no precolombian iconography** — those are Tier 2, blocked until a real partnership with Bribri organizations exists. For launch: a **wordmark-first logo**, optionally with a *generic botanical* motif (cacao pod / seed / leaf treated as neutral botany, no cultural symbolism).
 
@@ -80,7 +82,7 @@ The original `/icon-192.png` and `/icon-512.png` manifest paths were broken. The
 | App icon 512 | L3, 512×512 PNG | `public/icon-512.png` |
 | Maskable icons | L3 with 20% safe-zone padding, 192 + 512 PNG (`"purpose": "maskable"`) | `public/icon-192-maskable.png`, `public/icon-512-maskable.png` + manifest entries |
 | Favicon | same `favicon.svg`/`.ico` as landing | `public/` + `index.html` |
-| Manifest rebrand | `name: "Tsuru POS"`, `short_name: "Tsuru"`, `description`, `theme_color: #6B2A22`, `background_color: #F4EFE6` | `public/manifest.json` (currently `JMarkets POS` / `#E8620A` / `#111111`) |
+| Manifest rebrand | `name: "Tsuru POS"`, `short_name: "Tsuru"`, `description`, `theme_color: #6B2A22`, `background_color: #F4EFE6` | `public/manifest.json` (currently `Tsuru POS` / `#E8620A` / `#111111`) |
 | Login / sidebar logo | L5 "Tsuru POS" SVG, light + dark | `src/` assets where the current logo/wordmark renders (Login, AuthNavbar, sidebar) |
 | Tsuru theme tokens | Map §1 palette into the 28-token registry | `src/theme/themes.ts` (add/replace the default theme) |
 

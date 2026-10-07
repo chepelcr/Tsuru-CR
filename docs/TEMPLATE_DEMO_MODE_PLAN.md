@@ -19,7 +19,7 @@
    - `template_categories`
 
 3. **Template Frontend Apps** (`/templates/`)
-   - 8 React apps: jmarkets-demo, beauty-essentials, tech-gadgets, vintage-fashion, artisan-crafts, gourmet-foods, fitness-hub, pet-care
+   - 8 React apps: tsuru-demo, beauty-essentials, tech-gadgets, vintage-fashion, artisan-crafts, gourmet-foods, fitness-hub, pet-care
    - Each deployed to S3 bucket for demo viewing
 
 4. **Organization Content Tables**

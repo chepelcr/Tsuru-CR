@@ -81,10 +81,10 @@ BeautyMarket/
 **Live Templates** — since the 2026-06-20 split each one is its own repo
 (`chepelcr/template-<name>`) deployed to **GitHub Pages**, and the host pattern
 is `{name}.examples.tsuru.jcampos.dev` (NOT the old `{name}-example.` one, and
-not the retired `*.j-markets.jcampos.dev` domain). These are also the
+not the retired `*.tsuru.jcampos.dev` domain). These are also the
 `preview_url` values in the `templates` table:
 
-1. **tsuru-demo** (renamed from `jmarkets-demo` on 2026-07-03) → https://tsuru-demo.examples.tsuru.jcampos.dev
+1. **tsuru-demo** (renamed from `tsuru-demo` on 2026-07-03) → https://tsuru-demo.examples.tsuru.jcampos.dev
 2. **tech-gadgets** → https://tech-gadgets.examples.tsuru.jcampos.dev
 3. **vintage-fashion** → https://vintage-fashion.examples.tsuru.jcampos.dev
 4. **artisan-crafts** → https://artisan-crafts.examples.tsuru.jcampos.dev
@@ -101,7 +101,7 @@ dead; look it up in the live account instead of copying an account id into docs.
 
 ## Template Design Specifications
 
-### 1. Tsuru (formerly JMarkets) Demo Example (General Marketplace)
+### 1. Tsuru (formerly Tsuru) Demo Example (General Marketplace)
 **Live URL:** https://tsuru-demo.examples.tsuru.jcampos.dev
 
 **Visual Identity:**

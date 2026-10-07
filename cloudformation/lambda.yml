@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: JMarkets Lambda Function (Simple CloudFormation - No SAM)
+Description: Tsuru Lambda Function (Simple CloudFormation - No SAM)
 
 Parameters:
   Environment:
@@ -9,16 +9,16 @@ Parameters:
     Description: Environment name — used to import shared infra policy and Cognito exports
 
   FunctionNameParam:
-    Description: "Function Name (pattern: jmarkets-{env}-api-handler)"
+    Description: "Function Name (pattern: tsuru-{env}-api-handler)"
     Type: String
-    Default: "jmarkets-dev-api-handler"
+    Default: "tsuru-dev-api-handler"
 
 Resources:
   LambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Ref FunctionNameParam
-      Description: "JMarkets API Handler"
+      Description: "Tsuru API Handler"
       PackageType: Zip
       Runtime: nodejs20.x
       Handler: lambda.handler
@@ -36,12 +36,12 @@ Resources:
       Environment:
         Variables:
           NODE_ENV: production
-          SSM_BASE_PATH: !Sub "/tsuru/${Environment}/jmarkets"
+          SSM_BASE_PATH: !Sub "/tsuru/${Environment}/platform"
 
   LambdaRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub "jmarkets-${Environment}-lambda-role"
+      RoleName: !Sub "tsuru-${Environment}-lambda-role"
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -74,10 +74,10 @@ Outputs:
     Description: Lambda Function ARN
     Value: !GetAtt LambdaFunction.Arn
     Export:
-      Name: !Sub "jmarkets-${Environment}-lambda-arn"
+      Name: !Sub "tsuru-${Environment}-lambda-arn"
 
   LambdaFunctionName:
     Description: Lambda Function Name
     Value: !Ref LambdaFunction
     Export:
-      Name: !Sub "jmarkets-${Environment}-lambda-name"
+      Name: !Sub "tsuru-${Environment}-lambda-name"

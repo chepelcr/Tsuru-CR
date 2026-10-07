@@ -7,7 +7,7 @@
 
 ## Product, audience, positioning
 
-Tsuru is a Costa Rican point of sale and digital storefront for small merchants. A business can start by organizing **products, customers, and manual orders** even if it is not using electronic invoicing yet. With the required fiscal configuration, a merchant can invoice a delivered order from its existing lines, review and issue the document, and have it linked to the order. Electronic invoicing is free on every plan. Its longer-term vision is a digital home for local fairs, barter, and the social solidarity economy. **Tsuru** is the public brand; JMarkets is a former name, not a customer-facing label.
+Tsuru is a Costa Rican point of sale and digital storefront for small merchants. A business can start by organizing **products, customers, and manual orders** even if it is not using electronic invoicing yet. With the required fiscal configuration, a merchant can invoice a delivered order from its existing lines, review and issue the document, and have it linked to the order. Electronic invoicing is free on every plan. Its longer-term vision is a digital home for local fairs, barter, and the social solidarity economy. **Tsuru** is the public brand; Tsuru is a former name, not a customer-facing label.
 
 Lead with small businesses that need to keep orders organized: home businesses, food producers, artisans, feria vendors, pulperías, and small shops. Some already issue electronic documents; others will add that workflow when it applies to them. Cooperatives and businesses with teams are the next audience. Fair organizers are a future, consultative audience. The fiscal product and pricing are Costa Rica-specific; the landing is Spanish-first, with English content available.
 

@@ -1,19 +1,19 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >
-  JMarkets static website — S3 (private) + OAC + CloudFront + ACM (DNS-validated) + Route53.
+  Tsuru static website — S3 (private) + OAC + CloudFront + ACM (DNS-validated) + Route53.
   Reusable per site: landing, dashboard, or any template storefront.
 
 Parameters:
 
   BucketName:
     Type: String
-    Description: S3 bucket name for static site assets (e.g. jmarkets-dev-landing)
+    Description: S3 bucket name for static site assets (e.g. tsuru-dev-landing)
 
   DomainName:
     Type: String
     Description: >
       Full custom domain for this site (e.g. tsuru.jcampos.dev or
-      jmarkets-demo-example.tsuru.jcampos.dev)
+      tsuru-demo-example.tsuru.jcampos.dev)
 
   HostedZoneId:
     Type: String
@@ -53,7 +53,7 @@ Resources:
         - Key: Environment
           Value: !Ref Environment
         - Key: Project
-          Value: jmarkets
+          Value: tsuru
 
   # ── CloudFront Origin Access Control ─────────────────────────────────────────
 
@@ -75,7 +75,7 @@ Resources:
     Properties:
       DistributionConfig:
         Enabled: true
-        Comment: !Sub "JMarkets ${DomainName} (${Environment})"
+        Comment: !Sub "Tsuru ${DomainName} (${Environment})"
         DefaultRootObject: index.html
         HttpVersion: http2and3
         PriceClass: PriceClass_All

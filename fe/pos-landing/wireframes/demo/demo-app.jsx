@@ -100,7 +100,7 @@ function CheckoutModal({ cart, onClose, onConfirmed }) {
                 {method === 'card' && (
                   <div className="rounded-md bg-muted/40 border border-border p-3 text-[12px] text-muted-foreground flex items-start gap-2">
                     <I.CreditCard size={14} className="mt-0.5 shrink-0"/>
-                    <span>Insertá la tarjeta en el datáfono. JMarkets POS detecta automáticamente la respuesta del banco.</span>
+                    <span>Insertá la tarjeta en el datáfono. Tsuru POS detecta automáticamente la respuesta del banco.</span>
                   </div>
                 )}
                 {method === 'sinpe' && (

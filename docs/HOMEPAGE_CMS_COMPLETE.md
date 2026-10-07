@@ -10,7 +10,7 @@ All 8 templates have been updated with dynamic CMS functionality. Homepage conte
 - Footer: Dynamic contact info and social links
 - Status: **100% Complete**
 
-### ✅ jmarkets-demo
+### ✅ tsuru-demo
 - Home.tsx: Fully dynamic (hero, benefits, CTA)
 - Footer: Dynamic contact info and social links
 - Status: **100% Complete**

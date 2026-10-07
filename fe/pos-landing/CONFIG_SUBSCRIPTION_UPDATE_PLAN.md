@@ -154,7 +154,7 @@ Transición del modelo de "Pago Único" a "Suscripción Mensual/Anual" con promo
 **Actual:**
 ```json
 "headline": "Pagás {{una vez}}. Vendés {{para siempre}}.",
-"subheadline": "Mientras otros sistemas te cobran por bloque de documentos o mes a mes, JMarkets POS es tuyo con un solo pago.",
+"subheadline": "Mientras otros sistemas te cobran por bloque de documentos o mes a mes, Tsuru POS es tuyo con un solo pago.",
 "rows": [
   {
     "feature": "Modelo de pago",
@@ -172,7 +172,7 @@ Transición del modelo de "Pago Único" a "Suscripción Mensual/Anual" con promo
 **Nuevo:**
 ```json
 "headline": "Precios {{claros}}. Sin {{trucos}}.",
-"subheadline": "Mientras otros te cobran por bloque de documentos o te atan con contratos largos, JMarkets POS te da flexibilidad mensual o anual con descuento.",
+"subheadline": "Mientras otros te cobran por bloque de documentos o te atan con contratos largos, Tsuru POS te da flexibilidad mensual o anual con descuento.",
 "rows": [
   {
     "feature": "Modelo de pago",
@@ -238,7 +238,7 @@ Transición del modelo de "Pago Único" a "Suscripción Mensual/Anual" con promo
 
 **Nuevo:**
 ```json
-"headline": "Negocios costarricenses que confían en JMarkets POS.",
+"headline": "Negocios costarricenses que confían en Tsuru POS.",
 "items": [
   {
     "quote": "El plan anual con 2 meses gratis fue la mejor decisión. Ahorramos y tenemos todo lo que necesitamos.",
@@ -360,7 +360,7 @@ Aplicar los mismos cambios en la versión en inglés:
 ### VS Competition:
 ```json
 "headline": "Clear pricing. No tricks.",
-"subheadline": "While others charge you per document block or lock you into long contracts, JMarkets POS gives you monthly or annual flexibility with discounts."
+"subheadline": "While others charge you per document block or lock you into long contracts, Tsuru POS gives you monthly or annual flexibility with discounts."
 ```
 
 ### Pricing:
@@ -443,7 +443,7 @@ Basado en el análisis competitivo:
 - Alegra: $15-$80 USD/mes (10% OFF anual)
 - Scrampi: ₡13,000-₡42,000/mes (15% OFF anual)
 - GTI: ₡7,650-₡41,000 (10 meses por 12)
-- **JMarkets POS**: ₡20,000/mes (16.67% OFF anual) ✅ **Más agresivo**
+- **Tsuru POS**: ₡20,000/mes (16.67% OFF anual) ✅ **Más agresivo**
 
 ---
 

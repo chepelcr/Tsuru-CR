@@ -7,7 +7,7 @@ REGION="${REGION:-us-east-1}"
 API_DOMAIN="${API_DOMAIN:-api.tsuru.jcampos.dev}"
 ROOT_DOMAIN="${ROOT_DOMAIN:-tsuru.jcampos.dev}"
 
-echo "=== JMarkets API Gateway Update ==="
+echo "=== Tsuru API Gateway Update ==="
 echo "  Environment : $ENVIRONMENT"
 echo "  Region      : $REGION"
 echo "  API Domain  : $API_DOMAIN"

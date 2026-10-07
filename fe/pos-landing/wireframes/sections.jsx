@@ -24,7 +24,7 @@ function TopNav({ dark, setDark }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-6">
         <a href="#top" className="flex items-center gap-2.5 font-display font-extrabold text-lg">
           <I.Logo size={32}/>
-          <span className="leading-none">JMARKETS<span className="text-primary">·</span>POS</span>
+          <span className="leading-none">TSURU<span className="text-primary">·</span>POS</span>
         </a>
         <nav className="hidden lg:flex items-center gap-1">
           {links.map(([h,l]) => (
@@ -409,14 +409,14 @@ function VsCompetition() {
         <div className="text-center mb-12">
           <div className="t-label">Por qué cambiar</div>
           <h2 className="font-display font-extrabold mt-2" style={{fontSize:'clamp(2rem,3.6vw,3rem)'}}>Pagás <span className="text-primary">una vez</span>. Vendés <span className="text-primary">para siempre</span>.</h2>
-          <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">Mientras otros sistemas te cobran por bloque de documentos o mes a mes, JMarkets POS es tuyo con un solo pago.</p>
+          <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">Mientras otros sistemas te cobran por bloque de documentos o mes a mes, Tsuru POS es tuyo con un solo pago.</p>
         </div>
 
         {/* Desktop / tablet table */}
         <div className="hidden md:block overflow-hidden rounded-2xl border border-border bg-card">
           <div className="grid grid-cols-12 bg-muted/60 border-b border-border">
             <div className="col-span-3 p-4 t-label">Característica</div>
-            <div className="col-span-3 p-4 t-label flex items-center gap-2"><I.Logo size={16}/>JMarkets POS</div>
+            <div className="col-span-3 p-4 t-label flex items-center gap-2"><I.Logo size={16}/>Tsuru POS</div>
             <div className="col-span-3 p-4 t-label">Facturador postpago</div>
             <div className="col-span-3 p-4 t-label">Suscripción mensual</div>
           </div>
@@ -441,7 +441,7 @@ function VsCompetition() {
                 <div className="p-4 flex items-start gap-3">
                   <div className="w-7 h-7 rounded-md bg-primary/10 text-primary flex items-center justify-center shrink-0"><I.Logo size={14}/></div>
                   <div className="flex-1">
-                    <div className="text-[11px] font-display font-bold uppercase tracking-wider text-primary">JMarkets POS</div>
+                    <div className="text-[11px] font-display font-bold uppercase tracking-wider text-primary">Tsuru POS</div>
                     <div className="text-sm font-semibold flex items-center gap-1.5 mt-0.5">
                       {r[1].ok && <I.BadgeCheck size={14} className="text-primary shrink-0"/>}
                       {r[1].v}
@@ -482,7 +482,7 @@ function Features() {
       [I.Users, 'Clientes y proveedores', 'Importá tu base por CSV, historial de compras y crédito por cliente.'],
     ]},
     { eyebrow: 'Facturación electrónica', title: 'Hacienda, sin dolores', items: [
-      [I.FileSignature, 'Firma y envío automático', 'Firmás con tu llave criptográfica, JMarkets envía y reintenta hasta validar.'],
+      [I.FileSignature, 'Firma y envío automático', 'Firmás con tu llave criptográfica, Tsuru envía y reintenta hasta validar.'],
       [I.FileText, 'Todos los documentos 4.4', 'Factura, tiquete, exportación, compra, notas de crédito y débito.'],
       [I.ShieldCheck, 'Modo contingencia', 'Si Hacienda se cae, seguís facturando. Reenvío automático cuando vuelve.'],
       [I.BadgeCheck, 'Recibidos y aceptación', 'Aceptás o rechazás documentos recibidos directamente desde el POS.'],
@@ -533,7 +533,7 @@ function HowItWorks() {
   const steps = [
     [I.Plus, 'Creá tu cuenta', 'Registrás tu negocio y tu primera sucursal en menos de 2 minutos. No pedimos tarjeta.'],
     [I.Package, 'Cargá tu catálogo', 'Importás CSV o creás productos a mano. Buscamos automáticamente el código CABYS.'],
-    [I.FileSignature, 'Subí tu llave Hacienda', 'Llave criptográfica + usuario ATV. JMarkets se encarga del resto del trámite técnico.'],
+    [I.FileSignature, 'Subí tu llave Hacienda', 'Llave criptográfica + usuario ATV. Tsuru se encarga del resto del trámite técnico.'],
     [I.ShoppingCart, 'Empezá a vender', 'Abrís el POS, escaneás, cobrás. La factura electrónica sale firmada y validada.'],
   ];
   return (
@@ -564,7 +564,7 @@ function Hacienda({ variant }) {
   const cards = [
     [I.FileSignature, 'Firma criptográfica', 'Subís tu llave una sola vez. Firmamos cada XML según los esquemas oficiales 4.4.'],
     [I.BadgeCheck, 'Validación ATV', 'Enviamos al Ministerio de Hacienda y monitoreamos hasta el estado final. Reintentamos en automático.'],
-    [I.ShieldCheck, 'Plan de contingencia', 'Si ATV está caído, seguís facturando. JMarkets reenvía cuando el servicio vuelve.'],
+    [I.ShieldCheck, 'Plan de contingencia', 'Si ATV está caído, seguís facturando. Tsuru reenvía cuando el servicio vuelve.'],
     [I.FileText, 'Aceptación de recibidos', 'Aceptás, rechazás parcial o totalmente documentos recibidos sin salir del sistema.'],
     [I.Tag, 'CABYS al día', 'Catálogo sincronizado con Hacienda. Nuevas tarifas IVA aplicadas automáticamente.'],
     [I.Layers, 'Reportes para tu contador', 'Exportá libros de ventas y compras en el formato exacto que pide tu contador.'],
@@ -716,7 +716,7 @@ function Footer() {
     <footer className="bg-secondary text-secondary-foreground">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid md:grid-cols-12 gap-10">
         <div className="md:col-span-4">
-          <a href="#top" className="flex items-center gap-2.5 font-display font-extrabold text-lg"><I.Logo size={32}/><span>JMARKETS<span className="text-primary">·</span>POS</span></a>
+          <a href="#top" className="flex items-center gap-2.5 font-display font-extrabold text-lg"><I.Logo size={32}/><span>TSURU<span className="text-primary">·</span>POS</span></a>
           <p className="text-sm text-secondary-foreground/70 mt-4 max-w-xs">El punto de venta costarricense con facturación electrónica 4.4 — sin renta mensual.</p>
           <div className="flex items-center gap-3 mt-6 text-xs text-secondary-foreground/60">
             <I.Globe size={14}/> Hecho en Costa Rica · 🇨🇷
@@ -735,7 +735,7 @@ function Footer() {
       </div>
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-secondary-foreground/60">
-          <span>© 2026 JMarkets POS. Todos los derechos reservados.</span>
+          <span>© 2026 Tsuru POS. Todos los derechos reservados.</span>
           <span className="font-mono">v4.4 · API 2.1.0</span>
         </div>
       </div>

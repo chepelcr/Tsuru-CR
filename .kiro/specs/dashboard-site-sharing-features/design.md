@@ -294,7 +294,7 @@ async verifyCustomDomain(req: Request, res: Response) {
   try {
     // Perform DNS TXT lookup
     const records = await dns.promises.resolveTxt(
-      `_j-markets-verification.${org.customDomain}`
+      `_tsuru-verification.${org.customDomain}`
     );
     
     // Check if any record matches the verification token
@@ -431,13 +431,13 @@ interface QRCodeOptions {
 
 ### DNS Verification Format
 
-**TXT Record Name**: `_j-markets-verification.{customDomain}`
+**TXT Record Name**: `_tsuru-verification.{customDomain}`
 
 **TXT Record Value**: `{verificationToken}` (64-character hex string)
 
 **Example**:
 ```
-_j-markets-verification.shop.example.com TXT "a1b2c3d4e5f6...xyz"
+_tsuru-verification.shop.example.com TXT "a1b2c3d4e5f6...xyz"
 ```
 
 
@@ -519,13 +519,13 @@ _j-markets-verification.shop.example.com TXT "a1b2c3d4e5f6...xyz"
 
 ### Property 13: DNS Record Format Display
 
-*For any* custom domain and verification token, the displayed DNS record format should match the pattern `_j-markets-verification.{customDomain} TXT {verificationToken}`
+*For any* custom domain and verification token, the displayed DNS record format should match the pattern `_tsuru-verification.{customDomain} TXT {verificationToken}`
 
 **Validates: Requirements 9.5**
 
 ### Property 14: DNS Lookup Hostname Construction
 
-*For any* custom domain, when domain verification is triggered, the DNS TXT lookup should be performed for the hostname `_j-markets-verification.{customDomain}`
+*For any* custom domain, when domain verification is triggered, the DNS TXT lookup should be performed for the hostname `_tsuru-verification.{customDomain}`
 
 **Validates: Requirements 10.2**
 
@@ -759,7 +759,7 @@ Property tests will verify universal behaviors across all inputs using **fast-ch
 2. **URL Construction Format** (Property 2)
    - Generate random valid subdomains
    - Construct URL using component logic
-   - Assert URL matches regex: `^https://[a-z0-9-]+\.j-markets\.tsuru\.dev$`
+   - Assert URL matches regex: `^https://[a-z0-9-]+\.tsuru\.tsuru\.dev$`
    - Assert subdomain portion matches input exactly
 
 3. **Dialog URL Display** (Property 3)
@@ -908,13 +908,13 @@ Integration tests will verify the complete user workflows:
     - Generate random custom domains and tokens
     - Render DNS instructions
     - Extract displayed DNS record format
-    - Assert format matches `_j-markets-verification.{customDomain} TXT {token}`
+    - Assert format matches `_tsuru-verification.{customDomain} TXT {token}`
 
 14. **DNS Lookup Hostname Construction** (Property 14)
     - Generate random custom domains
     - Mock DNS lookup function
     - Trigger domain verification
-    - Assert DNS lookup called with `_j-markets-verification.{customDomain}`
+    - Assert DNS lookup called with `_tsuru-verification.{customDomain}`
 
 15. **DNS Verification Success Condition** (Property 15)
     - Generate random custom domains and tokens

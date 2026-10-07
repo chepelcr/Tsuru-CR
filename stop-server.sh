@@ -5,7 +5,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-echo -e "${GREEN}🔄 Rebooting JMarkets server...${NC}"
+echo -e "${GREEN}🔄 Rebooting Tsuru server...${NC}"
 
 # Kill existing server processes by name
 echo "Stopping existing processes..."

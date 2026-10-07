@@ -36,7 +36,7 @@ interface FeatureGroup {
 ```typescript
 interface VsRow {
   feature: string;  // Feature name
-  jm: string;       // JMarkets value
+  jm: string;       // Tsuru value
   alt1: string;     // Competitor 1 value
   alt2: string;     // Competitor 2 value
 }

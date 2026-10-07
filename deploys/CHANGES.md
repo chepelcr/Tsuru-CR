@@ -9,8 +9,8 @@ Updated BeautyMarket AWS deployment infrastructure based on best practices from 
 ### 1. CloudFormation Templates Updated
 
 #### `cloudformation/lambda.yml`
-- ✅ Updated default function name: `tsuru-biller-lambda` → `jmarkets-api-handler`
-- ✅ Updated description: "JCampos Biller API" → "JMarkets Beauty Market API"
+- ✅ Updated default function name: `tsuru-biller-lambda` → `tsuru-api-handler`
+- ✅ Updated description: "JCampos Biller API" → "Tsuru Beauty Market API"
 - ✅ Fixed environment variable names to match project:
   - `DATABASE_URL` → `NEW_DATABASE_URL`
   - `VITE_CLOUDFRONT_URL` → `AWS_CLOUDFRONT_URL`

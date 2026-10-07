@@ -1,7 +1,7 @@
 {
   "base_url": "https://api.tsuru.jcampos.dev",
   "auth": "Authorization: Bearer <cognito-id-token>",
-  "cognito_pool_arn_export": "jmarkets-cognito-UserPoolArn",
+  "cognito_pool_arn_export": "tsuru-cognito-UserPoolArn",
   "public_prefixes": [
     "/health",
     "/api/templates",
@@ -13,7 +13,7 @@
   ],
   "services": [
     {
-      "name": "jmarkets",
+      "name": "tsuru",
       "endpoints": [
         {
           "path": "/api/components",

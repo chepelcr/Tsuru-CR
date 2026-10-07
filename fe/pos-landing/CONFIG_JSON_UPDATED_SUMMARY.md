@@ -96,7 +96,7 @@ Se ha actualizado exitosamente el archivo `config.json` para reflejar el nuevo m
 - **Terminal extra**: "Activá nuevas terminales sin cambiarte de plan." → "Activá nuevas terminales sin costo adicional en el plan Pro."
 
 #### Testimonials:
-- **Headline**: "Negocios costarricenses que ya no pagan mensualidad." → "Negocios costarricenses que confían en JMarkets POS."
+- **Headline**: "Negocios costarricenses que ya no pagan mensualidad." → "Negocios costarricenses que confían en Tsuru POS."
 - **Quote 1**: "Pasamos de pagar mensualidades a tener un sistema que es nuestro..." → "El plan anual con 2 meses gratis fue la mejor decisión. Ahorramos y tenemos todo lo que necesitamos."
 
 #### FAQ:
@@ -145,7 +145,7 @@ Todos los cambios anteriores también se aplicaron en la versión en inglés (`t
 - "Activate new terminals without changing your plan." → "Activate new terminals at no additional cost on the Pro plan."
 
 #### Testimonials:
-- "Costa Rican businesses that no longer pay monthly fees." → "Costa Rican businesses that trust JMarkets POS."
+- "Costa Rican businesses that no longer pay monthly fees." → "Costa Rican businesses that trust Tsuru POS."
 - "We went from paying monthly fees..." → "The annual plan with 2 free months was the best decision. We save money and have everything we need."
 
 #### FAQ:
@@ -176,7 +176,7 @@ Todos los cambios anteriores también se aplicaron en la versión en inglés (`t
 - Alegra: 10% OFF anual
 - Scrampi: 15% OFF anual
 - GTI: 10 meses por 12
-- **JMarkets POS: 16.67% OFF anual** ✅ **Más agresivo**
+- **Tsuru POS: 16.67% OFF anual** ✅ **Más agresivo**
 
 ---
 

@@ -2,7 +2,7 @@
 
 ## Research Methodology
 
-This document provides color palette recommendations for each JMarkets template based on:
+This document provides color palette recommendations for each Tsuru template based on:
 - Industry-standard e-commerce color psychology
 - Real-world successful brands in each category
 - Accessibility standards (WCAG AA compliance)
@@ -11,7 +11,7 @@ This document provides color palette recommendations for each JMarkets template 
 
 ---
 
-## 1. JMarkets Demo (General Marketplace)
+## 1. Tsuru Demo (General Marketplace)
 
 ### Industry Examples
 - **Amazon**: Orange `#FF9900` + Blue `#232F3E`

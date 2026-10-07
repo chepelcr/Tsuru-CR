@@ -16,7 +16,7 @@ for arg in "$@"; do
   [ "$arg" = "--skip-refresh" ] && SKIP_REFRESH=true
 done
 
-echo "Deploy API Gateway — JMarkets"
+echo "Deploy API Gateway — Tsuru"
 echo "Environment  -> $ENVIRONMENT"
 echo "Profile      -> $PROFILE"
 echo ""
@@ -46,8 +46,8 @@ fi
 # ── Step 1: Refresh swagger spec from Express JSDoc annotations ───────────────
 if [ "$SKIP_REFRESH" = "true" ]; then
   echo "Skipping swagger refresh (--skip-refresh)"
-  if [ ! -f "swagger/jmarkets.json" ]; then
-    echo "ERROR: swagger/jmarkets.json not found. Run: npm run generate:swagger"
+  if [ ! -f "swagger/tsuru.json" ]; then
+    echo "ERROR: swagger/tsuru.json not found. Run: npm run generate:swagger"
     exit 1
   fi
 else

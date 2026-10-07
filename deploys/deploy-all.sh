@@ -19,7 +19,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Banner
 echo -e "${CYAN}"
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║        JMarkets AWS Infrastructure Master Deploy           ║"
+echo "║        Tsuru AWS Infrastructure Master Deploy           ║"
 echo "║                                                            ║"
 echo "║ This script will deploy all AWS infrastructure components: ║"
 echo "║  1. Cognito (Authentication)                              ║"
@@ -178,14 +178,14 @@ echo -e "${YELLOW}=== Architecture Overview ===${NC}"
 cat << 'EOF'
 
 ┌────────────────────────────────────────────────────────────────┐
-│                    JMarkets Architecture                        │
+│                    Tsuru Architecture                        │
 ├────────────────────────────────────────────────────────────────┤
 │                                                                │
 │  GitHub                    CodePipeline                        │
 │    ↓                           ↓                               │
 │  [main branch]  →  [CodeBuild] →  [Lambda Update]              │
 │                                      ↓                         │
-│                              jmarkets-api-handler               │
+│                              tsuru-api-handler               │
 │                              (Node.js 20)                       │
 │                                      ↓                         │
 │                    ┌──────────────────┴──────────────────┐     │

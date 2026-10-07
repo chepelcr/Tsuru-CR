@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >
-  JMarkets Backend Services - SSM Parameters.
+  Tsuru Backend Services - SSM Parameters.
   Single resource per parameter; environment encoded in the path via !Sub.
   Path prefix: /tsuru/{env}/platform  (matches server/settings.cfg ssmpath).
   DB credentials are NOT here — they live in Secrets Manager under
@@ -28,6 +28,11 @@ Parameters:
   FrontendUrl:
     Type: String
     Description: Landing page / frontend URL (e.g. https://tsuru.jcampos.dev)
+
+  AppUrl:
+    Type: String
+    Default: https://app.tsuru.jcampos.dev
+    Description: Seller app URL for organization invitation links
 
   DashboardUrl:
     Type: String
@@ -78,7 +83,7 @@ Resources:
       Name: !Sub "/tsuru/${Environment}/platform/aws/stage"
       Type: String
       Value: !Ref Environment
-      Description: !Sub "Deployment stage for JMarkets Backend (${Environment})"
+      Description: !Sub "Deployment stage for Tsuru Backend (${Environment})"
 
   # /tsuru/{env}/platform/aws/region
   AwsRegion:
@@ -171,6 +176,14 @@ Resources:
       Description: Landing page / frontend URL
 
   # /tsuru/{env}/platform/dashboard/url
+  AppUrlParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub "/tsuru/${Environment}/platform/app/url"
+      Type: String
+      Value: !Ref AppUrl
+      Description: Seller app URL for organization invitation links
+
   DashboardUrlParam:
     Type: AWS::SSM::Parameter
     Properties:
@@ -242,7 +255,7 @@ Resources:
 # ---------------------------------------------------------------------------
 Outputs:
   SsmBasePath:
-    Description: SSM base path for all JMarkets Backend parameters
+    Description: SSM base path for all Tsuru Backend parameters
     Value: !Sub "/tsuru/${Environment}/platform"
     Export:
       Name: !Sub "tsuru-${Environment}-platform-ssm-base-path"

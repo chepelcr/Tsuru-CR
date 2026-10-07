@@ -1,8 +1,8 @@
-# TSURU Rebrand Plan — JMarkets → Tsuru
+# TSURU Rebrand Plan — Tsuru → Tsuru
 
 **Date:** 2026-06-11
 **Status:** Approved direction (user decision 2026-06-11). **Spec only — no content changes applied in this workflow.**
-**Scope:** All user-facing surfaces — landing content JSONs, POS strings, docs. **Explicitly OUT of scope:** domains, buckets, repos, package names, template/theme IDs, infra (`tsuru.jcampos.dev`, `admin.tsuru.jcampos.dev`, `jmarkets-template-market`, `jmarkets-demo`, Cognito, CI/CD paths). Those stay until a separate infra-rename workstream.
+**Scope:** All user-facing surfaces — landing content JSONs, POS strings, docs. **Explicitly OUT of scope:** domains, buckets, repos, package names, template/theme IDs, infra (`tsuru.jcampos.dev`, `admin.tsuru.jcampos.dev`, `tsuru-template-market`, `tsuru-demo`, Cognito, CI/CD paths). Those stay until a separate infra-rename workstream.
 **Inputs:** `docs/audit/tsuru/tsuru_landing_audit.md`, `tsuru_reconciliation_report.md`, `tsuru_product_strategy.md`, `tsuru_research_reconciliation.md`, `tsuru_executive_vision.md`, `docs/Rebranding Web_ Economía Indígena Solidaria.txt`, plus a fresh grep inventory of `landing-client/src` and `templates/pos-system/src` (2026-06-11).
 
 **Related approved workstreams (context for copy decisions):**
@@ -16,7 +16,7 @@
 
 ### 1.1 Decision
 
-**The public brand becomes Tsuru.** "JMarkets" is retired from every user-facing surface. The codebase already chose this name internally (repos `chepelcr/tsuru-pos-system` and `chepelcr/tsuru-landing`, "Tsuru Admin" chrome in `landing-client/src/translations/en.json`, the `tsuru:content-saved` DOM event in `landing-client/src/lib/admin-store.ts`) — the rebrand finishes publicly what the engineering already did privately (`tsuru_landing_audit.md` §1.1; `tsuru_research_reconciliation.md` §1 row "Costa Rican cultural identity").
+**The public brand becomes Tsuru.** "Tsuru" is retired from every user-facing surface. The codebase already chose this name internally (repos `chepelcr/tsuru-pos-system` and `chepelcr/tsuru-landing`, "Tsuru Admin" chrome in `landing-client/src/translations/en.json`, the `tsuru:content-saved` DOM event in `landing-client/src/lib/admin-store.ts`) — the rebrand finishes publicly what the engineering already did privately (`tsuru_landing_audit.md` §1.1; `tsuru_research_reconciliation.md` §1 row "Costa Rican cultural identity").
 
 ### 1.2 Name story
 
@@ -263,9 +263,9 @@ EN: "Give communities the digital tools to trade fairly and legally — starting
 
 ---
 
-## 4. Change inventory — every file containing JMarkets branding
+## 4. Change inventory — every file containing Tsuru branding
 
-Grep basis: `JMarkets|J-Markets|jmarkets|J Markets` across `landing-client/src` (96 occurrences / 21 files), `templates/pos-system/src` (21 occurrences / 7 files), plus `index.html` files and docs (2026-06-11). **Type:** `C` = content-only (JSON/copy), `K` = code change, `D` = docs.
+Grep basis: `Tsuru|Tsuru|tsuru|J Markets` across `landing-client/src` (96 occurrences / 21 files), `templates/pos-system/src` (21 occurrences / 7 files), plus `index.html` files and docs (2026-06-11). **Type:** `C` = content-only (JSON/copy), `K` = code change, `D` = docs.
 
 ### 4.1 Landing — content JSONs (`landing-client/src/content/`) — all type C
 
@@ -278,56 +278,56 @@ Grep basis: `JMarkets|J-Markets|jmarkets|J Markets` across `landing-client/src` 
 | `landing.json` | 2 | `values.subtitle` ES/EN name swap; plus the §3.1/§3.4 copy rework and new billing/roadmap blocks. |
 | `features.json` | 1 | `useCasesSection.title` → "¿Quién usa Tsuru?"; plus §3.2 feature-card rework (replaces not-built order tracking, kills "miles de emprendedores"). |
 | `fairs.json` | 5 | Name swaps + entire page reframed to "en construcción" roadmap framing (§3.5); remove "Active fairs" present-tense framing. |
-| `community.json` | 4 | `subtitle` name swap; **delete** the three placeholder testimonials (incl. "gracias a JMarkets … 200 clientes fieles"); barter block reframed to "muy pronto". |
+| `community.json` | 4 | `subtitle` name swap; **delete** the three placeholder testimonials (incl. "gracias a Tsuru … 200 clientes fieles"); barter block reframed to "muy pronto". |
 | `about.json` | 13 | All name swaps + §3.6 rewrites (subtitle, queEs, story paras, mission, team). Origin story content otherwise preserved. |
 | `terms.json` | 17 | Name swaps throughout §1–§7 + `docTitleSuffix` → " | Tsuru"; contact email line (see email note below). Keep facilitator stance (§4/§6 — most honest claim). §2 description must stop asserting fairs/barter as current features until shipped. |
-| `privacy.json` | 5 | `docTitleSuffix` → " | Tsuru"; `privacy@jmarkets.com` ×4 → new alias (see email note); delete/de-claim GDPR + encryption sentences per §2.4. |
+| `privacy.json` | 5 | `docTitleSuffix` → " | Tsuru"; `privacy@tsuru.com` ×4 → new alias (see email note); delete/de-claim GDPR + encryption sentences per §2.4. |
 | `cookies.json` | 3 | `docTitleSuffix` → " | Tsuru"; rewrite/remove the consent-banner description (#23 — banner doesn't exist). |
-| `contact.json` | 2 | `docTitleSuffix` → " | Tsuru"; `hola@jmarkets.com` → new alias; remove placeholder phone "+506 XXXX-XXXX" and the 24h-response promise (until SES delivery is wired). |
-| `blog.json` | 7 | `author: "Equipo JMarkets"` ×3 → "Equipo Tsuru"; article titles/descriptions name-swapped ("Cómo Crear Tu Espacio Comunitario en Tsuru", etc.); article4 (Trueque 101) reframed as cultural/educational until barter ships. |
+| `contact.json` | 2 | `docTitleSuffix` → " | Tsuru"; `hola@tsuru.com` → new alias; remove placeholder phone "+506 XXXX-XXXX" and the 24h-response promise (until SES delivery is wired). |
+| `blog.json` | 7 | `author: "Equipo Tsuru"` ×3 → "Equipo Tsuru"; article titles/descriptions name-swapped ("Cómo Crear Tu Espacio Comunitario en Tsuru", etc.); article4 (Trueque 101) reframed as cultural/educational until barter ships. |
 | `blog-chrome.json` | 1 | `docTitleSuffix` → " | Tsuru"; remove newsletter promise (#20). |
 
-**Email note:** `hola@jmarkets.com` / `privacy@jmarkets.com` are brand-domain emails. Since domains are out of scope, replace with working aliases on an owned domain (e.g. existing SES-verified address) or a neutral "página de contacto" reference — do NOT ship `@tsuru.com` addresses that don't exist (would recreate the placeholder-content problem, audit Observation 6).
+**Email note:** `hola@tsuru.com` / `privacy@tsuru.com` are brand-domain emails. Since domains are out of scope, replace with working aliases on an owned domain (e.g. existing SES-verified address) or a neutral "página de contacto" reference — do NOT ship `@tsuru.com` addresses that don't exist (would recreate the placeholder-content problem, audit Observation 6).
 
 ### 4.2 Landing — code (`landing-client/src` + root) — type K
 
 | File | Refs | What it becomes |
 |---|---|---|
 | `landing-client/index.html` (lines 6–7) | 2 | `<title>` and meta description → Tsuru versions (must match `seo.json`; the prerender script `scripts/prerender.mjs` re-injects from seo.json — keep both in sync). |
-| `src/components/layout/navbar.tsx:63` | 1 | Hardcoded literal `JMarkets` brand text. **Fix properly:** read `navbar.json.brand[lang]` (the entity already exists) — this literal violates the repo's no-hardcoded-text rule. |
-| `src/components/layout/footer.tsx:22` | 1 | Same: hardcoded `JMarkets` → read `footer.json.brand[lang]`. |
-| `src/pages/About.tsx:40,70` | 2 | Line 40 is a comment (rename optional); line 70 hardcodes `JMarkets` in the story card → move to `about.json` field. |
+| `src/components/layout/navbar.tsx:63` | 1 | Hardcoded literal `Tsuru` brand text. **Fix properly:** read `navbar.json.brand[lang]` (the entity already exists) — this literal violates the repo's no-hardcoded-text rule. |
+| `src/components/layout/footer.tsx:22` | 1 | Same: hardcoded `Tsuru` → read `footer.json.brand[lang]`. |
+| `src/pages/About.tsx:40,70` | 2 | Line 40 is a comment (rename optional); line 70 hardcodes `Tsuru` in the story card → move to `about.json` field. |
 | `src/translations/es.json` / `en.json` | 10 + 10 | Legacy key-table mirrors of content copy (`values.subtitle`, `about.*`, `footer.copyright`, `terms.acceptanceNotice`, `examples.subtitle`, …). Per `landing-client/CLAUDE.md` these are admin-chrome + Examples-page keys only. Swap the strings to Tsuru where keys are still referenced (`examples.subtitle` is — `src/pages/Examples.tsx`); the rest should be updated in lockstep or pruned if truly dead (verify references before pruning). |
-| `src/pages/Examples.tsx:55` | 1 | `featuredTemplateNames = ['jmarkets-demo', …]` — **template ID, not branding. DO NOT change** (matches DB template names / live demo subdomains). |
+| `src/pages/Examples.tsx:55` | 1 | `featuredTemplateNames = ['tsuru-demo', …]` — **template ID, not branding. DO NOT change** (matches DB template names / live demo subdomains). |
 
 ### 4.3 POS app (`templates/pos-system`) — type K (user-facing strings) unless noted
 
 | File | Refs | What it becomes |
 |---|---|---|
-| `index.html:14` | 1 | `<title>JMarkets POS</title>` → `Tsuru POS` |
-| `src/hooks/usePageTitle.ts:3` | 1 | `const BRAND = "JMarkets POS"` → `"Tsuru POS"` (drives all document titles) |
-| `src/components/ui/Logo.tsx:17` | 1 | Fallback `displayName = orgName ?? "JMarkets POS"` → `"Tsuru POS"` |
-| `src/contexts/LanguageContext.tsx:1161,3196` | 2 | `"auth.login.title": "JMarkets"` (ES + EN blocks) → `"Tsuru"` — login screen brand |
-| `src/theme/themes.ts:206,266` | 2 user-facing | Theme display `name: "JMarkets"` → `"Tsuru"` and `name: "JMarkets Demo"` → `"Tsuru Demo"` (shown in the per-org theme picker). **Keep theme IDs** `jmarkets` / `jmarkets-demo` and `DEFAULT_THEME_ID = "jmarkets"` (lines 205/265/747/749/761/763/774) — IDs are persisted in org settings/DB; renaming them is a data migration, out of scope. |
-| `src/lib/appCode.ts:2,10`, `src/components/layout/NotificationsBell.tsx:26`, `src/types/cms.ts:110` | 4 | Code comments referencing "the jmarkets ecosystem" / `"jmarkets-demo"` example. Non-user-facing — optional cleanup ("the Tsuru ecosystem"); never blocks the rebrand. |
+| `index.html:14` | 1 | `<title>Tsuru POS</title>` → `Tsuru POS` |
+| `src/hooks/usePageTitle.ts:3` | 1 | `const BRAND = "Tsuru POS"` → `"Tsuru POS"` (drives all document titles) |
+| `src/components/ui/Logo.tsx:17` | 1 | Fallback `displayName = orgName ?? "Tsuru POS"` → `"Tsuru POS"` |
+| `src/contexts/LanguageContext.tsx:1161,3196` | 2 | `"auth.login.title": "Tsuru"` (ES + EN blocks) → `"Tsuru"` — login screen brand |
+| `src/theme/themes.ts:206,266` | 2 user-facing | Theme display `name: "Tsuru"` → `"Tsuru"` and `name: "Tsuru Demo"` → `"Tsuru Demo"` (shown in the per-org theme picker). **Keep theme IDs** `tsuru` / `tsuru-demo` and `DEFAULT_THEME_ID = "tsuru"` (lines 205/265/747/749/761/763/774) — IDs are persisted in org settings/DB; renaming them is a data migration, out of scope. |
+| `src/lib/appCode.ts:2,10`, `src/components/layout/NotificationsBell.tsx:26`, `src/types/cms.ts:110` | 4 | Code comments referencing "the tsuru ecosystem" / `"tsuru-demo"` example. Non-user-facing — optional cleanup ("the Tsuru ecosystem"); never blocks the rebrand. |
 
 Note: POS work belongs in the standalone repo `chepelcr/tsuru-pos-system` per the monorepo split rules (root `CLAUDE.md`); the monorepo copy is dual-tracked, so apply changes wherever the team's current source of truth is and mirror per split policy.
 
 ### 4.4 Docs — type D
 
-`grep -rl jmarkets docs/` hits ~30 files. Disposition by class:
+`grep -rl tsuru docs/` hits ~30 files. Disposition by class:
 
 | Class | Files (examples) | What it becomes |
 |---|---|---|
-| Living guidance docs | root `CLAUDE.md` (12 refs incl. "J-Markets storefront SaaS" phrasing), `docs/README.md`, `docs/LANDING_CLIENT_BRIEF.md`, `docs/app/MULTI_TEMPLATE_ARCHITECTURE.md`, `docs/DEPLOYMENT*.md` | Replace **brand** usages with "Tsuru (formerly JMarkets)" on first mention, then "Tsuru". **Leave untouched:** domains (`tsuru.jcampos.dev`), bucket names (`jmarkets-template-market`), template IDs (`jmarkets-demo`), env values — these are real infra identifiers. |
-| Audit corpus | `docs/audit/tsuru/*.md` (14 files) | **Do not edit** — historical record; they intentionally document the JMarkets era. |
+| Living guidance docs | root `CLAUDE.md` (12 refs incl. "Tsuru storefront SaaS" phrasing), `docs/README.md`, `docs/LANDING_CLIENT_BRIEF.md`, `docs/app/MULTI_TEMPLATE_ARCHITECTURE.md`, `docs/DEPLOYMENT*.md` | Replace **brand** usages with "Tsuru (formerly Tsuru)" on first mention, then "Tsuru". **Leave untouched:** domains (`tsuru.jcampos.dev`), bucket names (`tsuru-template-market`), template IDs (`tsuru-demo`), env values — these are real infra identifiers. |
+| Audit corpus | `docs/audit/tsuru/*.md` (14 files) | **Do not edit** — historical record; they intentionally document the Tsuru era. |
 | Status/implementation archives | `docs/IMPLEMENTATION_*.md`, `docs/TEMPLATE_*.md`, `docs/HOMEPAGE_CMS_*.md`, etc. | Low priority; sweep opportunistically or mark archived. |
 
 ### 4.5 Explicitly NOT changed (out of scope, restated)
 
 - Domains/DNS: `tsuru.jcampos.dev`, `admin.tsuru.jcampos.dev`, `api.tsuru.jcampos.dev`, `{slug}.tsuru.jcampos.dev`; `seo.json.siteUrl`; `branding.json` admin URLs.
-- AWS resources: `jmarkets-template-market` bucket, CloudFront, Route53, Cognito, pipelines (`deploys/setup-template-bucket.js` references).
-- Identifiers: template names/IDs (`jmarkets-demo` in DB seeds, `Examples.tsx`, POS theme IDs), package names, repo names, `jmarkets_common` Python lib.
+- AWS resources: `tsuru-template-market` bucket, CloudFront, Route53, Cognito, pipelines (`deploys/setup-template-bucket.js` references).
+- Identifiers: template names/IDs (`tsuru-demo` in DB seeds, `Examples.tsx`, POS theme IDs), package names, repo names, `tsuru_common` Python lib.
 - The 8 storefront template apps' internal branding (their fate is the §5.7 consolidation decision in `tsuru_product_strategy.md`, not this rebrand).
 
 ---
@@ -346,36 +346,36 @@ Note: POS work belongs in the standalone repo `chepelcr/tsuru-pos-system` per th
 - [ ] 6. Optional same-wave: palette swap in `themes.json` to the §1.5 natural-pigment palette + wordmark/favicon into `branding.json` slots (Tier 1 only — no gated Tier 2 assets).
 - [ ] 7. Sync `index.html` title/meta with `seo.json`; fix the hardcoded brand literals in `navbar.tsx`/`footer.tsx`/`About.tsx` to read their entities (closes the no-hardcoded-text violations). *(K)*
 - [ ] 8. Update `src/translations/{es,en}.json` mirrored strings still referenced (at minimum `examples.subtitle`); verify dead keys before pruning.
-- [ ] 9. Verify: `pnpm run check`; `pnpm run build && grep -rl "__local" ../dist/landing/assets` (must be empty); `node scripts/prerender.mjs`; visual ES/EN pass on all public routes; confirm zero remaining user-visible "JMarkets" (`grep -ri jmarkets src/content src/pages src/components index.html` — only allowed hits: template IDs in `Examples.tsx`, admin URLs in `branding.json`, `seo.json.siteUrl`).
+- [ ] 9. Verify: `pnpm run check`; `pnpm run build && grep -rl "__local" ../dist/landing/assets` (must be empty); `node scripts/prerender.mjs`; visual ES/EN pass on all public routes; confirm zero remaining user-visible "Tsuru" (`grep -ri tsuru src/content src/pages src/components index.html` — only allowed hits: template IDs in `Examples.tsx`, admin URLs in `branding.json`, `seo.json.siteUrl`).
 
 ### Phase R2 — POS strings (second)
 
 - [ ] 10. `index.html` title, `usePageTitle.ts` BRAND, `Logo.tsx` fallback → "Tsuru POS".
 - [ ] 11. `LanguageContext.tsx` `auth.login.title` (both language blocks) → "Tsuru".
 - [ ] 12. `themes.ts` display names → "Tsuru" / "Tsuru Demo" (**IDs unchanged**; confirm the theme picker shows only `name`, never `id`).
-- [ ] 13. Sweep for any other user-visible brand strings (`grep -rn "JMarkets" src/` — remaining hits must be comments/IDs only); optional comment cleanup (`appCode.ts`, `NotificationsBell.tsx`, `cms.ts`).
+- [ ] 13. Sweep for any other user-visible brand strings (`grep -rn "Tsuru" src/` — remaining hits must be comments/IDs only); optional comment cleanup (`appCode.ts`, `NotificationsBell.tsx`, `cms.ts`).
 - [ ] 14. Verify: `npm run check` (or repo equivalent), boot the POS, check login screen, browser tab titles, theme picker, org-less Logo fallback. Mirror changes to `chepelcr/tsuru-pos-system` per split policy.
 
 ### Phase R3 — Docs (third)
 
-- [ ] 15. Root `CLAUDE.md`: brand phrasing → "Tsuru (formerly JMarkets)"; leave infra identifiers (domains, bucket, template IDs) untouched; same for `landing-client/CLAUDE.md` / `templates/pos-system/CLAUDE.md` where they name the brand.
+- [ ] 15. Root `CLAUDE.md`: brand phrasing → "Tsuru (formerly Tsuru)"; leave infra identifiers (domains, bucket, template IDs) untouched; same for `landing-client/CLAUDE.md` / `templates/pos-system/CLAUDE.md` where they name the brand.
 - [ ] 16. `docs/README.md`, `docs/LANDING_CLIENT_BRIEF.md`, `docs/app/*.md`, `docs/DEPLOYMENT*.md`: same brand-vs-identifier rule.
 - [ ] 17. Do NOT edit `docs/audit/tsuru/*` (historical record). Mark stale `IMPLEMENTATION_*/TEMPLATE_*` docs archived or sweep opportunistically.
-- [ ] 18. Add a "Brand: Tsuru" note + pointer to this plan in the root `CLAUDE.md` so future agents stop writing "JMarkets".
+- [ ] 18. Add a "Brand: Tsuru" note + pointer to this plan in the root `CLAUDE.md` so future agents stop writing "Tsuru".
 
 ### Phase R4 — explicitly deferred (tracked, not in this rebrand)
 
 - Domain/infra renames (`tsuru.jcampos.dev` → tsuru domain, bucket, SEO `siteUrl`, admin CTA URLs — which also need re-aiming at the POS app per `tsuru_reconciliation_report.md` §3.5).
 - Tier 2 cultural identity (Bribri lexicon IA, Ú-sure/cacao logo, etnogeometric patterns) — **gated on RIBCA/Bribri partnership** (§1.3).
 - Contact-form SES delivery, real publish status, legal-pages full rewrite with counsel — trust fixes that pair with, but exceed, the rebrand.
-- Theme-ID/template-ID/data migrations (`jmarkets` theme id, `jmarkets-demo` template rows).
+- Theme-ID/template-ID/data migrations (`tsuru` theme id, `tsuru-demo` template rows).
 - Monetization narrative publication before any Stripe activation (`tsuru_product_strategy.md` §6).
 
 ---
 
 ## 6. Acceptance criteria for the rebrand wave
 
-1. No user-visible "JMarkets" on the landing or POS (allowed residue: URLs/IDs listed in §4.5).
+1. No user-visible "Tsuru" on the landing or POS (allowed residue: URLs/IDs listed in §4.5).
 2. Free e-invoicing appears as the #1 message on the landing hero + a dedicated section (today it appears in 0 of 22 entities).
 3. Zero present-tense claims for unbuilt features; fairs/trueque appear only under explicit "en construcción / muy pronto" labels.
 4. Placeholder phone, fake testimonials, "miles de emprendedores", newsletter and 24h-response promises removed.

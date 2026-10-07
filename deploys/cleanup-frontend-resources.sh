@@ -9,7 +9,7 @@
 #   - CloudFront distributions (disable → wait → delete) in parallel
 #   - S3 buckets (empty then delete)
 #   - ACM certificates for each domain + the old wildcard *.tsuru.jcampos.dev
-#   - CloudFront OAC: j-markets-template-oac
+#   - CloudFront OAC: tsuru-template-oac
 set -euo pipefail
 
 PROFILE="${AWS_PROFILE:-J-CAMPOS}"
@@ -39,7 +39,7 @@ AWS="aws --profile $PROFILE --region $REGION"
 # ── Resource names ─────────────────────────────────────────────────────────────
 
 TEMPLATE_SUBDOMAINS=(
-  jmarkets-demo-example
+  tsuru-demo-example
   tech-gadgets-example
   vintage-fashion-example
   artisan-crafts-example
@@ -50,7 +50,7 @@ TEMPLATE_SUBDOMAINS=(
   pollo-porteno-example
 )
 
-DOMAIN_DASHES="${BASE_DOMAIN//./-}"   # j-markets-tsuru-dev
+DOMAIN_DASHES="${BASE_DOMAIN//./-}"   # tsuru-tsuru-dev
 
 # All 10 domains
 declare -A DOMAIN_TO_BUCKET
@@ -64,7 +64,7 @@ ALL_DOMAINS=("${!DOMAIN_TO_BUCKET[@]}")
 
 echo ""
 echo "========================================================"
-echo "  JMarkets Frontend Resource Cleanup"
+echo "  Tsuru Frontend Resource Cleanup"
 echo "  Base domain : $BASE_DOMAIN"
 echo "  Profile     : $PROFILE"
 [ "$DRY_RUN" = "true" ] && echo "  Mode        : DRY RUN (no changes)"
@@ -224,18 +224,18 @@ if [ "$DRY_RUN" = "false" ]; then
     ok "Deleted distribution $DIST_ID ($DOMAIN)"
   done
 
-  # Delete shared OAC (j-markets-template-oac) if it exists
+  # Delete shared OAC (tsuru-template-oac) if it exists
   OAC_ID=$(${AWS} cloudfront list-origin-access-controls \
-    --query "OriginAccessControlList.Items[?Name=='j-markets-template-oac'].Id" \
+    --query "OriginAccessControlList.Items[?Name=='tsuru-template-oac'].Id" \
     --output text 2>/dev/null || true)
   if [ -n "$OAC_ID" ] && [ "$OAC_ID" != "None" ]; then
     OAC_ETAG=$(${AWS} cloudfront get-origin-access-control \
       --id "$OAC_ID" --query "ETag" --output text)
     ${AWS} cloudfront delete-origin-access-control \
       --id "$OAC_ID" --if-match "$OAC_ETAG"
-    ok "Deleted shared OAC j-markets-template-oac ($OAC_ID)"
+    ok "Deleted shared OAC tsuru-template-oac ($OAC_ID)"
   else
-    warn "OAC j-markets-template-oac not found — skipping"
+    warn "OAC tsuru-template-oac not found — skipping"
   fi
 fi
 echo ""

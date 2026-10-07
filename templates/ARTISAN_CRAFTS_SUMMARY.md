@@ -111,7 +111,7 @@ templates/artisan-crafts/
 - 4-column responsive layout
 - Company info with logo
 - Shop, About, Connect sections
-- Copyright and JMarkets credit
+- Copyright and Tsuru credit
 
 ## Custom CSS Classes
 

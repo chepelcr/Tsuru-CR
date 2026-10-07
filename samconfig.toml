@@ -1,8 +1,8 @@
 version = 0.1
 
 [default.deploy.parameters]
-stack_name = "jmarkets-lambda"
-s3_prefix = "jmarkets-lambda"
+stack_name = "tsuru-lambda"
+s3_prefix = "tsuru-lambda"
 region = "us-east-1"
 capabilities = "CAPABILITY_IAM"
 parameter_overrides = []

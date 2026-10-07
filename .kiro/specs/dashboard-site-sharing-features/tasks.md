@@ -153,7 +153,7 @@ Key features:
   - [ ] 9.2 Add POST /api/organizations/:id/domain/verify endpoint
     - Add endpoint to OrganizationController
     - Retrieve organization and verify customDomain and verificationToken exist
-    - Perform DNS TXT lookup for `_j-markets-verification.{customDomain}` using dns.promises.resolveTxt()
+    - Perform DNS TXT lookup for `_tsuru-verification.{customDomain}` using dns.promises.resolveTxt()
     - Check if any TXT record matches verificationToken
     - If match: set domainVerified=true, return success
     - If no match: return error with expected and found values
@@ -197,9 +197,9 @@ Key features:
     - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
   
   - [ ] 10.3 Implement DNS verification instructions panel
-    - Display DNS TXT record name: `_j-markets-verification.{customDomain}`
+    - Display DNS TXT record name: `_tsuru-verification.{customDomain}`
     - Display DNS TXT record value: verificationToken
-    - Show expected DNS record format: `_j-markets-verification.{customDomain} TXT {verificationToken}`
+    - Show expected DNS record format: `_tsuru-verification.{customDomain} TXT {verificationToken}`
     - Add copy button to copy verificationToken to clipboard
     - Provide links to common DNS provider documentation
     - Show panel only when domainVerified is false

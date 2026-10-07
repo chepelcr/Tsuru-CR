@@ -50,7 +50,7 @@ npm run deploy:all-frontend           # Build all templates + dashboard + deploy
 
 Fields:
 - `name` - Unique template identifier (e.g., 'tsuru-demo')
-- `displayName` - Human-readable name (e.g., 'JMarkets Demo')
+- `displayName` - Human-readable name (e.g., 'Tsuru Demo')
 - `description` - Template description
 - `category` - Template category (demo, electronics, fashion, etc.)
 - `thumbnailUrl` - Preview image URL

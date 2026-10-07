@@ -119,7 +119,7 @@ for n in gourmet-foods artisan-crafts beauty-essentials fitness-hub \
          tsuru-demo pet-care tech-gadgets vintage-fashion; do
   git clone "https://github.com/chepelcr/template-$n.git" "templates/$n"
 done
-# (template-tsuru-demo is the former template-jmarkets-demo, rebranded 2026-07-03)
+# (template-tsuru-demo is the former template-tsuru-demo, rebranded 2026-07-03)
 git clone https://github.com/chepelcr/tsuru-infrastructure.git Infrastructure
 ```
 

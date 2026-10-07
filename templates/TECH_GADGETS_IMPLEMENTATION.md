@@ -379,7 +379,7 @@ npm run preview
 
 ## Template Comparison
 
-### vs. JMarkets Demo (Pink Marketplace)
+### vs. Tsuru Demo (Pink Marketplace)
 - **Color:** Blue/Cyan vs Pink
 - **Mode:** Dark vs Light
 - **Aesthetic:** Tech/Futuristic vs Modern/Clean

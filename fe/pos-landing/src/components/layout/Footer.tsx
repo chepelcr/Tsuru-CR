@@ -19,7 +19,7 @@ export function Footer() {
         <div className="md:col-span-4">
           <Link to="/" className="flex items-center gap-2.5 font-display font-extrabold text-lg">
             <LogoIcon size={32} />
-            <span>JMARKETS<span className="text-primary">·</span>POS</span>
+            <span>TSURU<span className="text-primary">·</span>POS</span>
           </Link>
           <p className="text-sm text-secondary-foreground/70 mt-4 max-w-xs">
             {t('footer.tagline')}

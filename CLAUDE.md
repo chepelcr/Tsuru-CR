@@ -40,7 +40,7 @@ on 2026-06-12 (roadmap TSR-112), parallel to the `be/` backend grouping — `fe/
 
 | Component | New repo | Status |
 |---|---|---|
-| `fe/pos-system` (Tsuru POS — standalone POS & Costa Rica/Hacienda e-invoicing system; **not** a store-front template) | [`chepelcr/tsuru-pos-system`](https://github.com/chepelcr/tsuru-pos-system) | Extracted; **untracked here** (2026-06-12); relocated to `fe/pos-system` (2026-06-12). Deploys via its own GH Actions to **GitHub Pages** at `app.tsuru.jcampos.dev` (the old S3/CloudFront `pos.j-markets.jcampos.dev` deploy is retired). Develop it there. |
+| `fe/pos-system` (Tsuru POS — standalone POS & Costa Rica/Hacienda e-invoicing system; **not** a store-front template) | [`chepelcr/tsuru-pos-system`](https://github.com/chepelcr/tsuru-pos-system) | Extracted; **untracked here** (2026-06-12); relocated to `fe/pos-system` (2026-06-12). Deploys via its own GH Actions to **GitHub Pages** at `app.tsuru.jcampos.dev` (the old S3/CloudFront `pos.tsuru.jcampos.dev` deploy is retired). Develop it there. |
 | `fe/landing` (Tsuru landing — public marketing SPA) | [`chepelcr/tsuru-landing`](https://github.com/chepelcr/tsuru-landing) | **Untracked here**. GitHub Pages serves code/assets; the visitor's browser loads all published editorial documents from the SigV4 public API. The old local JSON CMS is development-only. Develop it there. |
 | `fe/blog-site` (public editorial blog) | [`chepelcr/tsuru-blog-site`](https://github.com/chepelcr/tsuru-blog-site) | **Untracked here** (2026-09-29, TSR-358). GitHub Pages at `blogs.tsuru.jcampos.dev` serves code/assets; the browser loads published posts and chrome from the SigV4 public API. Its CI does not manage content data. |
 | `fe/pos-landing` (Tsuru POS **product marketing site** — pricing/plans, live POS demo, own config-driven dashboard; **not** a storefront template) | — (tracked in this monorepo) | **Tracked here**; relocated from `templates/pos-landing` to `fe/pos-landing` (2026-08-23, TSR-142). No standalone repo exists. Scripts: `npm run dev:pos-landing` / `build:pos-landing` → `dist/pos-landing`. |
@@ -73,10 +73,10 @@ on 2026-06-12 (roadmap TSR-112), parallel to the `be/` backend grouping — `fe/
 - `fe/pos-landing` is **not** one of the 8 storefront templates — it is the POS *marketing* site and is deliberately excluded from `npm run build:templates`. Keep it out of the template matrix.
 - New work on the POS system belongs in `chepelcr/tsuru-pos-system`; new work on the landing site belongs in `chepelcr/tsuru-landing`; new work on the Express platform API belongs in `chepelcr/tsuru-platform-api` — not here. Mirror commits to the monorepo are no longer needed.
 
-**Brand: Tsuru.** The public brand is **Tsuru** (formerly JMarkets). Do not write new
-"JMarkets" brand text on any user-facing surface. Infra identifiers are NOT the brand and
-stay as-is: domains (`tsuru.jcampos.dev`), buckets (`jmarkets-template-market`), template
-POS theme ids `jmarkets`/`jmarkets-demo`, and the `jmarkets_common` lib. (The demo template was rebranded: `jmarkets-demo` -> `tsuru-demo` / repo `template-tsuru-demo`, 2026-07-03, Bribri content.)
+**Brand: Tsuru.** The public brand is **Tsuru** (formerly Tsuru). Do not write new
+"Tsuru" brand text on any user-facing surface. Infra identifiers are NOT the brand and
+stay as-is: domains (`tsuru.jcampos.dev`), buckets (`tsuru-template-market`), template
+POS theme ids `tsuru`/`tsuru-demo`, and the `tsuru_common` lib. (The demo template was rebranded: `tsuru-demo` -> `tsuru-demo` / repo `template-tsuru-demo`, 2026-07-03, Bribri content.)
 See `docs/roadmap/tsuru_rebrand_plan.md` for scope.
 
 ## ⚠️ Security Guidelines

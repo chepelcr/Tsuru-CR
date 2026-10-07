@@ -232,7 +232,7 @@ HALLAZGOS = [
     ["TSR-120", "Páginas huérfanas sin decisión de producto",
      "AnalyticsPage.tsx y AssignmentsPage.tsx sin ruta; flujo cajero src/pages/pos/* sin cablear. Decidir: migrar o eliminar", "Baja"],
     ["TSR-121", "Higiene de repo: .env.example y README obsoletos",
-     ".env.example apunta a markets-api.jcampos.dev / orders-api.jcampos.dev (pre-rebrand) y nombra 'JMarkets POS'; README.md es boilerplate npm en un repo pnpm", "Baja"],
+     ".env.example apunta a markets-api.jcampos.dev / orders-api.jcampos.dev (pre-rebrand) y nombra 'Tsuru POS'; README.md es boilerplate npm en un repo pnpm", "Baja"],
     ["TSR-122", "Carrito compartido entre tabs de documento",
      "El estado del carrito no se persiste/restaura por tab (TASKS.md T7.4-futuro); editar dos documentos en paralelo mezcla líneas", "Media"],
     ["TSR-123", "Documento de análisis QA (md + xlsx)", "Entregable de preparación de QA — Done", "—"],

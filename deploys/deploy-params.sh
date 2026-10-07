@@ -2,7 +2,7 @@
 set -e
 
 # ---------------------------------------------------------------------------
-# deploy-params.sh — Deploy JMarkets SSM Parameter Stack
+# deploy-params.sh — Deploy Tsuru SSM Parameter Stack
 #
 # Usage:
 #   bash deploys/deploy-params.sh [dev|staging|prod] [OPTIONS]
@@ -128,7 +128,7 @@ if [ "$USE_PROFILE" = true ]; then
   PROFILE_ARG="--profile $PROFILE"
 fi
 
-# Must match the DEPLOYED stack. This said "jmarkets-ssm-params" long after the
+# Must match the DEPLOYED stack. This said "tsuru-ssm-params" long after the
 # live stack was named for the `platform` namespace it writes, so running the
 # script would try to CREATE a second stack over parameter names the first one
 # already owns — which fails, rolls back, and tells you nothing useful.
@@ -136,7 +136,7 @@ PARAMS_STACK="tsuru-${ENVIRONMENT}-platform-ssm-params"
 TEMPLATE_FILE="$REPO_ROOT/cloudformation/params.yml"
 
 echo "======================================================"
-echo " Deploying JMarkets SSM Parameters"
+echo " Deploying Tsuru SSM Parameters"
 echo "======================================================"
 echo " Stack:            $PARAMS_STACK"
 echo " Environment:      $ENVIRONMENT"
@@ -151,7 +151,7 @@ echo " Orders API URL:   $ORDERS_API_URL_VAL"
 echo " Sales API URL:    $SALES_API_URL_VAL"
 echo " Data API URL:     $DATA_API_URL_VAL"
 echo " Events API URL:   ${EVENTS_API_URL_VAL:-<none — POS builds without live notifications>}"
-echo " SSM Base Path:    /tsuru/${ENVIRONMENT}/jmarkets"
+echo " SSM Base Path:    /tsuru/${ENVIRONMENT}/platform"
 echo "======================================================"
 
 # shellcheck disable=SC2086
@@ -176,19 +176,19 @@ aws cloudformation deploy \
 
 echo ""
 echo "✅ SSM parameters deployed successfully."
-echo "   Base path: /tsuru/${ENVIRONMENT}/jmarkets"
+echo "   Base path: /tsuru/${ENVIRONMENT}/platform"
 echo ""
 echo "   Parameters created/updated:"
-echo "   - /tsuru/${ENVIRONMENT}/jmarkets/aws/stage"
-echo "   - /tsuru/${ENVIRONMENT}/jmarkets/aws/region"
-echo "   - /tsuru/${ENVIRONMENT}/jmarkets/aws/database  → tsuru/${ENVIRONMENT}/database"
-echo "   - /tsuru/${ENVIRONMENT}/jmarkets/cognito/user-pool-id   (from jmarkets-cognito stack)"
-echo "   - /tsuru/${ENVIRONMENT}/jmarkets/cognito/client-id      (from jmarkets-cognito stack)"
-echo "   - /tsuru/${ENVIRONMENT}/jmarkets/sns/organization-topic-arn  (from organization-publish-topic stack)"
-echo "   - /tsuru/${ENVIRONMENT}/jmarkets/dashboard/url          → ${DASHBOARD_URL_VAL}"
-echo "   - /tsuru/${ENVIRONMENT}/jmarkets/s3/bucket              → ${S3_BUCKET}"
-echo "   - /tsuru/${ENVIRONMENT}/jmarkets/email/from             → ${FROM_EMAIL_VAL}"
-echo "   - /tsuru/${ENVIRONMENT}/jmarkets/frontend/url           → ${FRONTEND_URL_VAL}"
-echo "   - /tsuru/${ENVIRONMENT}/jmarkets/cloudfront/domain      → ${CLOUDFRONT_DOMAIN_VAL}
-   - /tsuru/${ENVIRONMENT}/jmarkets/api/url               → ${API_URL_VAL}
-   - /tsuru/${ENVIRONMENT}/jmarkets/api/orders-url        → ${ORDERS_API_URL_VAL}"
+echo "   - /tsuru/${ENVIRONMENT}/platform/aws/stage"
+echo "   - /tsuru/${ENVIRONMENT}/platform/aws/region"
+echo "   - /tsuru/${ENVIRONMENT}/platform/aws/database  → tsuru/${ENVIRONMENT}/database"
+echo "   - /tsuru/${ENVIRONMENT}/platform/cognito/user-pool-id   (from tsuru-cognito stack)"
+echo "   - /tsuru/${ENVIRONMENT}/platform/cognito/client-id      (from tsuru-cognito stack)"
+echo "   - /tsuru/${ENVIRONMENT}/platform/sns/organization-topic-arn  (from organization-publish-topic stack)"
+echo "   - /tsuru/${ENVIRONMENT}/platform/dashboard/url          → ${DASHBOARD_URL_VAL}"
+echo "   - /tsuru/${ENVIRONMENT}/platform/s3/bucket              → ${S3_BUCKET}"
+echo "   - /tsuru/${ENVIRONMENT}/platform/email/from             → ${FROM_EMAIL_VAL}"
+echo "   - /tsuru/${ENVIRONMENT}/platform/frontend/url           → ${FRONTEND_URL_VAL}"
+echo "   - /tsuru/${ENVIRONMENT}/platform/cloudfront/domain      → ${CLOUDFRONT_DOMAIN_VAL}
+   - /tsuru/${ENVIRONMENT}/platform/api/url               → ${API_URL_VAL}
+   - /tsuru/${ENVIRONMENT}/platform/api/orders-url        → ${ORDERS_API_URL_VAL}"

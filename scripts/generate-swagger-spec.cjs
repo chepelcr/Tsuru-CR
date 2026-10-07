@@ -2,7 +2,7 @@
  * Generate OpenAPI spec from Express JSDoc annotations.
  *
  * Modes:
- *   (default)  → swagger/jmarkets.json   — source of truth for API Gateway template
+ *   (default)  → swagger/tsuru.json   — source of truth for API Gateway template
  *   --dist     → dist/swagger-spec.json  — bundled into Lambda package for runtime swagger UI
  *
  * Usage:
@@ -20,11 +20,11 @@ const options = {
   definition: {
     openapi: '3.0.3',
     info: {
-      title: 'JMarkets API Documentation',
+      title: 'Tsuru API Documentation',
       version: '1.0.0',
       description: 'Multi-tenant marketplace platform API with CMS, authentication, RBAC, and auto-deployment',
       contact: {
-        name: 'JMarkets Support',
+        name: 'Tsuru Support',
         url: 'https://tsuru.jcampos.dev'
       }
     },
@@ -134,10 +134,10 @@ if (distMode) {
   fs.writeFileSync(outputPath, specJson);
   console.log('✅ Swagger spec generated at:', outputPath);
 } else {
-  // API Gateway mode (default): output to swagger/jmarkets.json
+  // API Gateway mode (default): output to swagger/tsuru.json
   const swaggerDir = path.join(rootDir, 'swagger');
   fs.mkdirSync(swaggerDir, { recursive: true });
-  const outputPath = path.join(swaggerDir, 'jmarkets.json');
+  const outputPath = path.join(swaggerDir, 'tsuru.json');
   fs.writeFileSync(outputPath, specJson);
   console.log('✅ Swagger spec generated at:', outputPath);
 }
