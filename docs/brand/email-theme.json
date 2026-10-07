@@ -1,0 +1,62 @@
+{
+  "background-color": {
+    "#f4efe6": [
+      "ts-bg-outer",
+      "#151B17"
+    ],
+    "#ffffff": [
+      "ts-bg-surface",
+      "#202621"
+    ],
+    "#fdfbf6": [
+      "ts-bg-footer",
+      "#202621"
+    ],
+    "#fbe9e7": [
+      "ts-bg-danger",
+      "#402723"
+    ],
+    "#e2f3e3": [
+      "ts-bg-success",
+      "#213B2B"
+    ],
+    "#fbf1df": [
+      "ts-bg-warning",
+      "#40351F"
+    ],
+    "#eef1f4": [
+      "ts-bg-info",
+      "#26343C"
+    ]
+  },
+  "color": {
+    "#3d4045": [
+      "ts-fg",
+      "#EEE9DE"
+    ],
+    "#6b2a22": [
+      "ts-primary",
+      "#F4EFE6"
+    ],
+    "#655d54": [
+      "ts-muted",
+      "#C3C5B8"
+    ],
+    "#b42318": [
+      "ts-danger",
+      "#FFB4A9"
+    ],
+    "#2f7f33": [
+      "ts-success",
+      "#A2D7AE"
+    ],
+    "#b7791f": [
+      "ts-warning",
+      "#F0CE83"
+    ],
+    "#5b6b7a": [
+      "ts-info",
+      "#BFCDD7"
+    ]
+  }
+}
