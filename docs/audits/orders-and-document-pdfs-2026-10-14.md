@@ -32,13 +32,19 @@ The order preview uses a saved order snapshot and the image currently served by 
 
 ## Document card follow-up
 
-The recipient and payment cards have equal widths (49% each with a 2% gutter). Cédula and Teléfono labels begin at the same column edge, with their values aligned right and the same 13px base font as name, email, and address. Identification labels use “Cédula” for every identification type. Name, email, address, and payment methods may wrap.
+The recipient and payment cards have equal widths (49% each with a 2% gutter) and share their bottom edge, following whichever card needs more height. Their backgrounds and borders stretch with the shared table row. Cédula and Teléfono labels begin at the same column edge, with compact label/value spacing and the same 13px base font as name, email, and address. Identification labels use “Cédula” for every identification type. Name, email, address, and payment methods may wrap.
 
-Payment metadata uses four rows: sale condition alone; currency and exchange rate; issue and due dates; then payment methods. Labels and values begin on the same line. Tipo de cambio and Vencimiento labels start at the same column edge, with their values aligned right. Unusually long sale conditions are fitted using the embedded font without dropping text.
+Payment metadata uses four rows: sale condition alone; currency and exchange rate; issue and due dates; then payment methods. Labels and values begin on the same line. Tipo de cambio and Vencimiento labels start at the same column edge, with compact label/value spacing. Condición de la venta, Moneda, Emisión and Medio de pago share one value column. Both sale-condition labels and values wrap at the normal font size; font fitting was removed. Wrapped payment and address continuation lines keep their first line's value-column position.
 
 Purchase invoices label the party card **Emisor** and **De:**; all other supported documents label it **Receptor** and **Para:**.
 
-Verified the final PDF with ordinary, long-text, purchase-invoice, absent-recipient, and three-page full-document samples. All 51 document PDF tests and 19 subtests pass. Rendered text positions confirm matching fonts, right-edge alignment, and inline dates/payment labels. Footer numbering remains present on all stress-sample pages.
+Verified the final PDF with ordinary, long-text, purchase-invoice, absent-recipient, and multi-page full-document samples. All 69 document PDF tests and 19 subtests pass. Rendered text positions confirm matching fonts, aligned value columns, and inline dates/payment labels. Footer numbering remains present on all stress-sample pages.
+
+The issuer's economic activity appears below Cédula beside the stored organization logo as **Actividad económica: {code} - {name}**. Names resolve from the organization activity snapshot or the country-scoped catalog, including equivalent integer/decimal code spellings; the signed document code remains unchanged. A missing optional catalog does not abort PDF generation. Email and phone share the first issuer-information row, with address on the second row. Their spacing follows the recipient card, and contacts remain compact when notes are absent.
+
+Notes occupy the second column beside issuer information. The **Notas:** label and justified text begin on the same row; all wrapped lines stay in the value column. Notes are no longer included beside totals. Issuer/notes and recipient/payment pairs share their respective bottom edges. Visual and rendered-text geometry checks cover inline justified notes, both contact rows, long values, card heights, and footer counters.
+
+Neighborhood names now reach both PDF addresses. The [document address flow audit](document-address-flow-2026-10-14.md) traces checkout, offline replay, create/update, ORM storage, party snapshots, XML/imports, public responses, related notes and PDF regeneration. The frontend retains the selected ID/name; sales resolves an optional ID before persistence and signing. Names already carried by an existing document remain intact. Final verification passes 623 frontend tests, 69 PDF tests, 91 shared tests, 65 sales API tests and 12 import tests, plus the relevant subtests; two existing shared tests remain skipped.
 
 Discount cells now show `0` when no discount applies, including when all lines have zero or absent discounts. Summary labels follow the requested order: **Total neto** before discounts, **Subtotal** after discounts, then taxes and final total. Calculations and stored business amounts are unchanged.
 
@@ -57,9 +63,9 @@ All application deployments succeeded on 14 October 2026:
 
 | Repository | Commit | Deployment |
 | --- | --- | --- |
-| tsuru-pos-system | fb6cf53 | https://github.com/chepelcr/tsuru-pos-system/actions/runs/38622893369 |
+| tsuru-pos-system | b0e4f26 | https://github.com/chepelcr/tsuru-pos-system/actions/runs/38632162226 |
 | tsuru-management-be | cf83e20 | https://github.com/chepelcr/tsuru-management-be/actions/runs/38622512842 |
 | tsuru-store-be | 08293f8 | https://github.com/chepelcr/tsuru-store-be/actions/runs/38622517328 |
-| tsuru-sales-be | 0e62ae7 | https://github.com/chepelcr/tsuru-sales-be/actions/runs/38622519803 |
+| tsuru-sales-be | 7c70584 | https://github.com/chepelcr/tsuru-sales-be/actions/runs/38631478846 |
 
 Verified the live delivered order page at 1440px and 375px: Facturar pedido shares the download group, the wide table fits without horizontal scrolling, the phone page has no horizontal overflow, CABYS is absent, and the company name is absent from sidebar branding. Billing opens the checkout drawer; no invoice was submitted or order data changed.
