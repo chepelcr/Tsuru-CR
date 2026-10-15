@@ -38,13 +38,23 @@ Payment metadata uses four rows: sale condition alone; currency and exchange rat
 
 Purchase invoices label the party card **Emisor** and **De:**; all other supported documents label it **Receptor** and **Para:**.
 
-Verified the final PDF with ordinary, long-text, purchase-invoice, absent-recipient, and multi-page full-document samples. All 69 document PDF tests and 19 subtests pass. Rendered text positions confirm matching fonts, aligned value columns, and inline dates/payment labels. Footer numbering remains present on all stress-sample pages.
+Verified the final PDF with ordinary, long-text, purchase-invoice, absent-recipient, and multi-page full-document samples. All 76 document PDF tests and 19 subtests pass. Rendered text positions confirm matching fonts, aligned value columns, and inline dates/payment labels. Footer numbering remains present on all stress-sample pages.
 
 The issuer's economic activity appears below Cédula beside the stored organization logo as **Actividad económica: {code} - {name}**. Names resolve from the organization activity snapshot or the country-scoped catalog, including equivalent integer/decimal code spellings; the signed document code remains unchanged. A missing optional catalog does not abort PDF generation. Email and phone share the first issuer-information row, with address on the second row. Their spacing follows the recipient card, and contacts remain compact when notes are absent.
 
 Notes occupy the second column beside issuer information. The **Notas:** label and justified text begin on the same row; all wrapped lines stay in the value column. Notes are no longer included beside totals. Issuer/notes and recipient/payment pairs share their respective bottom edges. Visual and rendered-text geometry checks cover inline justified notes, both contact rows, long values, card heights, and footer counters.
 
-Neighborhood names now reach both PDF addresses. The [document address flow audit](document-address-flow-2026-10-14.md) traces checkout, offline replay, create/update, ORM storage, party snapshots, XML/imports, public responses, related notes and PDF regeneration. The frontend retains the selected ID/name; sales resolves an optional ID before persistence and signing. Names already carried by an existing document remain intact. Final verification passes 623 frontend tests, 69 PDF tests, 91 shared tests, 65 sales API tests and 12 import tests, plus the relevant subtests; two existing shared tests remain skipped.
+Issuer and receiver **Teléfono:** labels share the same column start, including when notes are absent. Verified the printed position at 194.7 points in ordinary, long-text, purchase-invoice and multipage samples.
+
+Document page counters sit outside and below the footer card, aligned with its right edge. A 31mm bottom margin reserves space for the QR/legal/brand card, the separate counter and printable bottom clearance. The full design example includes 24 lines, two other charges, five other fields, two references and every available summary row across two visually reviewed pages. Counters and body/footer clearance are verified on both pages.
+
+Details, Other charges, Other fields and References share the same 8px header-to-body gap and 14px of top body spacing. One reusable header-gap macro supplies the gap and a 5px body-top cap inside the repeated table header; the body cells supply the remaining 9px. This preserves the same top spacing on continuation pages. Rendered text measurements confirm a 20.81-point heading-to-body text gap in all four tables, including Details on pages one and two. Cantidad, Precio unitario, Descuentos, Otros imp., I.V.A and Precio final headings are centered within their cells; numeric values remain aligned to the right. The Cantidad column is wide enough to center its complete label without clipping.
+
+**Otros campos** occupies the left summary column beneath the tax-category breakdown, beside the totals. Field names resolve from the active counterparty-specific special-field catalog, then the built-in Walmart/Tsuru labels, then the original field code. Codes and values in stored/signed documents are unchanged; hidden fields remain excluded. Tests cover counterparty isolation, inactive entries, blank names, missing catalogs, purchase invoices, received documents and carried fields on credit notes.
+
+**Referencias del documento** follows the taller summary column without forcing the entire reference table onto a new page. All five column headings are centered. Documento No. uses the same 14px body font as every reference field. Its width is reduced from 32% to 28%, leaving 20% for Razón. Rendered checks confirm matching text sizes across all five reference columns and that References begins directly below the summary/other-fields area in the complete two-page sample.
+
+Neighborhood names now reach both PDF addresses. The [document address flow audit](document-address-flow-2026-10-14.md) traces checkout, offline replay, create/update, ORM storage, party snapshots, XML/imports, public responses, related notes and PDF regeneration. The frontend retains the selected ID/name; sales resolves an optional ID before persistence and signing. Names already carried by an existing document remain intact. Final verification passes 623 frontend tests, 76 PDF tests, 91 shared tests, 65 sales API tests and 12 import tests, plus the relevant subtests; two existing shared tests remain skipped. The latest PDF follow-up reran all 76 PDF and 91 shared tests successfully.
 
 Discount cells now show `0` when no discount applies, including when all lines have zero or absent discounts. Summary labels follow the requested order: **Total neto** before discounts, **Subtotal** after discounts, then taxes and final total. Calculations and stored business amounts are unchanged.
 
@@ -54,7 +64,7 @@ Discount cells now show `0` when no discount applies, including when all lines h
 - Order header uses identity, amount and options across the top on wide screens; phones retain a distinct amount row and a two-column action group. All actions are at least 44px high.
 - Page content responds to its available width, including space consumed by the sidebar. Narrow desktops use a full-width line table and paired information cards; wide desktops use a larger line-items column alongside customer and delivery information.
 - Dates and department share the same label/value structure. Verified no page overflow at 360, 430, 768, 1024, 1280 and 1440px, including long order keys, names and event text, with light and dark themes.
-- Document recipient name, email and address now begin in one shared value column. Wrapped continuation lines stay in that column. One-page ordinary/purchase/long-text samples and a three-page complete document retain correct footer numbering.
+- Document recipient name, email and address now begin in one shared value column. Wrapped continuation lines stay in that column. One-page ordinary/purchase/long-text samples and the two-page complete document retain correct footer numbering.
 - Release validation: 620 frontend tests, 216 platform API tests, 80 orders backend tests, 51 document PDF tests and 87 shared sales tests pass. Two existing shared tests are skipped.
 
 ## Deployment
@@ -66,6 +76,6 @@ All application deployments succeeded on 14 October 2026:
 | tsuru-pos-system | b0e4f26 | https://github.com/chepelcr/tsuru-pos-system/actions/runs/38632162226 |
 | tsuru-management-be | cf83e20 | https://github.com/chepelcr/tsuru-management-be/actions/runs/38622512842 |
 | tsuru-store-be | 08293f8 | https://github.com/chepelcr/tsuru-store-be/actions/runs/38622517328 |
-| tsuru-sales-be | 7c70584 | https://github.com/chepelcr/tsuru-sales-be/actions/runs/38631478846 |
+| tsuru-sales-be | 21ef0cd | https://github.com/chepelcr/tsuru-sales-be/actions/runs/38659942574 |
 
 Verified the live delivered order page at 1440px and 375px: Facturar pedido shares the download group, the wide table fits without horizontal scrolling, the phone page has no horizontal overflow, CABYS is absent, and the company name is absent from sidebar branding. Billing opens the checkout drawer; no invoice was submitted or order data changed.
