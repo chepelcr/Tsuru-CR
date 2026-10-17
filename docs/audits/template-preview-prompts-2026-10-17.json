@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-17",
+  "method": "Built-in image_gen tool",
+  "purpose": "Original generated cover artwork replacing template screenshots",
+  "images": [
+    {
+      "name": "tsuru-demo",
+      "destination": "fe/pos-system/public/templates/tsuru-demo.jpg",
+      "prompt": "Use case: product-mockup. Asset type: original editorial cover artwork for a storefront-template gallery. Generate one premium, photorealistic editorial image, horizontal 16:10 composition, ideally 1280x800. A coherent studio-lit visual with tactile materials and clear subject silhouettes, polished but natural, readable as a small thumbnail. Keep the complete main subject inside the central 80% of the frame; balanced composition and an uncluttered backdrop. This is standalone artwork for a category, not an interface. No website layout, no screenshot, no browser chrome, no text, no lettering, no numbers, no logos, no watermarks, no collage. Subject: a balanced general-store lifestyle product collection: an oatmeal linen shopping tote, a matte sage reusable bottle, a small ivory ceramic cup, a closed kraft notebook and a folded natural cotton textile on warm cream stone blocks. Soft morning studio light, refined earthy cream, sage and warm wood palette. Welcoming independent neighborhood shop mood. No grocery spread, no cosmetics, no electronics.",
+      "generated_source": "/Users/jcampos/.codex/generated_images/01a14814-0a16-7f12-a172-93ab34ad31c5/exec-ae02a2b7-7eaf-4dca-bd4c-4eb93432cb47.png"
+    },
+    {
+      "name": "beauty-essentials",
+      "destination": "fe/pos-system/public/templates/beauty-essentials.jpg",
+      "prompt": "Use case: product-mockup. Asset type: original editorial cover artwork for a storefront-template gallery. Generate one premium, photorealistic editorial image, horizontal 16:10 composition, ideally 1280x800. A coherent studio-lit visual with tactile materials and clear subject silhouettes, polished but natural, readable as a small thumbnail. Keep the complete main subject inside the central 80% of the frame; balanced composition and an uncluttered backdrop. This is standalone artwork for a category, not an interface. No website layout, no screenshot, no browser chrome, no text, no lettering, no numbers, no logos, no watermarks, no collage. Subject: an elegant arrangement of unbranded skincare bottles, a glass serum dropper and a cream jar on blush-pink and ivory stone display blocks, a small botanical leaf as an accent. Soft diffused beauty lighting, subtle rose and warm cream palette, realistic translucent glass and smooth ceramic textures. A refined beauty and cosmetics boutique mood.",
+      "generated_source": "/Users/jcampos/.codex/generated_images/01a14814-0a16-7f12-a172-93ab34ad31c5/exec-c302126a-70ef-497b-81a4-708ec73a5278.png"
+    },
+    {
+      "name": "tech-gadgets",
+      "destination": "fe/pos-system/public/templates/tech-gadgets.jpg",
+      "prompt": "Use case: product-mockup. Asset type: category cover artwork for the Tech Gadgets storefront template in a website-template gallery. Generate one polished editorial product photograph, horizontal 16:10 composition, ideally 1280x800. Subject: a tasteful arrangement of a modern unbranded graphite smartphone, over-ear headphones and a compact smart speaker on dark navy sculptural display blocks. Soft electric-blue edge lighting, subtle teal highlights, convincing metal and matte surfaces. Contemporary premium technology mood, clear recognizable silhouettes when viewed as a small thumbnail. Center the complete arrangement within the central 80% of the frame with a generous clean backdrop and balanced depth. This is standalone photographic artwork. No website interface, no screenshot, no browser chrome, no text, no lettering, no numbers, no logos, no watermarks, no collage.",
+      "generated_source": "/Users/jcampos/.codex/generated_images/01a14814-0a16-7f12-a172-93ab34ad31c5/exec-200badcd-1a67-49e6-ba2b-ac9199614902.png"
+    },
+    {
+      "name": "vintage-fashion",
+      "destination": "fe/pos-system/public/templates/vintage-fashion.jpg",
+      "prompt": "Use case: product-mockup. Asset type: original editorial cover artwork for a storefront-template gallery. Generate one premium, photorealistic editorial image, horizontal 16:10 composition, ideally 1280x800. A coherent studio-lit visual with tactile materials and clear subject silhouettes, polished but natural, readable as a small thumbnail. Keep the complete main subject inside the central 80% of the frame; balanced composition and an uncluttered backdrop. This is standalone artwork for a category, not an interface. No website layout, no screenshot, no browser chrome, no text, no lettering, no numbers, no logos, no watermarks, no collage. Subject: a tasteful vintage clothing still life with a warm ivory folded knit sweater, a burgundy silk scarf and a worn cognac leather handbag on a natural wood bench; a tailored cream coat on a simple rail in the softly blurred background. Warm sunlit editorial fashion photography, parchment beige, wine red and brown palette, visible fabric weave and aged leather, nostalgic yet sophisticated.",
+      "generated_source": "/Users/jcampos/.codex/generated_images/01a14814-0a16-7f12-a172-93ab34ad31c5/exec-6e6676f9-0fa6-4636-bc2e-8b8b059d2b81.png"
+    },
+    {
+      "name": "artisan-crafts",
+      "destination": "fe/pos-system/public/templates/artisan-crafts.jpg",
+      "prompt": "Use case: product-mockup. Asset type: original editorial cover artwork for a storefront-template gallery. Generate one premium, photorealistic editorial image, horizontal 16:10 composition, ideally 1280x800. A coherent studio-lit visual with tactile materials and clear subject silhouettes, polished but natural, readable as a small thumbnail. Keep the complete main subject inside the central 80% of the frame; balanced composition and an uncluttered backdrop. This is standalone artwork for a category, not an interface. No website layout, no screenshot, no browser chrome, no text, no lettering, no numbers, no logos, no watermarks, no collage. Subject: a curated collection of handmade terracotta vessels, a handwoven basket, folded natural linen and wooden craft tools on a warm cream plaster tabletop. Earthy terracotta, honey gold and soft sage palette. Tactile imperfect ceramics and woven fibers, gentle window light, refined artisan workshop atmosphere, no hands or people.",
+      "generated_source": "/Users/jcampos/.codex/generated_images/01a14814-0a16-7f12-a172-93ab34ad31c5/exec-65d3aa0f-07a0-4b52-b3e1-76bf1c99186f.png"
+    },
+    {
+      "name": "gourmet-foods",
+      "destination": "fe/pos-system/public/templates/gourmet-foods.jpg",
+      "prompt": "Use case: product-mockup. Asset type: original editorial cover artwork for a storefront-template gallery. Generate one premium, photorealistic editorial image, horizontal 16:10 composition, ideally 1280x800. A coherent studio-lit visual with tactile materials and clear subject silhouettes, polished but natural, readable as a small thumbnail. Keep the complete main subject inside the central 80% of the frame; balanced composition and an uncluttered backdrop. This is standalone artwork for a category, not an interface. No website layout, no screenshot, no browser chrome, no text, no lettering, no numbers, no logos, no watermarks, no collage. Subject: an abundant but carefully composed gourmet food still life: fresh sourdough loaf, colorful ripe vegetables, a small olive oil bottle and leafy herbs on a rustic dark wood table. Warm olive green, dark brown and natural red accents. Appetizing premium food photography with rich detail and directional daylight, tasteful depth, no labels on bottles.",
+      "generated_source": "/Users/jcampos/.codex/generated_images/01a14814-0a16-7f12-a172-93ab34ad31c5/exec-3d3afdea-08e1-4af5-9fda-01e54eea4ad2.png"
+    },
+    {
+      "name": "fitness-hub",
+      "destination": "fe/pos-system/public/templates/fitness-hub.jpg",
+      "prompt": "Use case: product-mockup. Asset type: original editorial cover artwork for a storefront-template gallery. Generate one premium, photorealistic editorial image, horizontal 16:10 composition, ideally 1280x800. A coherent studio-lit visual with tactile materials and clear subject silhouettes, polished but natural, readable as a small thumbnail. Keep the complete main subject inside the central 80% of the frame; balanced composition and an uncluttered backdrop. This is standalone artwork for a category, not an interface. No website layout, no screenshot, no browser chrome, no text, no lettering, no numbers, no logos, no watermarks, no collage. Subject: a pair of matte black dumbbells, a black kettlebell, a neatly rolled charcoal exercise mat and a burgundy athletic towel on a dark gym floor. Premium fitness equipment product photography, a subtle red light accent from the side, crisp clean silhouettes, realistic rubber and metal textures, energetic and disciplined mood. No people.",
+      "generated_source": "/Users/jcampos/.codex/generated_images/01a14814-0a16-7f12-a172-93ab34ad31c5/exec-0bee67cd-0165-4b8b-b47b-ffe436a0cb11.png"
+    },
+    {
+      "name": "pet-care",
+      "destination": "fe/pos-system/public/templates/pet-care.jpg",
+      "prompt": "Use case: product-mockup. Asset type: original editorial cover artwork for a storefront-template gallery. Generate one premium, photorealistic editorial image, horizontal 16:10 composition, ideally 1280x800. A coherent studio-lit visual with tactile materials and clear subject silhouettes, polished but natural, readable as a small thumbnail. Keep the complete main subject inside the central 80% of the frame; balanced composition and an uncluttered backdrop. This is standalone artwork for a category, not an interface. No website layout, no screenshot, no browser chrome, no text, no lettering, no numbers, no logos, no watermarks, no collage. Use case also includes natural animal photography. Subject: a friendly golden retriever sitting comfortably beside a relaxed gray-and-white cat, accompanied by a simple orange pet bowl and a small rope toy on a soft light-blue studio floor. Both animals fully visible, anatomically natural and appealing, realistic fur, gentle expressions, warm diffused light. Cheerful pet boutique mood, pale sky blue, cream and a small orange accent. No collars with lettering.",
+      "generated_source": "/Users/jcampos/.codex/generated_images/01a14814-0a16-7f12-a172-93ab34ad31c5/exec-2d0b53ef-9c15-4b6d-a115-848dd5d1f671.png"
+    },
+    {
+      "name": "pollo-porteno",
+      "destination": "fe/pos-system/public/templates/pollo-porteno.jpg",
+      "prompt": "Use case: product-mockup. Asset type: original editorial cover artwork for a storefront-template gallery. Generate one premium, photorealistic editorial image, horizontal 16:10 composition, ideally 1280x800. A coherent studio-lit visual with tactile materials and clear subject silhouettes, polished but natural, readable as a small thumbnail. Keep the complete main subject inside the central 80% of the frame; balanced composition and an uncluttered backdrop. This is standalone artwork for a category, not an interface. No website layout, no screenshot, no browser chrome, no text, no lettering, no numbers, no logos, no watermarks, no collage. Subject: an appetizing fully cooked whole charcoal-roasted chicken with golden crisp skin and light grill marks on a dark rustic serving board, with a small stack of warm tortillas, roasted plantain pieces and a small bowl of fresh salsa as side dishes. Premium Costa Rican neighborhood grill food photography. Warm ember-orange side lighting, charcoal brown background, subtle atmospheric smoke, realistic textures and natural serving proportions. No people.",
+      "generated_source": "/Users/jcampos/.codex/generated_images/01a14814-0a16-7f12-a172-93ab34ad31c5/exec-4445b0af-e764-4750-a352-6bcbacea62d1.png"
+    }
+  ]
+}
