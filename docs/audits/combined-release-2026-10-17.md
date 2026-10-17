@@ -67,3 +67,14 @@ Deployment links:
 - [Email](https://github.com/chepelcr/tsuru-cognito-templates/actions/runs/39061511309)
 - [Landing](https://github.com/chepelcr/tsuru-landing/actions/runs/39061511518)
 - [Admin](https://github.com/chepelcr/tsuru-admin-dashboard/actions/runs/39061512012)
+
+## Email activation correction — TSR-378
+
+The subsequent greeting report revealed that workflow `39061511309` had built a
+new image but Lambda still resolved an older digest. The earlier workflow success,
+template rendering and warm-up were insufficient evidence of code activation.
+Pool-hook wiring was verified and remains correct. The greeting follow-up is now
+deployed as `f5d97f5` / successful run `39063556310`: the exact image/cache revision
+and all 12 live code-trigger renders pass. It pins immutable images and verifies
+live code rendering; see
+[the correction and release evidence](code-email-greeting-2026-10-17.md).
